@@ -30,4 +30,9 @@ public class AirlineController {
     public void deleteAirline(@PathVariable("airlineId") Long airlineId){
         airlineService.deleteAirline(airlineId);
     }
+
+    @PutMapping(path = "{airlineId}")
+    public void updateAirline(@PathVariable("airlineId") Long airlineId, @RequestParam(required = false,name = "name") String name, @RequestParam(required = false, name = "IBAN") String IBAN, @RequestParam(required = false, name = "customerServiceNumber") String customerServiceNumber){
+        airlineService.updateAirline(airlineId, name, IBAN, customerServiceNumber);
+    }
 }
