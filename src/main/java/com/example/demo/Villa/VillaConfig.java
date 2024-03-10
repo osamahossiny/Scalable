@@ -21,6 +21,7 @@ public class VillaConfig {
         Features.add("2Floors");
         BreakfastFeatures.add("Foul");
         Rules.add("No Noise");
+
         return args -> {
             Villa villa1 = new Villa(1L,"myVilla","Egypt","Cairo" , "Elrehab" , VillaType.REGULAR , Features , 5 , 15000000 , 15000250 , BreakfastFeatures , Amenities , Rules , true , 5000 , "000000");
             Villa villa2 = new Villa(2L,"myVilla2","Egypt","Cairo" , "Elrehab2" , VillaType.EXTRA , Features , 5 , 15000000 , 15000250 , BreakfastFeatures , Amenities , Rules , true , 5000 , "000000");
