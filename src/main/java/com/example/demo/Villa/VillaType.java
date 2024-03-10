@@ -1,5 +1,5 @@
 package com.example.demo.Villa;
 
 public enum VillaType {
-    REGULAR, EXTRA
+    REGULAR, EXTRA , SMALL
 }
