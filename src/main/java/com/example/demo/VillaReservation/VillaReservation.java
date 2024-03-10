@@ -5,19 +5,21 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 
+import java.util.Date;
+
 public class VillaReservation {
 
     private Long Userid;
     private Long Villaid;
-    private String From;
-    private String To;
+    private Date From;
+    private Date To;
     private Integer Price;
     private Integer NumOfPersons;
 
     public VillaReservation(){
 
     }
-    public VillaReservation(Long userid, Long villaid, String from, String to, Integer price, Integer numOfPersons) {
+    public VillaReservation(Long userid, Long villaid, Date from, Date to, Integer price, Integer numOfPersons) {
         Userid = userid;
         Villaid = villaid;
         From = from;
@@ -26,7 +28,7 @@ public class VillaReservation {
         NumOfPersons = numOfPersons;
     }
 
-    public VillaReservation(String from, String to, Integer price, Integer numOfPersons) {
+    public VillaReservation(Date from, Date to, Integer price, Integer numOfPersons) {
         From = from;
         To = to;
         Price = price;
@@ -49,19 +51,19 @@ public class VillaReservation {
         Villaid = villaid;
     }
 
-    public String getFrom() {
+    public Date getFrom() {
         return From;
     }
 
-    public void setFrom(String from) {
+    public void setFrom(Date from) {
         From = from;
     }
 
-    public String getTo() {
+    public Date getTo() {
         return To;
     }
 
-    public void setTo(String to) {
+    public void setTo(Date to) {
         To = to;
     }
 
@@ -92,4 +94,5 @@ public class VillaReservation {
                 ", NumOfPersons=" + NumOfPersons +
                 '}';
     }
+
 }

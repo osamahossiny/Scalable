@@ -1,4 +1,7 @@
 package com.example.demo.Villa;
 
-public interface VillaRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface VillaRepository extends JpaRepository<Villa , Long> {
+
 }

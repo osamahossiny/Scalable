@@ -13,7 +13,7 @@ public class Villa {
     private String VillaName;
     private String Country;
     private String City;
-    private Integer Address;
+    private String Address;
     private VillaType Type;
     private ArrayList<String> Features;
     private Integer MaxNumberOfGuests;
@@ -29,9 +29,10 @@ public class Villa {
     public Villa(){
 
     }
-    public Villa(Long villaid, String villaName, String country, String city, Integer address, VillaType type, ArrayList<String> features,
-                 Integer maxNumberOfGuests, Integer price, Integer priceWithBreakfast, ArrayList<String> breakfastFeatures, ArrayList<String> amenities,
-                 ArrayList<String> rules, boolean canRefund, Integer cancellationFee, String IBAN) {
+
+    public Villa(Long villaid, String villaName, String country, String city, String address, VillaType type, ArrayList<String> features, Integer maxNumberOfGuests,
+                 Integer price, Integer priceWithBreakfast, ArrayList<String> breakfastFeatures, ArrayList<String> amenities, ArrayList<String> rules,
+                 boolean canRefund, Integer cancellationFee, String IBAN) {
         Villaid = villaid;
         VillaName = villaName;
         Country = country;
@@ -50,7 +51,7 @@ public class Villa {
         this.IBAN = IBAN;
     }
 
-    public Villa(String villaName, String country, String city, Integer address, VillaType type, ArrayList<String> features, Integer maxNumberOfGuests,
+    public Villa(String villaName, String country, String city, String address, VillaType type, ArrayList<String> features, Integer maxNumberOfGuests,
                  Integer price, Integer priceWithBreakfast, ArrayList<String> breakfastFeatures, ArrayList<String> amenities, ArrayList<String> rules,
                  boolean canRefund, Integer cancellationFee, String IBAN) {
         VillaName = villaName;
@@ -102,11 +103,11 @@ public class Villa {
         City = city;
     }
 
-    public Integer getAddress() {
+    public String getAddress() {
         return Address;
     }
 
-    public void setAddress(Integer address) {
+    public void setAddress(String address) {
         Address = address;
     }
 
@@ -205,7 +206,7 @@ public class Villa {
                 ", VillaName='" + VillaName + '\'' +
                 ", Country='" + Country + '\'' +
                 ", City='" + City + '\'' +
-                ", Address=" + Address +
+                ", Address='" + Address + '\'' +
                 ", Type=" + Type +
                 ", Features=" + Features +
                 ", MaxNumberOfGuests=" + MaxNumberOfGuests +

@@ -1,4 +1,6 @@
 package com.example.demo.VillaReservation;
 
-public class VillaReservationController {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public class VillaReservationController{
 }

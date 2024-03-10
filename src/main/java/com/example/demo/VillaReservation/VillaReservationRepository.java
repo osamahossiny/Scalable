@@ -1,4 +1,6 @@
 package com.example.demo.VillaReservation;
 
-public interface VillaReservationRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface VillaReservationRepository extends JpaRepository<VillaReservation , Long> {
 }

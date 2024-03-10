@@ -4,20 +4,20 @@ public class VillaRating {
 
     private Long UserId;
     private Long VillaId;
-    private Integer Rating;
+    private Double Rating;
     private String Review;
 
     public VillaRating(){
 
     }
-    public VillaRating(Long userId, Long villaId, Integer rating, String review) {
+    public VillaRating(Long userId, Long villaId, Double rating, String review) {
         UserId = userId;
         VillaId = villaId;
         Rating = rating;
         Review = review;
     }
 
-    public VillaRating(Integer rating, String review) {
+    public VillaRating(Double rating, String review) {
         Rating = rating;
         Review = review;
     }
@@ -38,11 +38,11 @@ public class VillaRating {
         VillaId = villaId;
     }
 
-    public Integer getRating() {
+    public Double getRating() {
         return Rating;
     }
 
-    public void setRating(Integer rating) {
+    public void setRating(Double rating) {
         Rating = rating;
     }
 
