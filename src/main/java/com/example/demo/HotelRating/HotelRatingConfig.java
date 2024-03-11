@@ -9,7 +9,7 @@ import java.util.List;
 @Configuration
 public class HotelRatingConfig {
     @Bean
-    CommandLineRunner commandLineRunner(HotelRatingRepository repository){
+    CommandLineRunner commandLine1(HotelRatingRepository repository){
         return args -> {
 
             HotelRating rating1 = new HotelRating(12L,45L,356L,4.2,"Lazez");
