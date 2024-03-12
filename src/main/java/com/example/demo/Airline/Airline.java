@@ -1,9 +1,18 @@
 package com.example.demo.Airline;
 
+import com.example.demo.Plane.Plane;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
-@Table
+@Table(
+        name = "airline",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "airline_name_unique", columnNames = "name")
+        }
+)
 public class Airline {
 
     @Id
@@ -17,8 +26,34 @@ public class Airline {
             generator = "airline_sequence"
     )
     private Long id;
+    @Column(
+            name = "name",
+            nullable = false,
+            updatable = true,
+            columnDefinition = "TEXT"
+    )
     private String name;
+    @Column(
+            name = "iban",
+            nullable = false,
+            updatable = true,
+            columnDefinition = "TEXT"
+    )
     private String IBAN;
+
+    @OneToMany(
+            mappedBy = "airline",
+            orphanRemoval = true,
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    private List<Plane> planes = new ArrayList<>();
+    @Column(
+            name = "customer_service_number",
+            nullable = false,
+            updatable = true,
+            columnDefinition = "TEXT"
+    )
     private String customerServiceNumber;
 
     public Airline() {
@@ -69,6 +104,20 @@ public class Airline {
         this.customerServiceNumber = customerServiceNumber;
     }
 
+    public void addPlane(Plane plane) {
+        if (!this.planes.contains(plane)) {
+            this.planes.add(plane);
+            plane.setAirline(this);
+        }
+    }
+
+    public void removePlane(Plane plane) {
+        if (!this.planes.contains(plane)) {
+            this.planes.remove(plane);
+            plane.setAirline(null);
+        }
+    }
+
     @Override
     public String toString() {
         return "Airline{" +
@@ -78,4 +127,5 @@ public class Airline {
                 ", customerServiceNumber='" + customerServiceNumber + '\'' +
                 '}';
     }
+
 }
