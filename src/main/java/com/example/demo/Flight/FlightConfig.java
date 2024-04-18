@@ -1,11 +1,13 @@
 package com.example.demo.Flight;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+@Configuration
 public class FlightConfig {
     @Bean
     CommandLineRunner commandLineRunner(FlightRepository repository){
