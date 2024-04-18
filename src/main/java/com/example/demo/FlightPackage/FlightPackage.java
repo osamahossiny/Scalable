@@ -1,6 +1,6 @@
 package com.example.demo.FlightPackage;
 
-//import com.example.demo.Flight.Flight;
+import com.example.demo.Flight.Flight;
 import jakarta.persistence.*;
 
 @Entity
@@ -17,8 +17,8 @@ public class FlightPackage {
             generator = "flight_package_id_sequence"
     )
     private Long id;
-//    @ManyToOne
-    //private Flight flight;
+    @ManyToOne
+    private Flight flight;
     @Column
     private int weightCapin;
     @Column
