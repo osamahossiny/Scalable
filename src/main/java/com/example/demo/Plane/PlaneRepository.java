@@ -1,11 +1,10 @@
 package com.example.demo.Plane;
-
-import com.example.demo.Airline.Airline;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
 public interface PlaneRepository extends JpaRepository<Plane, Long> {
-
+    @Query("select a from Plane a where  a.name = ?1")
     Optional<Plane> findPlaneByName(String name);
 }

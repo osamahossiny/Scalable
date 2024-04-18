@@ -1,5 +1,6 @@
 package com.example.demo.Flight;
 
+import com.example.demo.Plane.Plane;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -9,6 +10,7 @@ import java.util.Optional;
 @Repository
 public interface FlightRepository extends JpaRepository <Flight, Long> {
 
-    @Query("select a from Flight a where  a.FlightId = ?1")
-    Optional<Flight> findFlightByFlightId(long id);
+
+    @Query("select a from Plane a where  a.id = ?1")
+    Optional<Plane> findPlaneId(long id);
 }

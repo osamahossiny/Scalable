@@ -1,5 +1,6 @@
 package com.example.demo.Flight;
 
+import com.example.demo.Plane.Plane;
 import jakarta.persistence.*;
 
 import java.time.*;
@@ -18,28 +19,48 @@ public class Flight {
             generator = "flight_sequence"
     )
     private Long FlightId;
+    @Column
     private String DepartureLocation;
+    @Column
     private String ArrivalLocation;
+    @Column
     private String TimeOfDep;
+    @Column
     private String TimeOfArrival;
-    private long PlaneId;
+    @ManyToOne
+    @JoinColumn(
+            name = "plane_id",
+            referencedColumnName = "id",
+            foreignKey = @ForeignKey(
+                    name = "plane_id_fk"
+            )
+    )
+    private Plane Plane;
+    @Column
     private float Distance;
+    @Column
     private float FlightPrice;
+    @Column
     private float InsurancePrice;
+    @Column
     private float ExtraBaggagePrice;
+    @Column
     private String DepAirport;
+    @Column
     private String ArrivalAirPort;
+    @Column
     private String DepDate;
+    @Column
     private String ArrivalDate;
     public Flight() {
     }
-    public Flight(Long flightId, String departureLocation, String arrivalLocation, String timeOfDep, String timeOfArrival, long planeId, float distance, float flightPrice, float insurancePrice, float extraBaggagePrice, String depAirport, String arrivalAirPort, String depDate, String arrivalDate) {
+    public Flight(Long flightId, String departureLocation, String arrivalLocation, String timeOfDep, String timeOfArrival, Plane plane, float distance, float flightPrice, float insurancePrice, float extraBaggagePrice, String depAirport, String arrivalAirPort, String depDate, String arrivalDate) {
         FlightId = flightId;
         DepartureLocation = departureLocation;
         ArrivalLocation = arrivalLocation;
         TimeOfDep = timeOfDep;
         TimeOfArrival = timeOfArrival;
-        PlaneId = planeId;
+        Plane = plane;
         Distance = distance;
         FlightPrice = flightPrice;
         InsurancePrice = insurancePrice;
@@ -50,12 +71,12 @@ public class Flight {
         ArrivalDate = arrivalDate;
     }
 
-    public Flight(String departureLocation, String arrivalLocation, String timeOfDep, String timeOfArrival, long planeId, float distance, float flightPrice, float insurancePrice, float extraBaggagePrice, String depAirport, String arrivalAirPort, String depDate, String arrivalDate) {
+    public Flight(String departureLocation, String arrivalLocation, String timeOfDep, String timeOfArrival, Plane plane, float distance, float flightPrice, float insurancePrice, float extraBaggagePrice, String depAirport, String arrivalAirPort, String depDate, String arrivalDate) {
         DepartureLocation = departureLocation;
         ArrivalLocation = arrivalLocation;
         TimeOfDep = timeOfDep;
         TimeOfArrival = timeOfArrival;
-        PlaneId = planeId;
+        Plane = plane;
         Distance = distance;
         FlightPrice = flightPrice;
         InsurancePrice = insurancePrice;
@@ -105,12 +126,12 @@ public class Flight {
         TimeOfArrival = timeOfArrival;
     }
 
-    public long getPlaneId() {
-        return PlaneId;
+    public Plane getPlane() {
+        return Plane;
     }
 
-    public void setPlaneId(long planeId) {
-        PlaneId = planeId;
+    public void setPlane(Plane plane) {
+        Plane = plane;
     }
 
     public float getDistance() {
@@ -184,7 +205,7 @@ public class Flight {
                 ", ArrivalLocation='" + ArrivalLocation + '\'' +
                 ", TimeOfDep=" + TimeOfDep +
                 ", TimeOfArrival=" + TimeOfArrival +
-                ", PlaneId=" + PlaneId +
+                ", PlaneId=" + Plane.getId() +
                 ", Distance=" + Distance +
                 ", FlightPrice=" + FlightPrice +
                 ", InsurancePrice=" + InsurancePrice +
