@@ -31,14 +31,16 @@ public class Plane {
     )
     private String name;
 
-    @ManyToOne
-    @JoinColumn(
-            name = "airline_Id",
-            referencedColumnName = "id",
-            foreignKey = @ForeignKey(
-                    name = "airline_id_fk"
-            )
-    )
+    @ManyToOne(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY)
+//    @JoinColumn(
+//            name = "airline_Id",
+//            referencedColumnName = "id",
+//            foreignKey = @ForeignKey(
+//                    name = "airline_id_fk"
+//            )
+//    )
     private Airline airline;
 
     @Column(

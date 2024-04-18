@@ -27,14 +27,16 @@ public class Flight {
     private String TimeOfDep;
     @Column
     private String TimeOfArrival;
-    @ManyToOne
-    @JoinColumn(
-            name = "plane_id",
-            referencedColumnName = "id",
-            foreignKey = @ForeignKey(
-                    name = "plane_id_fk"
-            )
-    )
+    @ManyToOne(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY)
+//    @JoinColumn(
+//            name = "plane_id",
+//            referencedColumnName = "id",
+//            foreignKey = @ForeignKey(
+//                    name = "plane_id_fk"
+//            )
+//    )
     private Plane Plane;
     @Column
     private float Distance;
