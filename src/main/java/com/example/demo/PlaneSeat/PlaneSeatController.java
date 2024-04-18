@@ -1,11 +1,6 @@
-package com.example.demo.PlaneSeat.Pla;
-
-import com.example.demo.Airline.Airline;
-import com.example.demo.Airline.AirlineService;
+package com.example.demo.PlaneSeat;
 import com.example.demo.Plane.Plane;
-import com.example.demo.Plane.PlaneSeatService;
-import com.example.demo.PlaneSeat.PlaneSeat;
-import com.example.demo.PlaneSeat.SeatCategory;
+import com.example.demo.PlaneSeat.PlaneSeatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;

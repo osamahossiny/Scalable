@@ -2,7 +2,8 @@ package com.example.demo.PlaneSeat;
 
 import com.example.demo.Plane.Plane;
 import jakarta.persistence.*;
-
+@Entity
+@Table
 public class PlaneSeat {
     @Id
     @SequenceGenerator(

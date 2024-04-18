@@ -1,6 +1,7 @@
-package com.example.demo.Plane;
+package com.example.demo.PlaneSeat;
 
 import com.example.demo.Airline.Airline;
+import com.example.demo.Plane.Plane;
 import com.example.demo.PlaneSeat.PlaneSeat;
 import com.example.demo.PlaneSeat.PlaneSeatRepository;
 import com.example.demo.PlaneSeat.SeatCategory;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PlaneSeatService {
