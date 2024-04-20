@@ -1,7 +1,6 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Service.AirlineService;
-import com.example.demo.Commands.AddAirlineCommand;
 import com.example.demo.model.Airline;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +25,7 @@ public class AirlineController {
 
     @PostMapping
     public void registerAirline(@RequestBody Airline airline){
-        //airlineService.addNewAirline(airline);
-        AddAirlineCommand addAirlineCommand= new AddAirlineCommand(airlineService, airline);
-        addAirlineCommand.execute();
+        airlineService.addNewAirline(airline);
     }
 
     @DeleteMapping(path = "{airlineId}")
