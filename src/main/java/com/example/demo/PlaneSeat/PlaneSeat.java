@@ -40,9 +40,18 @@ public class PlaneSeat {
         this.price = price;
     }
 
+    public PlaneSeat(int seatNumber, SeatCategory seatCategory, Plane plane, int price) {
+        this.seatNumber = seatNumber;
+        this.seatCategory = seatCategory;
+        this.plane = plane;
+        this.price = price;
+    }
+
     public PlaneSeat() {
 
     }
+
+
 
     public Long getId() {
         return id;

@@ -2,11 +2,17 @@ package com.example.demo.FlightReservation;
 
 
 import com.example.demo.Airline.Airline;
+import com.example.demo.Airline.AirlineRepository;
 import com.example.demo.AppUser.AppUser;
+import com.example.demo.AppUser.AppUserRepository;
 import com.example.demo.Flight.Flight;
+import com.example.demo.Flight.FlightRepository;
 import com.example.demo.FlightPackage.FlightPackage;
+import com.example.demo.FlightPackage.FlightPackageRepository;
 import com.example.demo.Plane.Plane;
+import com.example.demo.Plane.PlaneRepository;
 import com.example.demo.PlaneSeat.PlaneSeat;
+import com.example.demo.PlaneSeat.PlaneSeatRepository;
 import com.example.demo.PlaneSeat.SeatCategory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -20,20 +26,26 @@ import java.util.List;
 public class FlightReservationConfig {
 
     @Bean
-    CommandLineRunner flightReservationCommandLineRunner(FlightReservationRepository repository){
+    CommandLineRunner flightReservationCommandLineRunner(FlightReservationRepository repository,FlightPackageRepository flightRepository,PlaneSeatRepository planeSeatRepository,PlaneRepository planeRepository,AppUserRepository userRepository){
         return args -> {
+            FlightPackage chickenPackage= new FlightPackage(new Flight("Egypt","Germany", LocalTime.now().toString(), LocalTime.now().toString(), new Plane("Boeing77746", new Airline("Dawly","456981684","01000000000"),"Airbus"),500.4F,10000.0F, 1000.0F, 500.0F, "CAI", "BER", LocalDate.now().toString(), LocalDate.now().toString()), 8,20,150,50,"Chicken with Potatoes",true,300);
+            flightRepository.save(chickenPackage);
 
-            Airline KLM = new Airline(1L,"EgyptAir","456981684","01000000000");
-            Plane boeing777 = new Plane("Boeing777",KLM,"Airbus");
-            Flight cairo_berlin = new Flight("Egypt","Germany", LocalTime.now().toString(), LocalTime.now().toString(), boeing777,500.4F,10000.0F, 1000.0F, 500.0F, "CAI", "BER", LocalDate.now().toString(), LocalDate.now().toString());
-            FlightPackage meatPackage= new FlightPackage(cairo_berlin, 8,23,100,50,"Meat with Rice", true,400);
-            AppUser appUser=new AppUser("Amro78", "kagfhlksdFNJK", "amro78@gmail.com", LocalDate.now(), "male", "Single", "0158", "Egypt", "01256552347", "Amr", "Maged");
-            PlaneSeat seat13C = new PlaneSeat(100L,13, SeatCategory.EconomyIsle,boeing777,500);
+            Plane p=new Plane("EGY123",
+                    new Airline("RyanAir","456981684","01000000000"),
+                    "Airbus");
+            planeRepository.save(p);
+            PlaneSeat seat = new PlaneSeat(15,SeatCategory.EconomyIsle,p,500);
+            planeSeatRepository.saveAll(List.of(seat));
 
-            FlightReservation flightReservation1=new FlightReservation(appUser,meatPackage,seat13C,false,false,false,300);
+            AppUser appUser=new AppUser("BavarianAT", "Guc197831!", "Taha123@gmail.com", LocalDate.now(), "male", "Single", "0158", "Egypt", "01012524680", "Amr", "Maged");
+            userRepository.saveAll(List.of(appUser));
 
-
-            repository.saveAll(List.of(flightReservation1));
+            FlightReservation flightReservation=new FlightReservation(
+                    appUser,
+                    chickenPackage,
+                    seat,false,false,false,300);
+            repository.saveAll(List.of(flightReservation));
         };
     }
 }

@@ -1,4 +1,5 @@
 package com.example.demo.Airline;
+import com.example.demo.Plane.Plane;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,9 +11,8 @@ public class AirlineConfig {
     @Bean
     CommandLineRunner commandLineRunner(AirlineRepository repository){
         return args -> {
-            Airline egyptAir = new Airline(1L,"EgyptAir","456981684","01000000000");
-            Airline flyEmirates = new Airline(2L,"FlyEmirates","97816322","01099999999");
-            repository.saveAll(List.of(egyptAir, flyEmirates));
+            Airline KLM = new Airline("EgyptAir","456981684","01000000000");
+            repository.saveAll(List.of(KLM));
         };
     }
 }

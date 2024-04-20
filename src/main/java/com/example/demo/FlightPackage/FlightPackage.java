@@ -20,7 +20,10 @@ public class FlightPackage {
 
 
 
-    @ManyToOne
+    @ManyToOne(
+                cascade = CascadeType.ALL,
+                fetch = FetchType.LAZY
+    )
     @JoinColumn(
             name = "flight_id",
             referencedColumnName = "FlightId",
@@ -28,6 +31,7 @@ public class FlightPackage {
                     name = "flight_id_fk"
             )
     )
+
     private Flight flight;
 
 

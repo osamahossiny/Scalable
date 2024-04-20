@@ -44,10 +44,9 @@ public class Airline {
     @OneToMany(
             mappedBy = "airline",
             //orphanRemoval = true,
-            //cascade = CascadeType.ALL,
+            cascade = {CascadeType.ALL},
             fetch = FetchType.LAZY
     )
-//    @Column
     private List<Plane> planes;
     @Column(
             name = "customer_service_number",
