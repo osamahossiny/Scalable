@@ -9,7 +9,7 @@ import java.util.Optional;
 @Service
 public class AppUserService {
 
-    private AppUserRepository appUserRepository;
+    private final AppUserRepository appUserRepository;
 
     @Autowired
     public AppUserService(AppUserRepository appUserRepository) {

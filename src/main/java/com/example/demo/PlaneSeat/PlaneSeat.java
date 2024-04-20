@@ -40,6 +40,10 @@ public class PlaneSeat {
         this.price = price;
     }
 
+    public PlaneSeat() {
+
+    }
+
     public Long getId() {
         return id;
     }
