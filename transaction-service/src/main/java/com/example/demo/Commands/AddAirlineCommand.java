@@ -1,17 +1,17 @@
 package com.example.demo.Commands;
 
-import com.example.demo.model.Airline;
-import com.example.demo.Service.AirlineService;
+import com.example.demo.model.Transaction;
+import com.example.demo.Service.TransactionService;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class AddAirlineCommand implements CommandInterface{
+public class AddTransactionCommand implements CommandInterface{
 
-    private final AirlineService airlineService;
-    private final Airline airline;
+    private final TransactionService transactionService;
+    private final Transaction transaction;
 
     @Override
     public void execute() {
-        airlineService.addNewAirline(airline);
+        transactionService.addNewTransaction(transaction);
     }
 }
