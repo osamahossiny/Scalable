@@ -2,16 +2,22 @@ package com.example.demo.Controller;
 import com.example.demo.model.Transaction;
 import com.example.demo.Service.TransactionService;
 import jakarta.persistence.Column;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
+
 
 @RestController
 @RequestMapping(path = "api/transactions")
 public class TransactionController {
+    Logger logger=  LoggerFactory.getLogger(TransactionController.class);
 
     private final TransactionService transactionService;
 
@@ -22,6 +28,7 @@ public class TransactionController {
 
     @GetMapping
     public List<Transaction> getTransactions(){
+        logger.info("Getting all transactions");
         return this.transactionService.getTransactions();
     }
 
@@ -37,14 +44,11 @@ public class TransactionController {
 
     @PutMapping(path = "{transactionID}")
     public void updateTransaction(@PathVariable("transactionID") Long transactionID,
-                            @RequestParam(name = "userId") Long userId,
-                            @RequestParam(required = false, name = "booking_id") Long bookingId,
-                            @RequestParam(required = false, name = "transaction_date_time") LocalDateTime transactionDateTime,
-                            @RequestParam(required = false, name = "payment_method") String paymentMethod,
-                            @RequestParam(required = false, name = "transaction_amount") BigDecimal transactionAmount,
-                            @RequestParam(required = false, name = "status") Transaction.Status status
-    ){
-        transactionService.updateTransaction(transactionID, userId, bookingId, transactionDateTime, paymentMethod, transactionAmount, status);
+                            @RequestBody Transaction request)
+    {
+        logger.info("updating transaction");
+        System.out.println("transactionID = " + transactionID);
+        transactionService.updateTransaction(transactionID, request.getUserId(), request.getBookingId(), request.getTransactionDateTime(), request.getPaymentMethod(), request.getTransactionAmount(), request.getStatus());
     }
 
 }

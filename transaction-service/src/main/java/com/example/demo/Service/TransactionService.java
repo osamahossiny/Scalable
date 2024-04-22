@@ -48,5 +48,10 @@ public class TransactionService {
         Transaction transaction = transactionRepository.findById(transactionId).orElseThrow(() ->
             new IllegalStateException("Transaction with id " + transactionId + " does not exist")
         );
+        System.out.println("status of Transaction = " + transaction.getStatus());
+        if(status != null && status != transaction.getStatus()){
+            transaction.setStatus(status);
+            transactionRepository.save(transaction);
+        }
     }
 }
