@@ -24,7 +24,7 @@ public class TransactionConfig {
 // we will add booking id for the user after the transaction is completed succesfully
 
         @Bean
-        CommandLineRunner commandLineRunner(TransactionRepository repository){
+        CommandLineRunner TransactionCommandLineRunner(TransactionRepository repository){
             LocalDateTime date = LocalDateTime.of(2024, 1, 11, 0, 0); // Corrected LocalDateTime creation
             LocalDateTime date1 = LocalDateTime.of(2024, 5, 12, 0, 0); // Corrected LocalDateTime creation
 
