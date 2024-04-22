@@ -26,21 +26,30 @@ public class Transaction {
         @Column(name = "transaction_amount")
         private BigDecimal transactionAmount;
 
-        public Transaction(Long transactionId, Long userId, Long bookingId, LocalDateTime transactionDateTime, String paymentMethod, BigDecimal transactionAmount) {
+        @Column(name = "status")
+        private Enum<Status> status;
+        public enum Status {
+        ACCEPTED,
+        PENDING,
+        DECLINED
+    }
+        public Transaction(Long transactionId, Long userId, Long bookingId, LocalDateTime transactionDateTime, String paymentMethod, BigDecimal transactionAmount, Enum<Status> status) {
             this.transactionId = transactionId;
             this.userId = userId;
             this.bookingId = bookingId;
             this.transactionDateTime = transactionDateTime;
             this.paymentMethod = paymentMethod;
             this.transactionAmount = transactionAmount;
+            this.status = status;
         }
-    public Transaction(Long transactionId, Long userId, LocalDateTime transactionDateTime, String paymentMethod, BigDecimal transactionAmount) {
+    public Transaction(Long transactionId, Long userId, LocalDateTime transactionDateTime, String paymentMethod, BigDecimal transactionAmount, Enum<Status> status) {
         this.transactionId = transactionId;
         this.userId = userId;
         this.bookingId = null;
         this.transactionDateTime = transactionDateTime;
         this.paymentMethod = paymentMethod;
         this.transactionAmount = transactionAmount;
+        this.status = status;
     }
 
 

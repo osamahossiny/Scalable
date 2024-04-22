@@ -29,8 +29,8 @@ public class TransactionConfig {
             LocalDateTime date1 = LocalDateTime.of(2024, 5, 12, 0, 0); // Corrected LocalDateTime creation
 
             return args -> {
-                Transaction SanadFlight = new Transaction(1L, 12L, date, "visa", BigDecimal.valueOf(50000)); // Corrected constructor call
-                Transaction NayerBus = new Transaction(3L, 7L, date1, "Cash", BigDecimal.valueOf(10000)); // Corrected constructor call
+                Transaction SanadFlight = new Transaction(1L, 12L, date, "visa", BigDecimal.valueOf(50000), Transaction.Status.PENDING); // Corrected constructor call
+                Transaction NayerBus = new Transaction(3L, 7L, date1, "Cash", BigDecimal.valueOf(10000),Transaction.Status.ACCEPTED); // Corrected constructor call
                 repository.saveAll(List.of(SanadFlight, NayerBus));
             };
         }

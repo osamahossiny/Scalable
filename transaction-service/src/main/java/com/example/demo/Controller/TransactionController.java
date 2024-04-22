@@ -36,13 +36,15 @@ public class TransactionController {
     }
 
     @PutMapping(path = "{transactionID}")
-    public void updateTrain(@PathVariable("transactionID") Long transactionID,
-                            @RequestParam(required = false, name = "userId") Long userId,
+    public void updateTransaction(@PathVariable("transactionID") Long transactionID,
+                            @RequestParam(name = "userId") Long userId,
                             @RequestParam(required = false, name = "booking_id") Long bookingId,
                             @RequestParam(required = false, name = "transaction_date_time") LocalDateTime transactionDateTime,
                             @RequestParam(required = false, name = "payment_method") String paymentMethod,
-                            @RequestParam(required = false, name = "transaction_amount") BigDecimal transactionAmount){
-        transactionService.updateTransaction(transactionID, userId, bookingId, transactionDateTime, paymentMethod, transactionAmount);
+                            @RequestParam(required = false, name = "transaction_amount") BigDecimal transactionAmount,
+                            @RequestParam(required = false, name = "status") Transaction.Status status
+    ){
+        transactionService.updateTransaction(transactionID, userId, bookingId, transactionDateTime, paymentMethod, transactionAmount, status);
     }
 
 }

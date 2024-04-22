@@ -44,7 +44,7 @@ public class TransactionService {
     }
 
     @Transactional
-    public void updateTransaction(Long transactionId, Long userId, Long bookingId, LocalDateTime transactionDateTime, String paymentMethod, BigDecimal transactionAmount) {
+    public void updateTransaction(Long transactionId, Long userId, Long bookingId, LocalDateTime transactionDateTime, String paymentMethod, BigDecimal transactionAmount, Transaction.Status status) {
         Transaction transaction = transactionRepository.findById(transactionId).orElseThrow(() ->
             new IllegalStateException("Transaction with id " + transactionId + " does not exist")
         );
