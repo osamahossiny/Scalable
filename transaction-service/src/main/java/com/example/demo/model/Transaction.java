@@ -66,6 +66,7 @@ public class Transaction {
                     ", transactionDateTime=" + transactionDateTime +
                     ", paymentMethod='" + paymentMethod + '\'' +
                     ", transactionAmount=" + transactionAmount +
+                    ", status=" + status +
                     '}';
         }
 
@@ -116,6 +117,13 @@ public class Transaction {
         public BigDecimal getTransactionAmount() {
             return transactionAmount;
         }
-    }
+
+        public Enum<Status> getStatus() {
+            return status;
+        }
+        public void setStatus(Enum<Status> status) {
+            this.status = status;
+        }
+}
 
 
