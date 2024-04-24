@@ -24,7 +24,7 @@ public class FlightPackage {
     )
     @JoinColumn(
             name = "flight_id",
-            referencedColumnName = "FlightId",
+            referencedColumnName = "id",
             foreignKey = @ForeignKey(
                     name = "flight_id_fk"
             )

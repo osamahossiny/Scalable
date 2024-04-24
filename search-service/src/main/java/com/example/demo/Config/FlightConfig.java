@@ -19,7 +19,7 @@ public class FlightConfig {
     CommandLineRunner FlightcommandLineRunner(FlightRepository repository, AirlineRepository airlineRepository, PlaneRepository planeRepository){
         return args -> {
 
-            Flight cairo_berlin4 = new Flight("Egypt","Germany", LocalTime.now().toString(), LocalTime.now().toString(),
+            Flight cairo_berlin4 = new Flight("France","Germany", LocalTime.now().toString(), LocalTime.now().toString(),
                                         new Plane("Boeing7774",
                                                 new Airline("EgyptAir4","456981684","01000000000")
                                                 ,"Airbus")

@@ -1,4 +1,5 @@
 package com.example.demo.model;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.*;
@@ -16,7 +17,7 @@ public class Flight {
             strategy = GenerationType.SEQUENCE,
             generator = "flight_sequence"
     )
-    private Long FlightId;
+    private Long id;
     @Column
     private String DepartureLocation;
     @Column
@@ -25,6 +26,7 @@ public class Flight {
     private String TimeOfDep;
     @Column
     private String TimeOfArrival;
+
     @ManyToOne(
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)
@@ -35,6 +37,7 @@ public class Flight {
 //                    name = "plane_id_fk"
 //            )
 //    )
+//    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Plane Plane;
     @Column
     private float Distance;
@@ -54,22 +57,22 @@ public class Flight {
     private String ArrivalDate;
     public Flight() {
     }
-    public Flight(Long flightId, String departureLocation, String arrivalLocation, String timeOfDep, String timeOfArrival, Plane plane, float distance, float flightPrice, float insurancePrice, float extraBaggagePrice, String depAirport, String arrivalAirPort, String depDate, String arrivalDate) {
-        FlightId = flightId;
-        DepartureLocation = departureLocation;
-        ArrivalLocation = arrivalLocation;
-        TimeOfDep = timeOfDep;
-        TimeOfArrival = timeOfArrival;
-        Plane = plane;
-        Distance = distance;
-        FlightPrice = flightPrice;
-        InsurancePrice = insurancePrice;
-        ExtraBaggagePrice = extraBaggagePrice;
-        DepAirport = depAirport;
-        ArrivalAirPort = arrivalAirPort;
-        DepDate = depDate;
-        ArrivalDate = arrivalDate;
-    }
+//    public Flight(Long flightId, String departureLocation, String arrivalLocation, String timeOfDep, String timeOfArrival, Plane plane, float distance, float flightPrice, float insurancePrice, float extraBaggagePrice, String depAirport, String arrivalAirPort, String depDate, String arrivalDate) {
+//        id = flightId;
+//        DepartureLocation = departureLocation;
+//        ArrivalLocation = arrivalLocation;
+//        TimeOfDep = timeOfDep;
+//        TimeOfArrival = timeOfArrival;
+//        Plane = plane;
+//        Distance = distance;
+//        FlightPrice = flightPrice;
+//        InsurancePrice = insurancePrice;
+//        ExtraBaggagePrice = extraBaggagePrice;
+//        DepAirport = depAirport;
+//        ArrivalAirPort = arrivalAirPort;
+//        DepDate = depDate;
+//        ArrivalDate = arrivalDate;
+//    }
 
     public Flight(String departureLocation, String arrivalLocation, String timeOfDep, String timeOfArrival, Plane plane, float distance, float flightPrice, float insurancePrice, float extraBaggagePrice, String depAirport, String arrivalAirPort, String depDate, String arrivalDate) {
         DepartureLocation = departureLocation;
@@ -87,11 +90,11 @@ public class Flight {
         ArrivalDate = arrivalDate;
     }
     public Long getFlightId() {
-        return FlightId;
+        return id;
     }
 
     public void setFlightId(Long flightId) {
-        FlightId = flightId;
+        id = flightId;
     }
 
     public String getDepartureLocation() {
@@ -200,12 +203,12 @@ public class Flight {
     @Override
     public String toString() {
         return "Flight{" +
-                "FlightId=" + FlightId +
+                "id=" + id +
                 ", DepartureLocation='" + DepartureLocation + '\'' +
                 ", ArrivalLocation='" + ArrivalLocation + '\'' +
                 ", TimeOfDep=" + TimeOfDep +
                 ", TimeOfArrival=" + TimeOfArrival +
-                ", PlaneId=" + Plane.getId() +
+                ", PlaneId=" + (Plane!=null? ""+Plane.getId() : "No plane assigned") +
                 ", Distance=" + Distance +
                 ", FlightPrice=" + FlightPrice +
                 ", InsurancePrice=" + InsurancePrice +

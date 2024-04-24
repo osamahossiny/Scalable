@@ -1,6 +1,7 @@
 package com.example.demo.Service;
 import com.example.demo.Repository.FlightRepository;
 import com.example.demo.model.Flight;
+import com.example.demo.model.FlightAttributes;
 import com.example.demo.model.Plane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,17 +23,27 @@ public class FlightService {
     public List<Flight> getFlights(){
         return flightRepository.findAll();
     }
+    public Optional<List<Flight>> getFlights(FlightAttributes attributes){
+        System.out.println(attributes.getFrom());
+        System.out.println(attributes.getTo());
+        System.out.println(attributes.getDepDate());
+        System.out.println(flightRepository.findbyAttributes(attributes.getFrom(), attributes.getTo(), attributes.getDepDate(), attributes.getTravelClass(), attributes.getNumber()));
+        return flightRepository.findbyAttributes(attributes.getFrom(), attributes.getTo(), attributes.getDepDate(), attributes.getTravelClass(), attributes.getNumber());
+    }
 
     public void addNewFlight(Flight flight) {
+//        Optional<Plane> plane=flightRepository.findPlaneId(flight.getPlane());
+        System.out.println(flight);
+        System.out.print("TEST");
         Optional<Flight> flightByFlightId = flightRepository.findById(flight.getFlightId());
         System.out.println(flight);
         if (flightByFlightId.isPresent()){
             throw new IllegalStateException("A Flight with this id already exists.");
         }
-        Optional<Plane> plane = flightRepository.findPlaneId(flight.getPlane().getId());
-        if (!plane.isPresent()){
-            throw new IllegalStateException("This plane does not exist.");
-        }
+//        Optional<Plane> plane = flightRepository.findPlaneId(flight.getPlane().getId());
+//        if (!plane.isPresent()){
+//            throw new IllegalStateException("This plane does not exist.");
+//        }
         flightRepository.save(flight);
     }
 

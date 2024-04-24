@@ -1,11 +1,13 @@
 package com.example.demo.Controller;
 import com.example.demo.Service.FlightService;
 import com.example.demo.model.Flight;
+import com.example.demo.model.FlightAttributes;
 import com.example.demo.model.Plane;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "api/v1/flight")
@@ -20,12 +22,18 @@ public class FlightController {
 
     @GetMapping
     public List<Flight> getFlights(){
+        System.out.println(this.flightService.getFlights());
         return this.flightService.getFlights();
+    }
+
+    @GetMapping(path = "/Search")
+    public Optional<List<Flight>> search(@RequestBody FlightAttributes attributes){
+        return this.flightService.getFlights(attributes);
     }
 
     @PostMapping
     public void registerFlight(@RequestBody Flight flight){
-        flightService.addNewFlight(flight);
+        System.out.println("test1");flightService.addNewFlight(flight);
     }
 
     @DeleteMapping(path = "{FlightId}")
