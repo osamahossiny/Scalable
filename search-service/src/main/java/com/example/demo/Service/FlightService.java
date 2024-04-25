@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,11 +24,23 @@ public class FlightService {
     public List<Flight> getFlights(){
         return flightRepository.findAll();
     }
-    public List<Flight> getFlights(FlightAttributes attributes){
+    public List<Flight> getDirectFlights(FlightAttributes attributes){
         return flightRepository.findbyAttributes(attributes.getFrom(), attributes.getTo(), attributes.getDepDate(), attributes.getTravelClass(), attributes.getNumber());
     }
     public List<Object[]> getTwoWay(FlightAttributes attributes){
         return flightRepository.findTwoWay(attributes.getFrom(), attributes.getTo(), attributes.getDepDate(), attributes.getTravelClass(), attributes.getNumber());
+    }
+    public List<Object[]> getRoundTrip(FlightAttributes attributes){
+        List<Flight> t1= flightRepository.findbyAttributes(attributes.getFrom(), attributes.getTo(), attributes.getDepDate(), attributes.getTravelClass(),attributes.getNumber());
+        List<Flight> t2= flightRepository.findbyAttributes(attributes.getTo(), attributes.getFrom(), attributes.getReturnDate(), attributes.getTravelClass(),attributes.getNumber());
+        List<Object[]> res= new LinkedList<>();
+        for(int i=0;i<t1.size();i++)
+            for(int j=0;j<t2.size();j++)
+                if(t1.get(i).getArrivalDate().compareTo(t2.get(j).getDepDate())<0){
+                    Object[] roundTrip={t1.get(i),t2.get(j)};
+                    res.add(roundTrip);
+                }
+        return res;
     }
     public void addNewFlight(Flight flight) {
 //        Optional<Plane> plane=flightRepository.findPlaneId(flight.getPlane());
