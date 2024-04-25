@@ -26,6 +26,12 @@ public class FlightConfig {
                     ,500.4F,10000.0F, 1000.0F, 500.0F, "CAI", "BER", LocalDate.now().toString(), LocalDate.now().toString());
             repository.saveAll(List.of(cairo_berlin4));
 
+            Flight cairo_paris = new Flight("Egypt","France", LocalTime.now().toString(), LocalTime.now().toString(),
+                    new Plane("AE7",
+                            new Airline("FranceAir","456981684","01000000000")
+                            ,"Airbus")
+                    ,500.4F,10000.0F, 1000.0F, 500.0F, "CAI", "PSG", LocalDate.now().toString(), LocalDate.now().toString());
+            repository.saveAll(List.of(cairo_paris));
 
         };
     }

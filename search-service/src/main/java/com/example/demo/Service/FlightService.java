@@ -24,13 +24,11 @@ public class FlightService {
         return flightRepository.findAll();
     }
     public Optional<List<Flight>> getFlights(FlightAttributes attributes){
-        System.out.println(attributes.getFrom());
-        System.out.println(attributes.getTo());
-        System.out.println(attributes.getDepDate());
-        System.out.println(flightRepository.findbyAttributes(attributes.getFrom(), attributes.getTo(), attributes.getDepDate(), attributes.getTravelClass(), attributes.getNumber()));
         return flightRepository.findbyAttributes(attributes.getFrom(), attributes.getTo(), attributes.getDepDate(), attributes.getTravelClass(), attributes.getNumber());
     }
-
+    public List<Object[]> getTwoWay(FlightAttributes attributes){
+        return flightRepository.findTwoWay(attributes.getFrom(), attributes.getTo(), attributes.getDepDate(), attributes.getTravelClass(), attributes.getNumber());
+    }
     public void addNewFlight(Flight flight) {
 //        Optional<Plane> plane=flightRepository.findPlaneId(flight.getPlane());
         System.out.println(flight);

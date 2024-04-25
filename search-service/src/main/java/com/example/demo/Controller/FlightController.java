@@ -26,9 +26,13 @@ public class FlightController {
         return this.flightService.getFlights();
     }
 
-    @GetMapping(path = "/Search")
+    @GetMapping(path = "/OneWay")
     public Optional<List<Flight>> search(@RequestBody FlightAttributes attributes){
         return this.flightService.getFlights(attributes);
+    }
+    @GetMapping(path = "/TwoWay")
+    public List<Object[]> filters(@RequestBody FlightAttributes attributes){
+        return this.flightService.getTwoWay(attributes);
     }
 
     @PostMapping

@@ -16,4 +16,8 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
     Optional<Plane> findPlaneId(long id);
     @Query("select f from Flight f where f.DepartureLocation=?1 and f.ArrivalLocation = ?2 and f.DepDate=?3")
     Optional<List<Flight>> findbyAttributes(String from, String to, String DepDate, String aClass, String num);
+
+    @Query("SELECT A,B FROM Flight A,Flight B WHERE A.DepartureLocation=?1 and B.ArrivalLocation = ?2 and A.DepDate=?3 AND B.DepartureLocation=A.ArrivalLocation AND ((A.ArrivalDate<B.DepDate) OR (A.ArrivalDate=B.DepDate AND A.TimeOfArrival<B.TimeOfDep))")
+    List<Object[]> findTwoWay(String from, String to, String DepDate, String aClass, String num);
+
 }
