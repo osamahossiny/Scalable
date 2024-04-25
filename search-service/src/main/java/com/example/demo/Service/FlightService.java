@@ -42,6 +42,57 @@ public class FlightService {
                 }
         return res;
     }
+    public List<Flight> getFiltered(FlightAttributes attributes){
+        List<Flight> l=flightRepository.findbyAttributes(attributes.getFrom(), attributes.getTo(), attributes.getDepDate(), attributes.getTravelClass(), attributes.getNumber());
+        for(int i=0;i<l.size();i++){
+            if(attributes.getPrice()>0&&l.get(i).getFlightPrice()>attributes.getPrice()) {
+                l.remove(i);
+                i--;
+                continue;
+            }
+            if(attributes.getDuration()>0){
+                int hours=Integer.parseInt(l.get(i).getTimeOfArrival().substring(0,2))-Integer.parseInt(l.get(i).getTimeOfDep().substring(0,2));
+                if(hours<0)
+                    hours+=24;
+                int mins=Integer.parseInt(l.get(i).getTimeOfArrival().substring(3,5))-Integer.parseInt(l.get(i).getTimeOfDep().substring(3,5));
+                if(mins<0) {
+                    hours-=1;
+                    mins += 60;
+                }
+                int seconds=Integer.parseInt(l.get(i).getTimeOfArrival().substring(6,8))-Integer.parseInt(l.get(i).getTimeOfDep().substring(6,8));
+                if(seconds<0) {
+                    mins-=1;
+                    seconds += 60;
+                    if(mins<0) {
+                        hours-=1;
+                        mins += 60;
+                    }
+                }
+                int actualDuration=hours*3600+mins*60+seconds;
+                if(actualDuration>attributes.getDuration()) {
+                    l.remove(i);
+                    i--;
+                    continue;
+                }
+            }
+            if(attributes.getArrAirport()!=null&&!attributes.getArrAirport().isEmpty()&&!attributes.getArrAirport().equals(l.get(i).getArrivalAirPort())){
+                l.remove(i);
+                i--;
+                continue;
+            }
+            if(attributes.getDepAirport()!=null&&!attributes.getDepAirport().isEmpty()&&!attributes.getDepAirport().equals(l.get(i).getDepAirport())){
+                l.remove(i);
+                i--;
+                continue;
+            }
+            if(attributes.getAirline()!=null && attributes.getAirline()!=0&&(l.get(i).getPlane()==null || l.get(i).getPlane().getAirline()==null || !attributes.getAirline().equals(l.get(i).getPlane().getAirline().getId()))) {
+                l.remove(i);
+                i--;
+                continue;
+            }
+        }
+        return l;
+    }
     public void addNewFlight(Flight flight) {
 //        Optional<Plane> plane=flightRepository.findPlaneId(flight.getPlane());
         System.out.println(flight);

@@ -5,6 +5,9 @@ import com.example.demo.model.FlightAttributes;
 import com.example.demo.model.Plane;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.Commands.FlightCommand.AddFlightCommand;
+import com.example.demo.Commands.FlightCommand.DeleteFlightCommand;
+import com.example.demo.Commands.FlightCommand.UpdateFlightCommand;
 
 import java.util.*;
 
@@ -37,19 +40,63 @@ public class FlightController {
     public List<Object[]> roundTrip(@RequestBody FlightAttributes attributes){
         return this.flightService.getRoundTrip(attributes);
     }
-
+    @GetMapping(path = "/Filtered")
+    public List<Flight> filtered(@RequestBody FlightAttributes attributes){
+        return this.flightService.getFiltered(attributes);
+    }
+/*
     @PostMapping
     public void registerFlight(@RequestBody Flight flight){
-        System.out.println("test1");flightService.addNewFlight(flight);
+        System.out.println("test1");
+        flightService.addNewFlight(flight);
+    }
+*/
+    @PostMapping
+    public void registerFlight(@RequestBody Flight flight){
+        AddFlightCommand addFlightCommand = new AddFlightCommand(flightService, flight);
+        addFlightCommand.execute();
     }
 
+    /*
     @DeleteMapping(path = "{FlightId}")
     public void deleteFlightId(@PathVariable("FlightId") Long flightId){
         flightService.deleteFlight(flightId);
     }
-
+*/
+    @DeleteMapping(path = "{FlightId}")
+    public void deleteFlightId(@PathVariable("FlightId") Long flightId){
+        DeleteFlightCommand deleteFlightCommand = new DeleteFlightCommand(flightService, flightId);
+        deleteFlightCommand.execute();
+    }
+    /*
     @PutMapping(path = "{FlightId}")
     public void updateAirline(@PathVariable("FlightId") Long FlightId, @RequestParam(required = false,name ="departureLocation")String departureLocation, @RequestParam(required = false,name ="arrivalLocation") String arrivalLocation, @RequestParam(required = false,name ="timeOfDep") String timeOfDep, @RequestParam(required = false,name ="timeOfArrival") String timeOfArrival, @RequestParam(required = false,name ="plane") Plane plane, @RequestParam(required = false,name ="distance") float distance, @RequestParam(required = false,name ="flightPrice") float flightPrice, @RequestParam(required = false,name ="insurancePrice") float insurancePrice, @RequestParam(required = false,name ="extraBaggagePrice") float extraBaggagePrice, @RequestParam(required = false,name ="depAirport") String depAirport, @RequestParam(required = false,name ="arrivalAirPort") String arrivalAirPort, @RequestParam(required = false,name ="depDate") String depDate, @RequestParam(required = false,name ="arrivalDate")String arrivalDate ){
         flightService.updateFlight(FlightId, departureLocation,arrivalLocation,timeOfDep,timeOfArrival, plane, distance, flightPrice, insurancePrice, extraBaggagePrice,depAirport,arrivalAirPort,depDate,arrivalDate);
     }
+*/
+    @PutMapping(path = "{FlightId}")
+    public void updateAirline(
+            @PathVariable("FlightId") Long flightId,
+            @RequestParam(required = false, name ="departureLocation") String departureLocation,
+            @RequestParam(required = false, name ="arrivalLocation") String arrivalLocation,
+            @RequestParam(required = false, name ="timeOfDep") String timeOfDep,
+            @RequestParam(required = false, name ="timeOfArrival") String timeOfArrival,
+            @RequestParam(required = false, name ="plane") Plane plane,
+            @RequestParam(required = false, name ="distance") float distance,
+            @RequestParam(required = false, name ="flightPrice") float flightPrice,
+            @RequestParam(required = false, name ="insurancePrice") float insurancePrice,
+            @RequestParam(required = false, name ="extraBaggagePrice") float extraBaggagePrice,
+            @RequestParam(required = false, name ="depAirport") String depAirport,
+            @RequestParam(required = false, name ="arrivalAirPort") String arrivalAirPort,
+            @RequestParam(required = false, name ="depDate") String depDate,
+            @RequestParam(required = false, name ="arrivalDate") String arrivalDate
+    ){
+        UpdateFlightCommand updateFlightCommand = new UpdateFlightCommand(
+                flightService,flightId,departureLocation,arrivalLocation,timeOfDep,timeOfArrival,plane,distance,flightPrice,
+                insurancePrice,extraBaggagePrice,depAirport,arrivalAirPort,depDate,arrivalDate
+        );
+        updateFlightCommand.execute();
+    }
+
+
 }
