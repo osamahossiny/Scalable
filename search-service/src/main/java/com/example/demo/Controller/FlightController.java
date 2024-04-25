@@ -6,8 +6,7 @@ import com.example.demo.model.Plane;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping(path = "api/v1/flight")
@@ -27,12 +26,25 @@ public class FlightController {
     }
 
     @GetMapping(path = "/OneWay")
-    public Optional<List<Flight>> search(@RequestBody FlightAttributes attributes){
+    public List<Flight> oneWay(@RequestBody FlightAttributes attributes){
         return this.flightService.getFlights(attributes);
     }
     @GetMapping(path = "/TwoWay")
-    public List<Object[]> filters(@RequestBody FlightAttributes attributes){
+    public List<Object[]> twoWay(@RequestBody FlightAttributes attributes){
         return this.flightService.getTwoWay(attributes);
+    }
+    @GetMapping(path = "/RoundTrip")
+    public List<Object[]> roundTrip(@RequestBody FlightAttributes flightAttributes){
+        List<Flight> t1= this.flightService.getFlights(new FlightAttributes(flightAttributes.getFrom(), flightAttributes.getTo(), flightAttributes.getDepDate(), flightAttributes.getTravelClass(),flightAttributes.getNumber()));
+        List<Flight> t2= this.flightService.getFlights(new FlightAttributes(flightAttributes.getTo(), flightAttributes.getFrom(), flightAttributes.getReturnDate(), flightAttributes.getTravelClass(),flightAttributes.getNumber()));
+        List<Object[]> res= new LinkedList<>();
+        for(int i=0;i<t1.size();i++)
+            for(int j=0;j<t2.size();j++)
+                if(t1.get(i).getArrivalDate().compareTo(t2.get(j).getDepDate())<0){
+                    Object[] roundTrip={t1,t2};
+                    res.add(roundTrip);
+                }
+        return res;
     }
 
     @PostMapping

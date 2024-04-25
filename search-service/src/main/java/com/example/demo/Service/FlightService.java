@@ -23,7 +23,7 @@ public class FlightService {
     public List<Flight> getFlights(){
         return flightRepository.findAll();
     }
-    public Optional<List<Flight>> getFlights(FlightAttributes attributes){
+    public List<Flight> getFlights(FlightAttributes attributes){
         return flightRepository.findbyAttributes(attributes.getFrom(), attributes.getTo(), attributes.getDepDate(), attributes.getTravelClass(), attributes.getNumber());
     }
     public List<Object[]> getTwoWay(FlightAttributes attributes){
