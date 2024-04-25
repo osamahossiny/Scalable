@@ -37,6 +37,10 @@ public class FlightController {
     public List<Object[]> roundTrip(@RequestBody FlightAttributes attributes){
         return this.flightService.getRoundTrip(attributes);
     }
+    @GetMapping(path = "/Filtered")
+    public List<Flight> filtered(@RequestBody FlightAttributes attributes){
+        return this.flightService.getFiltered(attributes);
+    }
 
     @PostMapping
     public void registerFlight(@RequestBody Flight flight){
