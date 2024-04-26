@@ -21,4 +21,6 @@ public interface FlightReservationRepository extends JpaRepository<FlightReserva
     @Query("select a from PlaneSeat a where  a.id = ?1")
     Optional<PlaneSeat> findPlaneSeatId(long id);
 
+
+
 }

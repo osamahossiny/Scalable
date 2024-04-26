@@ -1,5 +1,6 @@
 package com.example.demo.Service;
 
+
 import com.example.demo.Repository.FlightReservationRepository;
 import com.example.demo.model.AppUser;
 import com.example.demo.model.FlightPackage;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -62,7 +64,7 @@ public class FlightReservationService {
     }
 
     @Transactional
-    public void updateFlightReservation(Long flightReservationId , AppUser appUser, FlightPackage flightPackage, PlaneSeat planeSeat, boolean seatChargeable, boolean extraBaggage, boolean withInsurance, int totalPrice, FlightReservation.PaymentMethod paymentMethod) {
+    public void updateFlightReservation(Long flightReservationId , Long user_id, Long package_id, Long seat_id, boolean seatChargeable, boolean extraBaggage, boolean withInsurance, FlightReservation.PaymentMethod paymentMethod) {
 
         FlightReservation flightReservation = flightReservationRepository.findById(flightReservationId).orElseThrow(() ->
                 new IllegalStateException("flight Package with id " + flightReservationId + " does not exist")
@@ -76,37 +78,76 @@ public class FlightReservationService {
             flightReservation.setId(flightReservationId);
         }
 
-
-        if (appUser != null && flightReservation.getAppUser()!=appUser) {
-            flightReservation.setAppUser(appUser);
+        if(user_id!=null && !Objects.equals(flightReservation.getAppUser().getId(), user_id)){
+            flightReservation.setAppUser(flightReservationRepository.findAppUserId(user_id).orElseThrow(() ->
+                    new IllegalStateException("user with id " + user_id + " does not exist")
+            ));
         }
-
-
-        if (flightPackage != null && flightReservation.getFlightPackage()!=flightPackage) {
+        int newPrice = flightReservation.getTotalPrice();
+        boolean priceChanged = false;
+        if(package_id!=null && !flightReservation.getFlightPackage().getId().equals(package_id)){
+            if(flightReservation.getFlightPackage()!=null){
+                newPrice -= flightReservation.getFlightPackage().getPrice();
+            }
+            FlightPackage flightPackage = flightReservationRepository.findFlightPackageId(package_id).orElseThrow(() ->
+                    new IllegalStateException("flight package with id " + package_id + " does not exist")
+            );
+            newPrice+= flightPackage.getPrice();
+            priceChanged = true;
             flightReservation.setFlightPackage(flightPackage);
         }
 
-
-        if (planeSeat != null && flightReservation.getPlaneSeat()!=planeSeat) {
+        if(seat_id!=null && !flightReservation.getPlaneSeat().getId().equals(seat_id)){
+            System.out.println("HEEEEEEREEEEE seat id = " + seat_id);
+            if(flightReservation.getPlaneSeat()!=null){
+                System.out.println("not null");
+                newPrice-= flightReservation.getPlaneSeat().getPrice();
+            }
+            PlaneSeat planeSeat = flightReservationRepository.findPlaneSeatId(seat_id).orElseThrow(() ->
+                    new IllegalStateException("plane seat with id " + seat_id + " does not exist")
+            );
+            newPrice+= planeSeat.getPrice();
+            priceChanged = true;
             flightReservation.setPlaneSeat(planeSeat);
         }
 
-
         if ( flightReservation.isSeatChargeable()!=seatChargeable) {
             flightReservation.setSeatChargeable(seatChargeable);
+            if (seatChargeable) {
+                newPrice += flightReservation.getSeatChargeablePrice();
+            }
+            else{
+                newPrice -= flightReservation.getSeatChargeablePrice();
+            }
+            priceChanged = true;
         }
 
         if ( flightReservation.isExtraBaggage()!=extraBaggage) {
             flightReservation.setExtraBaggage(extraBaggage);
+            if(extraBaggage){
+                newPrice += flightReservation.getExtraBaggagePrice();
+            }
+            else{
+                newPrice -= flightReservation.getExtraBaggagePrice();
+            }
+            priceChanged = true;
         }
 
         if ( flightReservation.isWithInsurance()!=withInsurance) {
             flightReservation.setWithInsurance(withInsurance);
+            if(withInsurance){
+                newPrice += flightReservation.getWithInsurancePrice();
+                 }
+            else{
+                newPrice -= flightReservation.getWithInsurancePrice();
+                }
+            priceChanged = true;
         }
 
-        if (totalPrice != 0 && flightReservation.getTotalPrice()!=totalPrice) {
-            flightReservation.setTotalPrice(totalPrice);
+        if(priceChanged){
+            flightReservation.setTotalPrice(newPrice);
         }
+
         if(paymentMethod != null && flightReservation.getPaymentMethod() != paymentMethod){
             flightReservation.setPaymentMethod(paymentMethod);
         }

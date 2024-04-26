@@ -4,6 +4,14 @@ import jakarta.persistence.*;
 @Entity
 @Table
 public class FlightReservation {
+
+    //should be changed in the future to be dynamic based on the airline
+    @Transient
+    int seatChargeablePrice = 50;
+    @Transient
+    int extraBaggagePrice = 30;
+    @Transient
+    int withInsurancePrice = 20;
     public Long getId() {
         return id;
     }
@@ -23,14 +31,18 @@ public class FlightReservation {
     public FlightReservation() {
     }
 
-    public FlightReservation(AppUser appUser, FlightPackage flightPackage, PlaneSeat planeSeat, boolean seatChargeable, boolean extraBaggage, boolean withInsurance, int totalPrice, PaymentMethod paymentMethod) {
+    public FlightReservation(AppUser appUser, FlightPackage flightPackage, PlaneSeat planeSeat, boolean seatChargeable, boolean extraBaggage, boolean withInsurance, PaymentMethod paymentMethod) {
         this.appUser = appUser;
         this.flightPackage = flightPackage;
         this.planeSeat = planeSeat;
         this.seatChargeable = seatChargeable;
         this.extraBaggage = extraBaggage;
         this.withInsurance = withInsurance;
-        this.totalPrice = totalPrice;
+        this.totalPrice = planeSeat.getPrice() +
+                flightPackage.getPrice() +
+                (seatChargeable ? seatChargeablePrice : 0) +
+                (extraBaggage ? extraBaggagePrice : 0) +
+                (withInsurance ? withInsurancePrice : 0);
         this.paymentMethod = paymentMethod;
     }
 
@@ -88,6 +100,18 @@ public class FlightReservation {
 
     public void setPaymentMethod(PaymentMethod paymentMethod) {
         this.paymentMethod = paymentMethod;
+    }
+
+    public int getSeatChargeablePrice() {
+        return seatChargeablePrice;
+    }
+
+    public int getExtraBaggagePrice() {
+        return extraBaggagePrice;
+    }
+
+    public int getWithInsurancePrice() {
+        return withInsurancePrice;
     }
 
     @Id

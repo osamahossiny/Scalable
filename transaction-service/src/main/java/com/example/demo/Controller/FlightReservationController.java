@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -37,8 +38,8 @@ public class FlightReservationController {
         }
 
         @PutMapping(path = "{FlightReservationID}")
-        public void updateFlightReservation(@PathVariable("FlightReservationID") Long id, @RequestParam(required = false,name ="appUser") AppUser appUser, @RequestParam(required = false,name ="flightPackage") FlightPackage flightPackage, @RequestParam(required = false,name ="planeSeat") PlaneSeat planeSeat, @RequestParam(required = false,name ="seatChargeable")boolean seatChargeable, @RequestParam(required = false,name =" extraBaggage") boolean extraBaggage, @RequestParam(required = false,name ="withInsurance") boolean withInsurance, @RequestParam(required = false,name ="totalPrice")int totalPrice, @RequestParam(required = false,name ="paymentMethod") FlightReservation.PaymentMethod paymentMethod){
-            flightReservationService.updateFlightReservation(id,appUser,flightPackage,planeSeat, seatChargeable, extraBaggage, withInsurance,totalPrice,paymentMethod);
+        public void updateFlightReservation(@PathVariable("FlightReservationID") Long id, @RequestParam(required = false,name ="user_id") Long user_id, @RequestParam(required = false,name ="package_id") Long package_id, @RequestParam(required = false,name ="seat_id") Long seat_id, @RequestParam(required = false,name ="seatChargeable")boolean seatChargeable, @RequestParam(required = false,name ="extraBaggage") boolean extraBaggage, @RequestParam(required = false,name ="withInsurance") boolean withInsurance, @RequestParam(required = false,name ="paymentMethod") FlightReservation.PaymentMethod paymentMethod){
+            flightReservationService.updateFlightReservation(id,user_id,package_id,seat_id, seatChargeable, extraBaggage, withInsurance,paymentMethod);
         }
 
 

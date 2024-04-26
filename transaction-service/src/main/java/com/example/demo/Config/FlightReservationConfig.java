@@ -30,9 +30,8 @@ public class FlightReservationConfig {
             userRepository.saveAll(List.of(appUser));
 
             FlightReservation flightReservation=new FlightReservation(
-                    appUser,
-                    chickenPackage,
-                    seat,false,false,false,300, FlightReservation.PaymentMethod.CASH);
+                    appUser,chickenPackage,
+                    seat,false,false,false, FlightReservation.PaymentMethod.CASH);
             repository.saveAll(List.of(flightReservation));
         };
     }

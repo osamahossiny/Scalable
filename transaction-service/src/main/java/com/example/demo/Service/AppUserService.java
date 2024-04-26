@@ -39,4 +39,10 @@ public class AppUserService {
         }
         appUserRepository.deleteById(userId);
     }
+
+    public AppUser getUserById(Long userId) {
+        return appUserRepository.findById(userId).orElseThrow(() ->
+            new IllegalStateException("User with id " + userId + " does not exist")
+        );
+    }
 }
