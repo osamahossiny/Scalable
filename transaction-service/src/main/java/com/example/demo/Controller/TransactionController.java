@@ -48,7 +48,7 @@ public class TransactionController {
     {
         logger.info("updating transaction");
         System.out.println("transactionID = " + transactionID);
-        transactionService.updateTransaction(transactionID, request.getUserId(), request.getBookingId(), request.getTransactionDateTime(), request.getPaymentMethod(), request.getTransactionAmount(), request.getStatus());
+        transactionService.updateTransaction(transactionID, request.getUserId(), request.getReservationId(), request.getTransactionDateTime(), request.getPaymentMethod(), request.getTransactionAmount(), request.getStatus());
     }
 
 }

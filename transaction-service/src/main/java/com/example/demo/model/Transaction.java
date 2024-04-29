@@ -6,7 +6,16 @@ import java.time.LocalDateTime;
 @Table(name = "transactions")
 public class Transaction {
         @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @SequenceGenerator(
+                name = "transaction_sequence",
+                sequenceName = "transaction_sequence",
+                allocationSize = 1
+        )
+        @GeneratedValue(
+                strategy = GenerationType.SEQUENCE,
+                generator = "transaction_sequence"
+        )
+//        @GeneratedValue(strategy = GenerationType.IDENTITY)
 
         @Column(name = "transactionId")
         private Long transactionId;
@@ -14,8 +23,8 @@ public class Transaction {
         @Column(name = "user_id")
         private Long userId;
 
-        @Column(name = "booking_id")
-        private Long bookingId;
+        @Column(name = "reservation_id")
+        private Long reservationId;
 
         @Column(name = "transaction_date_time")
         private LocalDateTime transactionDateTime;
@@ -29,28 +38,47 @@ public class Transaction {
         @Column(name = "status")
         private Status status;
         public enum Status {
-        ACCEPTED,
+        SUCCESSFUL,
         PENDING,
-        DECLINED
+        DECLINED;
+            public static Status stringToEnum(String status) {
+                switch (status) {
+                    case "succeeded":
+                        return Status.SUCCESSFUL;
+                    case "requires_payment_method":
+                        return Status.PENDING;
+                    case "requires_confirmation":
+                        return Status.PENDING;
+                    case "requires_action":
+                        return Status.PENDING;
+                    case "processing":
+                        return Status.PENDING;
+                    case "failed":
+                        return Status.DECLINED;
+                    default:
+                        return null;
+                }
+            }
+
     }
-        public Transaction(Long transactionId, Long userId, Long bookingId, LocalDateTime transactionDateTime, String paymentMethod, BigDecimal transactionAmount, Status status) {
+        public Transaction(Long transactionId, Long userId, Long reservationId, LocalDateTime transactionDateTime, String paymentMethod, BigDecimal transactionAmount, Status status) {
             this.transactionId = transactionId;
             this.userId = userId;
-            this.bookingId = bookingId;
+            this.reservationId = reservationId;
             this.transactionDateTime = transactionDateTime;
             this.paymentMethod = paymentMethod;
             this.transactionAmount = transactionAmount;
             this.status = status;
         }
-    public Transaction(Long transactionId, Long userId, LocalDateTime transactionDateTime, String paymentMethod, BigDecimal transactionAmount, Status status) {
-        this.transactionId = transactionId;
-        this.userId = userId;
-        this.bookingId = null;
-        this.transactionDateTime = transactionDateTime;
-        this.paymentMethod = paymentMethod;
-        this.transactionAmount = transactionAmount;
-        this.status = status;
-    }
+
+        public Transaction(Long userId, Long reservationId, LocalDateTime transactionDateTime, String paymentMethod, BigDecimal transactionAmount, Status status) {
+            this.userId = userId;
+            this.reservationId = reservationId;
+            this.transactionDateTime = transactionDateTime;
+            this.paymentMethod = paymentMethod;
+            this.transactionAmount = transactionAmount;
+            this.status = status;
+        }
 
 
         public Transaction() {
@@ -62,7 +90,7 @@ public class Transaction {
             return "Transaction{" +
                     "transactionId=" + transactionId +
                     ", userId=" + userId +
-                    ", bookingId=" + bookingId +
+                    ", reservationId=" + reservationId +
                     ", transactionDateTime=" + transactionDateTime +
                     ", paymentMethod='" + paymentMethod + '\'' +
                     ", transactionAmount=" + transactionAmount +
@@ -78,8 +106,8 @@ public class Transaction {
             this.userId = userId;
         }
 
-        public void setBookingId(Long bookingId) {
-            this.bookingId = bookingId;
+        public void setReservationId(Long bookingId) {
+            this.reservationId = bookingId;
         }
 
         public void setTransactionDateTime(LocalDateTime transactionDateTime) {
@@ -102,8 +130,8 @@ public class Transaction {
             return userId;
         }
 
-        public Long getBookingId() {
-            return bookingId;
+        public Long getReservationId() {
+            return reservationId;
         }
 
         public LocalDateTime getTransactionDateTime() {

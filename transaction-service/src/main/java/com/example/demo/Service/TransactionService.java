@@ -26,10 +26,11 @@ public class TransactionService {
     }
 
     public void addNewTransaction(Transaction transaction) {
-        Optional<Transaction> transactionByID = transactionRepository.findById(transaction.getTransactionId());
-
-        if (transactionByID.isPresent()){
-            throw new IllegalStateException("A transaction with this id already exists.");
+        if (transaction.getTransactionId() != null) {
+            Optional<Transaction> existingTransaction = transactionRepository.findById(transaction.getTransactionId());
+            if (existingTransaction.isPresent()) {
+                throw new IllegalStateException("A transaction with this id already exists.");
+            }
         }
         transactionRepository.save(transaction);
     }

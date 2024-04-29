@@ -32,6 +32,7 @@ public class FlightReservationController {
             flightReservationService.addNewFlightReservation(flightReservation);
         }
 
+
         @DeleteMapping(path = "{FlightReservationID}")
         public void deleteFlightReservationId(@PathVariable("FlightReservationID") Long flightReservationId){
             flightReservationService.deleteFlightReservation(flightReservationId);
