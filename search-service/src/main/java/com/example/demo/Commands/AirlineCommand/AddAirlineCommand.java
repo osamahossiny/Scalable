@@ -1,11 +1,12 @@
-package com.example.demo.Commands;
+package com.example.demo.Commands.AirlineCommand;
 
-import com.example.demo.model.Airline;
+import com.example.demo.Commands.CommandInterface;
 import com.example.demo.Service.AirlineService;
+import com.example.demo.model.Airline;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class AddAirlineCommand implements CommandInterface{
+public class AddAirlineCommand implements CommandInterface {
 
     private final AirlineService airlineService;
     private final Airline airline;

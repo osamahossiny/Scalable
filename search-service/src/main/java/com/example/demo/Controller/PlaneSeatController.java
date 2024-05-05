@@ -1,0 +1,80 @@
+package com.example.demo.Controller;
+import com.example.demo.Service.PlaneSeatService;
+import com.example.demo.model.Plane;
+import com.example.demo.model.PlaneSeat;
+import com.example.demo.model.SeatCategory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+import com.example.demo.Commands.PlaneSeatCommand.AddPlaneSeatCommand;
+import com.example.demo.Commands.PlaneSeatCommand.DeletePlaneSeatCommand;
+import com.example.demo.Commands.PlaneSeatCommand.UpdatePlaneSeatCommand;
+
+
+
+
+@RestController
+@RequestMapping(path = "api/v1/planeSeat")
+public class PlaneSeatController {
+    private final PlaneSeatService planeSeatService;
+
+    @Autowired
+    public PlaneSeatController(PlaneSeatService planeSeatService) {
+        this.planeSeatService = planeSeatService;
+    }
+
+    @GetMapping
+    public List<PlaneSeat> getPlaneSeats(){
+        return this.planeSeatService.getPlaneSeats();
+    }
+
+    /*
+    @PostMapping
+    public void registerPlaneSeat(@RequestBody PlaneSeat planeSeat){
+        planeSeatService.addNewPlaneSeat(planeSeat);
+    }
+
+     */
+    @PostMapping
+    public void registerPlaneSeat(@RequestBody PlaneSeat planeSeat){
+        AddPlaneSeatCommand addPlaneSeatCommand = new AddPlaneSeatCommand(planeSeatService, planeSeat);
+        addPlaneSeatCommand.execute();
+    }
+
+
+    /*
+    @DeleteMapping(path = "{planeSeatId}")
+    public void deletePlaneSeat(@PathVariable("planeSeatId") Long planeSeatId){
+        planeSeatService.deletePlaneSeat(planeSeatId);
+    }
+
+     */
+    @DeleteMapping(path = "{planeSeatId}")
+    public void deletePlaneSeat(@PathVariable("planeSeatId") Long planeSeatId){
+        DeletePlaneSeatCommand deletePlaneSeatCommand = new DeletePlaneSeatCommand(planeSeatService, planeSeatId);
+        deletePlaneSeatCommand.execute();
+    }
+
+    /*
+    @PutMapping(path = "{planeSeatId}")
+    public void updateSeatPlane(@PathVariable("planeSeatId") Long planeId, @RequestParam(required = false,name = "seatNumber") int seatNumber, @RequestParam(required = false,name = "price") int price, @RequestParam(required = false, name = "SeatCategory") SeatCategory seatCategory, @RequestParam(required = false, name = "plane") Plane plane){
+        planeSeatService.updatePlaneSeat(planeId, seatNumber, seatCategory, plane,price);
+    }
+
+     */
+    @PutMapping(path = "{planeSeatId}")
+    public void updateSeatPlane(
+            @PathVariable("planeSeatId") Long planeSeatId,
+            @RequestParam(required = false, name = "seatNumber") int seatNumber,
+            @RequestParam(required = false, name = "price") int price,
+            @RequestParam(required = false, name = "SeatCategory") SeatCategory seatCategory,
+            @RequestParam(required = false, name = "plane") Plane plane
+    ){
+        UpdatePlaneSeatCommand updatePlaneSeatCommand = new UpdatePlaneSeatCommand(
+                planeSeatService,planeSeatId,seatNumber,seatCategory,plane,price
+        );
+        updatePlaneSeatCommand.execute();
+    }
+
+
+}

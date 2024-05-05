@@ -1,6 +1,4 @@
 package com.example.demo.model;
-
-import com.example.demo.model.Airline;
 import jakarta.persistence.*;
 
 @Entity
@@ -31,15 +29,14 @@ public class Plane {
     )
     private String name;
 
-    @ManyToOne
-    @JoinColumn(
-            name = "airline_Id",
-            referencedColumnName = "id",
-            foreignKey = @ForeignKey(
-                    name = "airline_id_fk"
-            )
+    @ManyToOne(
+            cascade = {CascadeType.ALL}
     )
+
+
     private Airline airline;
+
+
 
     @Column(
             name = "type",
