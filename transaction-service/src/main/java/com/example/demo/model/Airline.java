@@ -2,8 +2,8 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.List;
+
 
 @Entity
 @Table(
@@ -42,11 +42,11 @@ public class Airline {
 
     @OneToMany(
             mappedBy = "airline",
-            orphanRemoval = true,
-            cascade = CascadeType.ALL,
+            //orphanRemoval = true,
+            cascade = {CascadeType.ALL},
             fetch = FetchType.LAZY
     )
-    private List<Plane> planes = new ArrayList<>();
+    private List<Plane> planes;
     @Column(
             name = "customer_service_number",
             nullable = false,

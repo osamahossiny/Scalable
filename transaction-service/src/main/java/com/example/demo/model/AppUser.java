@@ -104,6 +104,10 @@ public class AppUser {
     )
     private String lastName;
 
+    private String stripeCustomerId;
+
+
+
     public AppUser(Long id, String userName, String email, String password, LocalDate birthDay, String gender, String maritalStatus, String pinCode, String residence, String mobileNumber, String firstName, String lastName) {
         this.id = id;
         this.userName = userName;
@@ -220,6 +224,34 @@ public class AppUser {
         this.email = email;
     }
 
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getStripeCustomerId() {
+        return stripeCustomerId;
+    }
+
+
+    public void setStripeCustomerId(String stripeCustomerId) {
+        this.stripeCustomerId = stripeCustomerId;
+    }
     @Override
     public String toString() {
         return "User{" +

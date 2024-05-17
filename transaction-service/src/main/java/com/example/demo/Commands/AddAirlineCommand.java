@@ -1,7 +1,7 @@
 package com.example.demo.Commands;
 
-import com.example.demo.model.Airline;
 import com.example.demo.Service.AirlineService;
+import com.example.demo.model.Airline;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

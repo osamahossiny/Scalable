@@ -12,11 +12,10 @@ import java.util.List;
 public class AirlineConfig {
 
     @Bean
-    CommandLineRunner commandLineRunner(AirlineRepository repository){
+    CommandLineRunner AirlineCommandLineRunner(AirlineRepository repository){
         return args -> {
-            Airline egyptAir = new Airline(1L,"EgyptAir","456981684","01000000000");
-            Airline flyEmirates = new Airline(2L,"FlyEmirates","97816322","01099999999");
-            repository.saveAll(List.of(egyptAir, flyEmirates));
+            Airline KLM = new Airline("EgyptAir","456981684","01000000000");
+            repository.saveAll(List.of(KLM));
         };
     }
 }
