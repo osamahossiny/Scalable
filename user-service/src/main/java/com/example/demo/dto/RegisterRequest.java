@@ -1,6 +1,9 @@
-package com.example.demo.auth;
 
-import com.example.demo.user.Role;
+
+
+package com.example.demo.dto;
+
+import com.example.demo.Model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,8 +12,10 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @AllArgsConstructor
+
 @NoArgsConstructor
-public class RegisterRequest {
+public class
+RegisterRequest {
 
   private String firstname;
   private String lastname;

@@ -1,4 +1,4 @@
-package com.example.demo.token;
+package com.example.demo.Model;
 
 public enum TokenType {
   BEARER

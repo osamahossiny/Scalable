@@ -1,5 +1,7 @@
-package com.example.demo.user;
+package com.example.demo.Controller;
 
+import com.example.demo.dto.ChangePasswordRequest;
+import com.example.demo.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;

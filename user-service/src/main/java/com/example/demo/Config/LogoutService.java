@@ -1,6 +1,6 @@
 package com.example.demo.Config;
 
-import com.example.demo.token.TokenRepository;
+import com.example.demo.Repository.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
