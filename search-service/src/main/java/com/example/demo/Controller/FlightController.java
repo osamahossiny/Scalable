@@ -2,7 +2,9 @@ package com.example.demo.Controller;
 import com.example.demo.Service.FlightService;
 import com.example.demo.model.Flight;
 import com.example.demo.model.FlightAttributes;
+import com.example.demo.model.FlightPackage;
 import com.example.demo.model.Plane;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.demo.Commands.FlightCommand.AddFlightCommand;
@@ -27,7 +29,11 @@ public class FlightController {
         System.out.println(this.flightService.getFlights());
         return this.flightService.getFlights();
     }
-
+    @GetMapping("/{id}")
+    public ResponseEntity<Flight> getFlightById(@PathVariable Long id) {
+        Optional<Flight> flight = Optional.ofNullable(flightService.getFlightId(id));
+        return flight.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
     @GetMapping(path = "/OneWay")
     public List<Flight> oneWay(@RequestBody FlightAttributes attributes){
         return this.flightService.getDirectFlights(attributes);

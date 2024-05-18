@@ -5,6 +5,7 @@ import com.example.demo.model.FlightPackage;
 import com.example.demo.model.FlightReservation;
 import com.example.demo.model.PlaneSeat;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.demo.Commands.FlightReservationCommand.AddFlightReservationCommand;
 import com.example.demo.Commands.FlightReservationCommand.DeleteFlightReservationCommand;
@@ -13,6 +14,7 @@ import com.example.demo.Commands.FlightReservationCommand.UpdateFlightReservatio
 
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -29,6 +31,11 @@ public class FlightReservationController {
         @GetMapping
         public List<FlightReservation> getFlightReservations(){
             return this.flightReservationService.getFlightReservations();
+        }
+        @GetMapping("/{id}")
+        public ResponseEntity<FlightReservation> getFlightReservationsById(@PathVariable Long id) {
+            Optional<FlightReservation> flightReservation = Optional.ofNullable(flightReservationService.getFlightReservationsId(id));
+            return flightReservation.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
         }
         /*
         @PostMapping

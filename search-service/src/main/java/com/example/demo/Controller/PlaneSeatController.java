@@ -1,11 +1,15 @@
 package com.example.demo.Controller;
 import com.example.demo.Service.PlaneSeatService;
+import com.example.demo.model.Flight;
 import com.example.demo.model.Plane;
 import com.example.demo.model.PlaneSeat;
 import com.example.demo.model.SeatCategory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
+
 import com.example.demo.Commands.PlaneSeatCommand.AddPlaneSeatCommand;
 import com.example.demo.Commands.PlaneSeatCommand.DeletePlaneSeatCommand;
 import com.example.demo.Commands.PlaneSeatCommand.UpdatePlaneSeatCommand;
@@ -27,13 +31,16 @@ public class PlaneSeatController {
     public List<PlaneSeat> getPlaneSeats(){
         return this.planeSeatService.getPlaneSeats();
     }
-
+    @GetMapping("/{id}")
+    public ResponseEntity<PlaneSeat> getPlaneById(@PathVariable Long id) {
+        Optional<PlaneSeat> planeSeat = Optional.ofNullable(planeSeatService.getPlaneSeatId(id));
+        return planeSeat.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
     /*
     @PostMapping
     public void registerPlaneSeat(@RequestBody PlaneSeat planeSeat){
         planeSeatService.addNewPlaneSeat(planeSeat);
     }
-
      */
     @PostMapping
     public void registerPlaneSeat(@RequestBody PlaneSeat planeSeat){

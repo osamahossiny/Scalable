@@ -1,7 +1,5 @@
 package com.example.demo.Config;
-import com.example.demo.model.Airline;
-import com.example.demo.model.AppUser;
-import com.example.demo.model.Complaints;
+import com.example.demo.model.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -33,6 +31,46 @@ public class RedisConfig {
     @Bean
     public RedisTemplate<String, AppUser> userRedisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, AppUser> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        return template;
+    }
+    @Bean
+    public RedisTemplate<String, FlightReservation> flightReservationRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, FlightReservation> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        return template;
+    }
+    @Bean
+    public RedisTemplate<String, Flight> flightRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, Flight> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        return template;
+    }
+    @Bean
+    public RedisTemplate<String, Plane> planeRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, Plane> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        return template;
+    }
+    @Bean
+    public RedisTemplate<String, FlightPackage> flightPackageRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, FlightPackage> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        return template;
+    }
+    @Bean
+    public RedisTemplate<String, PlaneSeat> planeSeatRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, PlaneSeat> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer());

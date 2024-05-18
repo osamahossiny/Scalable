@@ -1,7 +1,9 @@
 package com.example.demo.Controller;
 import com.example.demo.Service.FlightPackageService;
+import com.example.demo.model.AppUser;
 import com.example.demo.model.Flight;
 import com.example.demo.model.FlightPackage;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.demo.Commands.FlightPackageCommand.AddFlightPackageCommand;
@@ -9,6 +11,7 @@ import com.example.demo.Commands.FlightPackageCommand.DeleteFlightPackageCommand
 import com.example.demo.Commands.FlightPackageCommand.UpdateFlightPackageCommand;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "api/v1/flightPackage")
@@ -24,6 +27,11 @@ public class FlightPackageController {
     @GetMapping
     public List<FlightPackage> getFlightPackages(){
         return this.flightPackageService.getFlightPackages();
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<FlightPackage> getFlightPackageById(@PathVariable Long id) {
+        Optional<FlightPackage> flightPackage = Optional.ofNullable(flightPackageService.getFlightPackagesId(id));
+        return flightPackage.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
     /*
     @PostMapping
