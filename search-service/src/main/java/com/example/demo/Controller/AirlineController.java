@@ -3,12 +3,16 @@ package com.example.demo.Controller;
 import com.example.demo.Commands.AirlineCommand.AddAirlineCommand;
 import com.example.demo.Service.AirlineService;
 import com.example.demo.model.Airline;
+import com.example.demo.model.Complaints;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.demo.Commands.AirlineCommand.DeleteAirlineCommand;
 import com.example.demo.Commands.AirlineCommand.UpdateAirlineCommand;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "api/v1/airline")
@@ -25,7 +29,11 @@ public class AirlineController {
     public List<Airline> getAirlines(){
         return this.airlineService.getAirlines();
     }
-
+    @GetMapping("/{id}")
+    public ResponseEntity<Airline> getAirlineById(@PathVariable Long id) {
+        Optional<Airline> airline = Optional.ofNullable(airlineService.getAirlineById(id));
+        return airline.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
     @PostMapping
     public void registerAirline(@RequestBody Airline airline){
         AddAirlineCommand addAirlineCommand = new AddAirlineCommand(airlineService,airline);

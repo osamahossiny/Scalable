@@ -21,7 +21,7 @@ public class ComplaintsController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Complaints> getComplaintsById(@PathVariable UUID id) {
-        Optional<Complaints> complaints = complaintsService.getComplaintsById(id);
+        Optional<Complaints> complaints = Optional.ofNullable(complaintsService.getComplaintsById(id));
         return complaints.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 

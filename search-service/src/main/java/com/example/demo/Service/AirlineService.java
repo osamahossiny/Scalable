@@ -2,18 +2,26 @@ package com.example.demo.Service;
 
 import com.example.demo.Repository.AirlineRepository;
 import com.example.demo.model.Airline;
+import com.example.demo.model.Complaints;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class AirlineService {
 
-    private  final AirlineRepository airlineRepository;
+    private static final String AIRLINE_CACHE_PREFIX = "airline::";
 
+    @Autowired
+    private  final AirlineRepository airlineRepository;
+    @Autowired
+    private RedisTemplate<String, Airline> redisTemplate;
     @Autowired
     public AirlineService(AirlineRepository airlineRepository) {
         this.airlineRepository = airlineRepository;
@@ -23,22 +31,37 @@ public class AirlineService {
         return airlineRepository.findAll();
     }
 
+    public Airline getAirlineById(Long id) {
+        System.out.println("GET");
+        Airline cached = redisTemplate.opsForValue().get(AIRLINE_CACHE_PREFIX+ id);
+        if (cached != null) {
+            System.out.println("CASHED");
+            return cached;
+        } else {
+            System.out.println("DB");
+            Airline db = airlineRepository.findById(id).orElse(null);
+            if (db != null) {
+                redisTemplate.opsForValue().set(AIRLINE_CACHE_PREFIX + id, db, 10, TimeUnit.MINUTES);
+            }
+            return db;
+        }
+    }
     public void addNewAirline(Airline airline) {
         Optional<Airline> airlineByName = airlineRepository.findAirlineByName(airline.getName());
-
         if (airlineByName.isPresent()){
             throw new IllegalStateException("An airline with this name already exists.");
         }
-        airlineRepository.save(airline);
+        Airline saved=airlineRepository.save(airline);
+        redisTemplate.opsForValue().set(AIRLINE_CACHE_PREFIX + saved.getId(), saved, 10, TimeUnit.MINUTES);
     }
 
     public void deleteAirline(Long airlineId) {
         boolean exists = airlineRepository.existsById(airlineId);
-
         if (!exists) {
             throw new IllegalStateException("Airline with id "+ airlineId + " does not exist.");
         }
         airlineRepository.deleteById(airlineId);
+        redisTemplate.delete(AIRLINE_CACHE_PREFIX + airlineId);
     }
 
     @Transactional
@@ -61,5 +84,7 @@ public class AirlineService {
         if (customerServiceNumber != null && !customerServiceNumber.isEmpty() && !airline.getCustomerServiceNumber().equals(customerServiceNumber)) {
             airline.setCustomerServiceNumber(customerServiceNumber);
         }
+        Airline saved=airlineRepository.save(airline);
+        redisTemplate.opsForValue().set(AIRLINE_CACHE_PREFIX + saved.getId(), saved, 10, TimeUnit.MINUTES);
     }
 }

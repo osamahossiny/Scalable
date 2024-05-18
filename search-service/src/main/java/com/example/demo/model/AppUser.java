@@ -208,6 +208,26 @@ public class AppUser {
         this.mobileNumber = mobileNumber;
     }
 
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
     public int getAge() {
         return Period.between(this.birthDay, LocalDate.now()).getYears();
     }

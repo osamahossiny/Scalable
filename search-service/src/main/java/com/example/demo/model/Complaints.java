@@ -17,4 +17,31 @@ public class Complaints {
         this.UserID = UserID;
         this.description = description;
     }
+
+    public Complaints() {
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getUserID() {
+        return UserID;
+    }
+
+    public void setUserID(String userID) {
+        UserID = userID;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
