@@ -1,6 +1,5 @@
 package com.example.demo.Service;
 
-import com.example.demo.Config.JwtService;
 import com.example.demo.Model.Token;
 import com.example.demo.Repository.TokenRepository;
 import com.example.demo.Model.TokenType;
