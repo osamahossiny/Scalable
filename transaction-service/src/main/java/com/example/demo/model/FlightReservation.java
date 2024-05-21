@@ -12,6 +12,7 @@ public class FlightReservation {
     int extraBaggagePrice = 30;
     @Transient
     int withInsurancePrice = 20;
+
     public Long getId() {
         return id;
     }
@@ -28,21 +29,18 @@ public class FlightReservation {
         this.appUser = appUser;
     }
 
+
+
     public FlightReservation() {
     }
 
-    public FlightReservation(AppUser appUser, FlightPackage flightPackage, PlaneSeat planeSeat, boolean seatChargeable, boolean extraBaggage, boolean withInsurance, PaymentMethod paymentMethod) {
+    public FlightReservation(AppUser appUser,FlightPackage flightPackage, PlaneSeat planeSeat, boolean seatChargeable, boolean extraBaggage, boolean withInsurance, PaymentMethod paymentMethod) {
         this.appUser = appUser;
         this.flightPackage = flightPackage;
         this.planeSeat = planeSeat;
         this.seatChargeable = seatChargeable;
         this.extraBaggage = extraBaggage;
         this.withInsurance = withInsurance;
-        this.totalPrice = planeSeat.getPrice() +
-                flightPackage.getPrice() +
-                (seatChargeable ? seatChargeablePrice : 0) +
-                (extraBaggage ? extraBaggagePrice : 0) +
-                (withInsurance ? withInsurancePrice : 0);
         this.paymentMethod = paymentMethod;
     }
 
@@ -86,11 +84,11 @@ public class FlightReservation {
         this.withInsurance = withInsurance;
     }
 
-    public int getTotalPrice() {
+    public float getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(int totalPrice) {
+    public void setTotalPrice(float totalPrice) {
         this.totalPrice = totalPrice;
     }
 
@@ -134,6 +132,8 @@ public class FlightReservation {
             )
     )
     private AppUser appUser;
+
+
     @ManyToOne
     @JoinColumn(
             name = "package_id",
@@ -159,7 +159,7 @@ public class FlightReservation {
     @Column
     private boolean withInsurance;
     @Column
-    private int totalPrice;
+    private float totalPrice;
 
 
     public enum PaymentMethod {
@@ -167,6 +167,8 @@ public class FlightReservation {
         CASH,
         VISA
     }
+
+
 
     @Column
     private PaymentMethod paymentMethod;

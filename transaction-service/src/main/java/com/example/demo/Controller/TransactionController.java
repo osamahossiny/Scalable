@@ -1,4 +1,6 @@
 package com.example.demo.Controller;
+import com.example.demo.model.FlightPackage;
+import com.example.demo.model.FlightReservation;
 import com.example.demo.model.Transaction;
 import com.example.demo.Service.TransactionService;
 import jakarta.persistence.Column;
@@ -15,7 +17,7 @@ import java.util.Objects;
 
 
 @RestController
-@RequestMapping(path = "api/transactions")
+@RequestMapping(path = "api/v1/transaction")
 public class TransactionController {
     Logger logger=  LoggerFactory.getLogger(TransactionController.class);
 
@@ -43,12 +45,12 @@ public class TransactionController {
     }
 
     @PutMapping(path = "{transactionID}")
-    public void updateTransaction(@PathVariable("transactionID") Long transactionID,
-                            @RequestBody Transaction request)
+    public void updateTransaction(@PathVariable("transactionID") Long transactionID, @RequestParam(required = false,name ="user_id") Long user_id, @RequestParam(required = false,name ="reservation_id") Long reservation_id, @RequestParam(required = false,name ="transaction_date_time") LocalDateTime transaction_date_time, @RequestParam(required = false,name ="payment_method") FlightReservation.PaymentMethod payment_method, @RequestParam(required = false,name ="transaction_amount") BigDecimal transaction_amount, @RequestParam(required = false,name ="status") Transaction.Status status)
     {
         logger.info("updating transaction");
-        System.out.println("transactionID = " + transactionID);
-        transactionService.updateTransaction(transactionID, request.getUserId(), request.getReservationId(), request.getTransactionDateTime(), request.getPaymentMethod(), request.getTransactionAmount(), request.getStatus());
+//        System.out.println("transactionID = " + transactionID);
+//        transactionService.updateTransaction(transactionID, request.getUserId(), request.getReservationId(), request.getTransactionDateTime(), request.getPaymentMethod(), request.getTransactionAmount(), request.getStatus());
+        transactionService.updateTransaction(transactionID, user_id, reservation_id, transaction_date_time, payment_method, transaction_amount, status);
     }
 
 }

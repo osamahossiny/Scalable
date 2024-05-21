@@ -14,25 +14,27 @@ import java.util.List;
 public class FlightReservationConfig {
 
     @Bean
-    CommandLineRunner flightReservationCommandLineRunner(FlightReservationRepository repository, FlightPackageRepository flightRepository, PlaneSeatRepository planeSeatRepository, PlaneRepository planeRepository, AppUserRepository userRepository){
+    CommandLineRunner flightReservationCommandLineRunner(FlightReservationRepository repository, FlightPackageRepository flightPackageRepository, PlaneSeatRepository planeSeatRepository, PlaneRepository planeRepository, AppUserRepository userRepository){
         return args -> {
-            FlightPackage chickenPackage= new FlightPackage(new Flight("Egypt","Germany", LocalTime.now().toString(), LocalTime.now().toString(), new Plane("Boeing77746", new Airline("Dawly","456981684","01000000000"),"Airbus"),500.4F,10000.0F, 1000.0F, 500.0F, "CAI", "BER", LocalDate.now().toString(), LocalDate.now().toString()), 8,20,150,50,"Chicken with Potatoes",true,300);
-            flightRepository.save(chickenPackage);
+
 
             Plane p=new Plane("EGY123",
                     new Airline("RyanAir","456981684","01000000000"),
                     "Airbus");
+            Flight flight = new Flight("Egypt","Germany", LocalTime.now().toString(), LocalTime.now().toString(), p,500.4F,10000.0F, 1000.0F, 500.0F, "CAI", "BER", LocalDate.now().toString(), LocalDate.now().toString());
+            FlightPackage chickenPackage= new FlightPackage(flight, 8,20,150,50,"Chicken with Potatoes",true,300);
+            flightPackageRepository.save(chickenPackage);
             planeRepository.save(p);
             PlaneSeat seat = new PlaneSeat(15,SeatCategory.EconomyIsle,p,500);
             planeSeatRepository.saveAll(List.of(seat));
 
             AppUser appUser=new AppUser("BavarianAT", "Guc197831!", "Taha123@gmail.com", LocalDate.now(), "male", "Single", "0158", "Egypt", "01012524680", "Amr", "Maged");
             userRepository.saveAll(List.of(appUser));
-
             FlightReservation flightReservation=new FlightReservation(
                     appUser,chickenPackage,
                     seat,false,false,false, FlightReservation.PaymentMethod.CASH);
             repository.saveAll(List.of(flightReservation));
+
         };
     }
 }

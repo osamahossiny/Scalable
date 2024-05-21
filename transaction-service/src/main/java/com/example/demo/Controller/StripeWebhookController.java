@@ -1,6 +1,7 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Service.TransactionService;
+import com.example.demo.model.FlightReservation;
 import com.example.demo.model.Transaction;
 import com.stripe.exception.EventDataObjectDeserializationException;
 import com.stripe.exception.SignatureVerificationException;
@@ -71,7 +72,7 @@ public class StripeWebhookController {
                     long unixTimestamp = paymentIntent.getCreated(); // Assuming paymentIntent.getCreated() returns Unix timestamp
                     Instant instant = Instant.ofEpochSecond(unixTimestamp);
                     LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
-                    Transaction transaction = new Transaction(userId, reservationId, localDateTime, "Stripe", amount, transactionStatus);
+                    Transaction transaction = new Transaction(userId, reservationId, localDateTime, FlightReservation.PaymentMethod.VISA, amount, transactionStatus);
                     System.out.println(transaction);
                     transactionService.addNewTransaction(transaction);
                 }

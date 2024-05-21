@@ -1,6 +1,7 @@
 package com.example.demo.Config;
 
 import com.example.demo.Repository.TransactionRepository;
+import com.example.demo.model.FlightReservation;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,8 +30,8 @@ public class TransactionConfig {
             LocalDateTime date1 = LocalDateTime.of(2024, 5, 12, 0, 0); // Corrected LocalDateTime creation
 
             return args -> {
-                Transaction SanadFlight = new Transaction(1L, 12L, date, "visa", BigDecimal.valueOf(50000), Transaction.Status.PENDING); // Corrected constructor call
-                Transaction NayerBus = new Transaction(3L, 7L, date1, "Cash", BigDecimal.valueOf(10000),Transaction.Status.SUCCESSFUL); // Corrected constructor call
+                Transaction SanadFlight = new Transaction(1L, 12L, date, FlightReservation.PaymentMethod.VISA, BigDecimal.valueOf(50000), Transaction.Status.PENDING); // Corrected constructor call
+                Transaction NayerBus = new Transaction(3L, 7L, date1, FlightReservation.PaymentMethod.CASH, BigDecimal.valueOf(10000),Transaction.Status.SUCCESSFUL); // Corrected constructor call
                 repository.saveAll(List.of(SanadFlight, NayerBus));
             };
         }

@@ -30,7 +30,7 @@ public class Transaction {
         private LocalDateTime transactionDateTime;
 
         @Column(name = "payment_method")
-        private String paymentMethod;
+        private FlightReservation.PaymentMethod paymentMethod;
 
         @Column(name = "transaction_amount")
         private BigDecimal transactionAmount;
@@ -61,7 +61,7 @@ public class Transaction {
             }
 
     }
-        public Transaction(Long transactionId, Long userId, Long reservationId, LocalDateTime transactionDateTime, String paymentMethod, BigDecimal transactionAmount, Status status) {
+        public Transaction(Long transactionId, Long userId, Long reservationId, LocalDateTime transactionDateTime, FlightReservation.PaymentMethod paymentMethod, BigDecimal transactionAmount, Status status) {
             this.transactionId = transactionId;
             this.userId = userId;
             this.reservationId = reservationId;
@@ -71,7 +71,7 @@ public class Transaction {
             this.status = status;
         }
 
-        public Transaction(Long userId, Long reservationId, LocalDateTime transactionDateTime, String paymentMethod, BigDecimal transactionAmount, Status status) {
+        public Transaction(Long userId, Long reservationId, LocalDateTime transactionDateTime, FlightReservation.PaymentMethod paymentMethod, BigDecimal transactionAmount, Status status) {
             this.userId = userId;
             this.reservationId = reservationId;
             this.transactionDateTime = transactionDateTime;
@@ -114,7 +114,7 @@ public class Transaction {
             this.transactionDateTime = transactionDateTime;
         }
 
-        public void setPaymentMethod(String paymentMethod) {
+        public void setPaymentMethod(FlightReservation.PaymentMethod paymentMethod) {
             this.paymentMethod = paymentMethod;
         }
 
@@ -138,7 +138,7 @@ public class Transaction {
             return transactionDateTime;
         }
 
-        public String getPaymentMethod() {
+        public FlightReservation.PaymentMethod getPaymentMethod() {
             return paymentMethod;
         }
 
