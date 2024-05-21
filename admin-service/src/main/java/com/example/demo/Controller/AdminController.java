@@ -2,10 +2,13 @@ package com.example.demo.Controller;
 
 import com.example.demo.model.Refund;
 import com.example.demo.model.Promotion;
-import com.example.demo.model.Complaint;
+import com.example.demo.model.Complaints;
 import com.example.demo.Service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/admin")
@@ -23,9 +26,10 @@ public class AdminController {
         return adminService.addPromotion(promotion, flightId);
     }
 
-    @PostMapping("/complaint/{id}")
-    public Complaint followUpComplaint(@PathVariable Long id, @RequestParam String status) {
-        return adminService.followUpComplaint(id, status);
+    @PutMapping("/followup/{complaintId}")
+    public ResponseEntity<Complaints> followUpComplaint(@PathVariable UUID complaintId, @RequestParam String status) {
+        Complaints updatedComplaint = adminService.followUpComplaint(complaintId, status);
+        return ResponseEntity.ok(updatedComplaint);
     }
 
 }

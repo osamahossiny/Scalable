@@ -43,6 +43,7 @@ public class ComplaintsService {
 
     public Complaints saveComplaints(Complaints complaints) {
         complaints.setId(UUID.randomUUID());
+        complaints.setStatus("Pending");
         redisTemplate.opsForValue().set(COMPLAINTS_CACHE_PREFIX + complaints.getId(), complaints, 10, TimeUnit.MINUTES);
         return complaintsRepository.save(complaints);
     }

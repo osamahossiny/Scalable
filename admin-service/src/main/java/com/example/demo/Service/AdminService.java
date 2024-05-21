@@ -3,13 +3,14 @@ package com.example.demo.Service;
 import com.example.demo.model.Refund;
 import com.example.demo.model.Promotion;
 import com.example.demo.model.Flight;
-import com.example.demo.model.Complaint;
+import com.example.demo.model.Complaints;
 import com.example.demo.Repository.RefundRepository;
 import com.example.demo.Repository.PromotionRepository;
 import com.example.demo.Repository.FlightRepository;
-import com.example.demo.Repository.ComplaintRepository;
+import com.example.demo.Repository.ComplaintsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.UUID;
 
 @Service
 public class AdminService {
@@ -22,7 +23,7 @@ public class AdminService {
     private PromotionRepository promotionRepository;
 
     @Autowired
-    private ComplaintRepository complaintRepository;
+    private ComplaintsRepository complaintsRepository;
 
     public Refund processRefund(Refund refund) {
         return refundRepository.save(refund);
@@ -41,11 +42,11 @@ public class AdminService {
         return promotionRepository.save(promotion);
     }
 
-    public Complaint followUpComplaint(Long complaintId, String status) {
-        Complaint complaint = complaintRepository.findById(complaintId)
+    public Complaints followUpComplaint(UUID complaintId, String status) {
+        Complaints complaint = complaintsRepository.findById(complaintId)
                 .orElseThrow(() -> new RuntimeException("Complaint not found"));
         complaint.setStatus(status);
-        return complaintRepository.save(complaint);
+        return complaintsRepository.save(complaint);
     }
 
     // Add other necessary methods
