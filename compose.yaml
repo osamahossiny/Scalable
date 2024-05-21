@@ -200,5 +200,13 @@ services:
 ##  transaction_postgres:
 ##  transaction_pgadmin:
 
+  cassandra:
+    image: 'cassandra:latest'
+    environment:
+      - 'CASSANDRA_DC=datacenter1'
+      - 'CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch'
+    ports:
+      - '9042:9042'
+
 
 
