@@ -40,13 +40,6 @@ public class Airline {
     )
     private String IBAN;
 
-    @OneToMany(
-            mappedBy = "airline",
-            //orphanRemoval = true,
-            cascade = {CascadeType.ALL},
-            fetch = FetchType.LAZY
-    )
-    private List<Plane> planes;
     @Column(
             name = "customer_service_number",
             nullable = false,
@@ -103,19 +96,7 @@ public class Airline {
         this.customerServiceNumber = customerServiceNumber;
     }
 
-    public void addPlane(Plane plane) {
-        if (!this.planes.contains(plane)) {
-            this.planes.add(plane);
-            plane.setAirline(this);
-        }
-    }
 
-    public void removePlane(Plane plane) {
-        if (!this.planes.contains(plane)) {
-            this.planes.remove(plane);
-            plane.setAirline(null);
-        }
-    }
 
     @Override
     public String toString() {
@@ -126,5 +107,6 @@ public class Airline {
                 ", customerServiceNumber='" + customerServiceNumber + '\'' +
                 '}';
     }
+
 
 }

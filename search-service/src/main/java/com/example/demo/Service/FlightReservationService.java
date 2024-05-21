@@ -5,16 +5,21 @@ import com.example.demo.model.FlightPackage;
 import com.example.demo.model.FlightReservation;
 import com.example.demo.model.PlaneSeat;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+
 @Service
 public class FlightReservationService {
-
+    private static final String CACHE_PREFIX = "flightReservation::";
     private  final FlightReservationRepository flightReservationRepository;
+    @Autowired
+    private RedisTemplate<String, FlightReservation> redisTemplate;
 
     @Autowired
     public FlightReservationService(FlightReservationRepository flightReservationRepository) {
@@ -24,7 +29,21 @@ public class FlightReservationService {
     public List<FlightReservation> getFlightReservations(){
         return flightReservationRepository.findAll();
     }
-
+    public FlightReservation getFlightReservationsId(Long id) {
+        System.out.println("GET");
+        FlightReservation cached = redisTemplate.opsForValue().get(CACHE_PREFIX+ id);
+        if (cached != null) {
+            System.out.println("CASHED");
+            return cached;
+        } else {
+            System.out.println("DB");
+            FlightReservation db = flightReservationRepository.findById(id).orElse(null);
+            if (db != null) {
+                redisTemplate.opsForValue().set(CACHE_PREFIX + id, db, 10, TimeUnit.MINUTES);
+            }
+            return db;
+        }
+    }
     public void addNewFlightReservation(FlightReservation flightReservation) {
         Optional<FlightReservation> flightReservationByFlightReservationId = flightReservationRepository.findById(flightReservation.getId());
         System.out.println(flightReservation);
@@ -48,7 +67,9 @@ public class FlightReservationService {
         }
 
 
-        flightReservationRepository.save(flightReservation);
+        FlightReservation saved= flightReservationRepository.save(flightReservation);
+        redisTemplate.opsForValue().set(CACHE_PREFIX + saved.getId(), saved, 10, TimeUnit.MINUTES);
+
     }
 
     public void deleteFlightReservation(Long flightReservationId) {
@@ -58,6 +79,8 @@ public class FlightReservationService {
             throw new IllegalStateException("Flight Reservation with id "+ flightReservationId + " does not exist.");
         }
         flightReservationRepository.deleteById(flightReservationId);
+        redisTemplate.delete(CACHE_PREFIX + flightReservationId);
+
     }
 
     @Transactional
@@ -106,10 +129,8 @@ public class FlightReservationService {
         if (totalPrice != 0 && flightReservation.getTotalPrice()!=totalPrice) {
             flightReservation.setTotalPrice(totalPrice);
         }
-
-
-
-
+        FlightReservation saved=flightReservationRepository.save(flightReservation);
+        redisTemplate.opsForValue().set(CACHE_PREFIX + saved.getId(), saved, 10, TimeUnit.MINUTES);
     }
 
 }

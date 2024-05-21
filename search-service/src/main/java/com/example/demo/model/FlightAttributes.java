@@ -34,6 +34,10 @@ public class FlightAttributes {
         TravelClass = aClass;
         Number = number;
     }
+
+    public FlightAttributes() {
+    }
+
     //    public FlightAttributes(String from, String to, String depDate, String aClass, String number,String returnDate) {
 //        From = from;
 //        To = to;

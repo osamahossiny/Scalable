@@ -2,20 +2,24 @@ package com.example.demo.Service;
 import com.example.demo.Repository.FlightRepository;
 import com.example.demo.model.Flight;
 import com.example.demo.model.FlightAttributes;
+import com.example.demo.model.FlightReservation;
 import com.example.demo.model.Plane;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class FlightService {
-
+    private static final String CACHE_PREFIX = "flight::";
     private  final FlightRepository flightRepository;
-
+    @Autowired
+    private RedisTemplate<String, Flight> redisTemplate;
     @Autowired
     public FlightService(FlightRepository flightRepository) {
         this.flightRepository = flightRepository;
@@ -23,6 +27,21 @@ public class FlightService {
 
     public List<Flight> getFlights(){
         return flightRepository.findAll();
+    }
+    public Flight getFlightId(Long id) {
+        System.out.println("GET");
+        Flight cached = redisTemplate.opsForValue().get(CACHE_PREFIX+ id);
+        if (cached != null) {
+            System.out.println("CASHED");
+            return cached;
+        } else {
+            System.out.println("DB");
+            Flight db = flightRepository.findById(id).orElse(null);
+            if (db != null) {
+                redisTemplate.opsForValue().set(CACHE_PREFIX + id, db, 10, TimeUnit.MINUTES);
+            }
+            return db;
+        }
     }
     public List<Flight> getDirectFlights(FlightAttributes attributes){
         return flightRepository.findbyAttributes(attributes.getFrom(), attributes.getTo(), attributes.getDepDate(), attributes.getTravelClass(), attributes.getNumber());
@@ -94,28 +113,22 @@ public class FlightService {
         return l;
     }
     public void addNewFlight(Flight flight) {
-//        Optional<Plane> plane=flightRepository.findPlaneId(flight.getPlane());
-        System.out.println(flight);
-        System.out.print("TEST");
         Optional<Flight> flightByFlightId = flightRepository.findById(flight.getFlightId());
-        System.out.println(flight);
         if (flightByFlightId.isPresent()){
             throw new IllegalStateException("A Flight with this id already exists.");
         }
-//        Optional<Plane> plane = flightRepository.findPlaneId(flight.getPlane().getId());
-//        if (!plane.isPresent()){
-//            throw new IllegalStateException("This plane does not exist.");
-//        }
-        flightRepository.save(flight);
+        Flight saved=flightRepository.save(flight);
+        redisTemplate.opsForValue().set(CACHE_PREFIX + saved.getId(), saved, 10, TimeUnit.MINUTES);
     }
 
     public void deleteFlight(Long flightId) {
         boolean exists = flightRepository.existsById(flightId);
-
         if (!exists) {
             throw new IllegalStateException("Flight with id "+ flightId + " does not exist.");
         }
         flightRepository.deleteById(flightId);
+        redisTemplate.delete(CACHE_PREFIX + flightId);
+
     }
 
     @Transactional
@@ -172,5 +185,7 @@ public class FlightService {
         if (arrivalDate != null && !arrivalDate.isEmpty()&& !flight.getArrivalDate().equals(arrivalDate)) {
             flight.setArrivalDate(arrivalDate);
         }
+        Flight saved=flightRepository.save(flight);
+        redisTemplate.opsForValue().set(CACHE_PREFIX + saved.getId(), saved, 10, TimeUnit.MINUTES);
     }
 }
