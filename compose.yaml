@@ -100,3 +100,105 @@ services:
       - REDIS_PASSWORD=my-password
       - REDIS_PORT=6379
       - REDIS_DATABASES=16
+
+#  userpostgres:
+#    container_name: user_postgres
+#    image: postgres
+#    environment:
+#      POSTGRES_USER: User
+#      POSTGRES_PASSWORD: password
+#      PGDATA: /data/postgres
+##    volumes:
+##      - user_postgres:/data/postgres
+#    ports:
+#      - "5433:5432"
+#    networks:
+#      - postgres
+#    restart: unless-stopped
+#
+#  pgadmin:
+#    container_name: user_pgadmin
+#    image: dpage/pgadmin4
+#    environment:
+#      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+#      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+#      PGADMIN_CONFIG_SERVER_MODE: 'False'
+##    volumes:
+##      - user_pgadmin:/var/lib/pgadmin
+#    ports:
+#      - "5050:80"
+#    networks:
+#      - postgres
+#    restart: unless-stopped
+#
+#  adminpostgres:
+#    container_name: admin_postgres
+#    image: postgres
+#    environment:
+#      POSTGRES_USER: Admin
+#      POSTGRES_PASSWORD: password
+#      PGDATA: /data/postgres
+##    volumes:
+##      - admin_postgres:/data/postgres
+#    ports:
+#      - "5434:5432"
+#    networks:
+#      - postgres
+#    restart: unless-stopped
+#
+#  searchpostgres:
+#    container_name: search_postgres
+#    image: postgres
+#    environment:
+#      POSTGRES_USER: Search
+#      POSTGRES_PASSWORD: password
+#      PGDATA: /data/postgres
+##    volumes:
+##      - search_postgres:/data/postgres
+#    ports:
+#      - "5435:5432"
+#    networks:
+#      - postgres
+#    restart: unless-stopped
+#
+#  transactionpostgres:
+#    container_name: transaction_postgres
+#    image: postgres
+#    environment:
+#      POSTGRES_USER: Transaction
+#      POSTGRES_PASSWORD: password
+#      PGDATA: /data/postgres
+##    volumes:
+##      - transaction_postgres:/data/postgres
+#    ports:
+#      - "5436:5432"
+#    networks:
+#      - postgres
+#    restart: unless-stopped
+#
+##  zipkin:
+##    image: openzipkin/zipkin
+##    container_name: zipkin
+##    ports:
+##      - "9411:9411"
+##    networks:
+##      - spring
+#
+#networks:
+#  postgres:
+#    driver: bridge
+#  spring:
+#    driver: bridge
+#
+##volumes:
+##  user_postgres:
+##  user_pgadmin:
+##  admin_postgres:
+##  admin_pgadmin:
+##  search_postgres:
+##  search_pgadmin:
+##  transaction_postgres:
+##  transaction_pgadmin:
+
+
+
