@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    continue-on-error: true
+    url: jdbc:postgresql://postgres:5432/Scalable
+    username: postgres
+    password: 0000
+    hikari:
+      allow-pool-suspension: true
+      initialization-fail-timeout: 0
+  jpa:
+    database-platform: org.hibernate.dialect.PostgresPlusDialect
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+      hibernate.id.new_generator_mappings: false
+      hibernate.temp.use_jdbc_metadata_defaults: false
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+  management:
+    endpoints:
+      web:
+        exposure:
+          include:
+            - refresh
+            - env
+
+  logging:
+    level:
+      org:
+        springframework:
+          context:
+            support:
+              DefaultLifecycleProcessor: debug
