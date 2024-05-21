@@ -13,10 +13,7 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
-    @PostMapping("/refund")
-    public Refund processRefund(@RequestBody Refund refund) {
-        return adminService.processRefund(refund);
-    }
+
     @PutMapping("/refund/{id}/status")
     public Refund updateRefundStatus(@PathVariable Long id, @RequestBody RefundStatusUpdateRequest statusUpdateRequest) {
         return adminService.updateRefundStatus(id, statusUpdateRequest.getStatus());
