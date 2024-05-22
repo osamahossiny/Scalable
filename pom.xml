@@ -19,6 +19,7 @@
         <module>transaction-service</module>
         <module>search-service</module>
         <module>discovery-service</module>
+        <module>Test</module>
     </modules>
 
     <properties>
