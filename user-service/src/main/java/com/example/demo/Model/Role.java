@@ -56,4 +56,5 @@ public enum Role {
     authorities.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
     return authorities;
   }
+
 }

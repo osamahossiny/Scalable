@@ -2,7 +2,7 @@ package com.example.demo.Commands.FlightPackageCommand;
 
 import com.example.demo.Commands.CommandInterface;
 import com.example.demo.Service.FlightPackageService;
-import com.example.demo.model.FlightPackage;
+import com.example.demo.Model.FlightPackage;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

@@ -1,7 +1,9 @@
 package com.example.demo.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -17,7 +19,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 @AllArgsConstructor
 @Entity
 @Table(name = "_user")
-public class User implements UserDetails {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class User implements UserDetails, Serializable {
 
   @Id
   @GeneratedValue
@@ -66,5 +69,8 @@ public class User implements UserDetails {
   @Override
   public boolean isEnabled() {
     return true;
+  }
+
+  public void setAuthorities(Object o) {
   }
 }

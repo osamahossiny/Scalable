@@ -1,5 +1,5 @@
 package com.example.demo.Repository;
-import com.example.demo.model.Flight;
+import com.example.demo.Model.Flight;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

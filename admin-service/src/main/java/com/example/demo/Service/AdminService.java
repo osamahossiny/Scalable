@@ -1,9 +1,9 @@
 package com.example.demo.Service;
 
-import com.example.demo.model.Refund;
-import com.example.demo.model.Promotion;
-import com.example.demo.model.Flight;
-import com.example.demo.model.Complaints;
+import com.example.demo.Model.Refund;
+import com.example.demo.Model.Promotion;
+import com.example.demo.Model.Flight;
+import com.example.demo.Model.Complaints;
 import com.example.demo.Repository.RefundRepository;
 import com.example.demo.Repository.PromotionRepository;
 import com.example.demo.Repository.FlightRepository;

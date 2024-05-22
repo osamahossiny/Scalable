@@ -1,8 +1,7 @@
 package com.example.demo.Service;
 import com.example.demo.Repository.PlaneRepository;
-import com.example.demo.model.Airline;
-import com.example.demo.model.Plane;
-import com.example.demo.model.PlaneSeat;
+import com.example.demo.Model.Airline;
+import com.example.demo.Model.Plane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;

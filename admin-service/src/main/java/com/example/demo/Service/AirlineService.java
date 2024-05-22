@@ -1,7 +1,7 @@
 package com.example.demo.Service;
 
 import com.example.demo.Repository.AirlineRepository;
-import com.example.demo.model.Airline;
+import com.example.demo.Model.Airline;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -2,6 +2,7 @@ package com.example.demo.Service;
 
 import com.example.demo.Model.User;
 import com.example.demo.Repository.TokenRepository;
+import com.example.demo.dto.UserTransfer;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class LogoutService implements LogoutHandler {
 
   private final TokenRepository tokenRepository;
-  private final RedisTemplate<String, User> userRedisTemplate;
+  private final RedisTemplate<String, UserTransfer> userRedisTemplate;
   private static final String USER_CACHE_PREFIX = "user::";
   @Override
   public void logout(

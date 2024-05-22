@@ -2,9 +2,9 @@ package com.example.demo.Commands.FlightReservationCommand;
 
 import com.example.demo.Commands.CommandInterface;
 import com.example.demo.Service.FlightReservationService;
-import com.example.demo.model.AppUser;
-import com.example.demo.model.FlightPackage;
-import com.example.demo.model.PlaneSeat;
+import com.example.demo.Model.AppUser;
+import com.example.demo.Model.FlightPackage;
+import com.example.demo.Model.PlaneSeat;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

@@ -1,9 +1,9 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Service.PlaneSeatService;
-import com.example.demo.model.Plane;
-import com.example.demo.model.PlaneSeat;
-import com.example.demo.model.SeatCategory;
+import com.example.demo.Model.Plane;
+import com.example.demo.Model.PlaneSeat;
+import com.example.demo.Model.SeatCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

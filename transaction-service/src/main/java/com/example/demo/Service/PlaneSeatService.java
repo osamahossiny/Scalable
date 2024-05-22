@@ -1,8 +1,8 @@
 package com.example.demo.Service;
 import com.example.demo.Repository.PlaneSeatRepository;
-import com.example.demo.model.Plane;
-import com.example.demo.model.PlaneSeat;
-import com.example.demo.model.SeatCategory;
+import com.example.demo.Model.Plane;
+import com.example.demo.Model.PlaneSeat;
+import com.example.demo.Model.SeatCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

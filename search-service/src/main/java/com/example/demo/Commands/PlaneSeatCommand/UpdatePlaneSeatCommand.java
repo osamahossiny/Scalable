@@ -2,8 +2,8 @@ package com.example.demo.Commands.PlaneSeatCommand;
 
 import com.example.demo.Commands.CommandInterface;
 import com.example.demo.Service.PlaneSeatService;
-import com.example.demo.model.Plane;
-import com.example.demo.model.SeatCategory;
+import com.example.demo.Model.Plane;
+import com.example.demo.Model.SeatCategory;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

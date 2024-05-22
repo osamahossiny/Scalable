@@ -1,10 +1,8 @@
 package com.example.demo.Controller;
 
-import com.example.demo.Commands.AirlineCommand.UpdateAirlineCommand;
 import com.example.demo.Commands.AppUserCommand.UpdateUserCommand;
 import com.example.demo.Service.AppUserService;
-import com.example.demo.model.Airline;
-import com.example.demo.model.AppUser;
+import com.example.demo.Model.AppUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,7 +1,7 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Service.AirlineService;
-import com.example.demo.model.Airline;
+import com.example.demo.Model.Airline;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

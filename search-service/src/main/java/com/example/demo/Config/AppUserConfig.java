@@ -2,7 +2,7 @@ package com.example.demo.Config;
 
 
 import com.example.demo.Repository.AppUserRepository;
-import com.example.demo.model.AppUser;
+import com.example.demo.Model.AppUser;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

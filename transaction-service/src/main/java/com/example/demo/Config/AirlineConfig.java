@@ -1,7 +1,7 @@
 package com.example.demo.Config;
 
 import com.example.demo.Repository.AirlineRepository;
-import com.example.demo.model.Airline;
+import com.example.demo.Model.Airline;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

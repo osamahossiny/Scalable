@@ -1,14 +1,10 @@
 package com.example.demo.Controller;
 import com.example.demo.Service.FlightReservationService;
-import com.example.demo.model.AppUser;
-import com.example.demo.model.FlightPackage;
-import com.example.demo.model.FlightReservation;
-import com.example.demo.model.PlaneSeat;
+import com.example.demo.Model.FlightReservation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController

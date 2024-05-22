@@ -1,10 +1,12 @@
 package com.example.demo.Controller;
 
-import com.example.demo.model.Refund;
-import com.example.demo.model.Promotion;
-import com.example.demo.model.Complaints;
+import com.example.demo.Model.Refund;
+import com.example.demo.Model.Promotion;
+import com.example.demo.Model.Complaints;
 import com.example.demo.Service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
@@ -12,6 +14,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/admin")
+@PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
     @Autowired
     private AdminService adminService;
@@ -19,6 +22,7 @@ public class AdminController {
 
     @PutMapping("/refund/{id}/status")
     public Refund updateRefundStatus(@PathVariable Long id, @RequestBody RefundStatusUpdateRequest statusUpdateRequest) {
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getCredentials().toString());
         return adminService.updateRefundStatus(id, statusUpdateRequest.getStatus());
     }
     @PostMapping("/promotion/{flightId}")

@@ -1,5 +1,5 @@
 package com.example.demo.Repository;
-import com.example.demo.model.Plane;
+import com.example.demo.Model.Plane;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

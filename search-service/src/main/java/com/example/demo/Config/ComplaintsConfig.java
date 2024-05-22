@@ -1,7 +1,7 @@
 package com.example.demo.Config;
 
 import com.example.demo.Repository.ComplaintsRepository;
-import com.example.demo.model.Complaints;
+import com.example.demo.Model.Complaints;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -2,7 +2,7 @@ package com.example.demo.Commands.FlightReservationCommand;
 
 import com.example.demo.Commands.CommandInterface;
 import com.example.demo.Service.FlightReservationService;
-import com.example.demo.model.FlightReservation;
+import com.example.demo.Model.FlightReservation;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

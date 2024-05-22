@@ -1,6 +1,6 @@
 package com.example.demo.Service;
 
-import com.example.demo.model.Refund;
+import com.example.demo.Model.Refund;
 import com.example.demo.Repository.RefundRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

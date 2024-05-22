@@ -8,6 +8,7 @@ import com.example.demo.Repository.UserRepository;
 import com.example.demo.dto.AuthenticationRequest;
 import com.example.demo.dto.AuthenticationResponse;
 import com.example.demo.dto.RegisterRequest;
+import com.example.demo.dto.UserTransfer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,7 +31,7 @@ public class AuthenticationService {
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;
-  private final RedisTemplate<String, User> userRedisTemplate;
+  private final RedisTemplate<String, UserTransfer> userRedisTemplate;
   private static final String USER_CACHE_PREFIX = "user::";
 
   public AuthenticationResponse register(RegisterRequest request) {
@@ -45,7 +46,15 @@ public class AuthenticationService {
     var jwtToken = jwtService.generateToken(user);
     var refreshToken = jwtService.generateRefreshToken(user);
     saveUserToken(savedUser, jwtToken);
-    userRedisTemplate.opsForValue().set(USER_CACHE_PREFIX + jwtToken, user, 24, TimeUnit.HOURS);
+    UserTransfer userTransfer = UserTransfer.builder()
+            .id(user.getId())
+            .email(user.getEmail())
+            .firstname(user.getFirstname())
+            .lastname(user.getLastname())
+            .password(user.getPassword())
+            .role(user.getRole())
+            .build();
+    userRedisTemplate.opsForValue().set(USER_CACHE_PREFIX + jwtToken, userTransfer, 24, TimeUnit.HOURS);
     return AuthenticationResponse.builder()
         .accessToken(jwtToken)
             .refreshToken(refreshToken)
@@ -65,7 +74,15 @@ public class AuthenticationService {
     var refreshToken = jwtService.generateRefreshToken(user);
     revokeAllUserTokens(user);
     saveUserToken(user, jwtToken);
-    userRedisTemplate.opsForValue().set(USER_CACHE_PREFIX + jwtToken, user, 24, TimeUnit.HOURS);
+    UserTransfer userTransfer = UserTransfer.builder()
+            .id(user.getId())
+            .email(user.getEmail())
+            .firstname(user.getFirstname())
+            .lastname(user.getLastname())
+            .password(user.getPassword())
+            .role(user.getRole())
+            .build();
+    userRedisTemplate.opsForValue().set(USER_CACHE_PREFIX + jwtToken, userTransfer, 24, TimeUnit.HOURS);
     return AuthenticationResponse.builder()
         .accessToken(jwtToken)
             .refreshToken(refreshToken)

@@ -2,10 +2,10 @@ package com.example.demo.Config;
 
 import com.example.demo.Repository.PlaneRepository;
 import com.example.demo.Repository.PlaneSeatRepository;
-import com.example.demo.model.Airline;
-import com.example.demo.model.Plane;
-import com.example.demo.model.PlaneSeat;
-import com.example.demo.model.SeatCategory;
+import com.example.demo.Model.Airline;
+import com.example.demo.Model.Plane;
+import com.example.demo.Model.PlaneSeat;
+import com.example.demo.Model.SeatCategory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

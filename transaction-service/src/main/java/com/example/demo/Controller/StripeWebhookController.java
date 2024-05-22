@@ -1,11 +1,10 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Service.TransactionService;
-import com.example.demo.model.Transaction;
+import com.example.demo.Model.Transaction;
 import com.stripe.exception.EventDataObjectDeserializationException;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.*;
-import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,10 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Optional;
 
 @RestController
 public class StripeWebhookController {

@@ -2,7 +2,7 @@ package com.example.demo.Commands.PlaneCommand;
 
 import com.example.demo.Commands.CommandInterface;
 import com.example.demo.Service.PlaneService;
-import com.example.demo.model.Plane;
+import com.example.demo.Model.Plane;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

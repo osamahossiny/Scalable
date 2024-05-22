@@ -1,8 +1,7 @@
 package com.example.demo.Controller;
 import com.example.demo.Service.FlightPackageService;
-import com.example.demo.model.AppUser;
-import com.example.demo.model.Flight;
-import com.example.demo.model.FlightPackage;
+import com.example.demo.Model.Flight;
+import com.example.demo.Model.FlightPackage;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;

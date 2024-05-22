@@ -1,9 +1,9 @@
 package com.example.demo.Controller;
 import com.example.demo.Service.FlightReservationService;
-import com.example.demo.model.AppUser;
-import com.example.demo.model.FlightPackage;
-import com.example.demo.model.FlightReservation;
-import com.example.demo.model.PlaneSeat;
+import com.example.demo.Model.AppUser;
+import com.example.demo.Model.FlightPackage;
+import com.example.demo.Model.FlightReservation;
+import com.example.demo.Model.PlaneSeat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

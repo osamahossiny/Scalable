@@ -1,8 +1,7 @@
 package com.example.demo.Service;
 
 import com.example.demo.Repository.AirlineRepository;
-import com.example.demo.model.Airline;
-import com.example.demo.model.Complaints;
+import com.example.demo.Model.Airline;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -10,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Service

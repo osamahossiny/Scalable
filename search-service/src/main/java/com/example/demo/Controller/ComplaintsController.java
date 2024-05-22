@@ -1,6 +1,6 @@
 package com.example.demo.Controller;
 import com.example.demo.Service.ComplaintsService;
-import com.example.demo.model.Complaints;
+import com.example.demo.Model.Complaints;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

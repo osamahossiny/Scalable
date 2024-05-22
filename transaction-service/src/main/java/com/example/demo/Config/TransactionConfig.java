@@ -7,16 +7,10 @@ import org.springframework.context.annotation.Configuration;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
-import com.example.demo.Repository.TransactionRepository;
-import com.example.demo.model.Transaction;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import com.example.demo.Model.Transaction;
 
-import java.util.List;
 @Configuration
 public class TransactionConfig {
 

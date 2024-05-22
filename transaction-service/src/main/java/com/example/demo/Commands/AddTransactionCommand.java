@@ -1,6 +1,6 @@
 package com.example.demo.Commands;
 
-import com.example.demo.model.Transaction;
+import com.example.demo.Model.Transaction;
 import com.example.demo.Service.TransactionService;
 import lombok.RequiredArgsConstructor;
 

@@ -1,7 +1,7 @@
 package com.example.demo.Config;
 
 import com.example.demo.Repository.*;
-import com.example.demo.model.*;
+import com.example.demo.Model.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

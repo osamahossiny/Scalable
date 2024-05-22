@@ -2,7 +2,7 @@ package com.example.demo.Commands.AppUserCommand;
 
 import com.example.demo.Commands.CommandInterface;
 import com.example.demo.Service.AppUserService;
-import com.example.demo.model.AppUser;
+import com.example.demo.Model.AppUser;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

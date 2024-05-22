@@ -1,18 +1,13 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Repository.FlightReservationRepository;
-import com.example.demo.model.*;
+import com.example.demo.Model.*;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
-import com.stripe.model.Charge;
 import com.stripe.model.Customer;
-import com.stripe.model.PaymentIntent;
-import com.stripe.model.StripeObject;
 import com.stripe.model.checkout.Session;
-import com.stripe.param.PaymentIntentUpdateParams;
 import com.stripe.param.checkout.SessionCreateParams;
 import com.stripe.param.checkout.SessionCreateParams.LineItem.PriceData;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;

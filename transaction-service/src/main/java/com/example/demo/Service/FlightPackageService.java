@@ -1,8 +1,8 @@
 package com.example.demo.Service;
 
 import com.example.demo.Repository.FlightPackageRepository;
-import com.example.demo.model.Flight;
-import com.example.demo.model.FlightPackage;
+import com.example.demo.Model.Flight;
+import com.example.demo.Model.FlightPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
