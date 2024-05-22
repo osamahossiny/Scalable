@@ -4,4 +4,4 @@ metadata:
   name: postgres-configmap
 data:
   host: "postgres"
-  name: "backendservice"
+  name: "Scalable"

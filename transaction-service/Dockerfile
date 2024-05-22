@@ -6,5 +6,4 @@ FROM openjdk:21-slim
 # Copy the packaged jar file into the container
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} transaction-service.jar
-CMD apt-get update -y
 ENTRYPOINT ["java", "-Xmx2048M", "-jar", "/transaction-service.jar"]

@@ -1,21 +1,21 @@
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: postgres-pv-claim
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-
----
+#
+#---
+#apiVersion: v1
+#kind: PersistentVolumeClaim
+#metadata:
+#  name: postgres-pv-claim
+#spec:
+#  accessModes:
+#    - ReadWriteOnce
+#  resources:
+#    requests:
+#      storage: 1Gi
+#
+#---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres
+  name: postgres-deployment
 spec:
   replicas: 1
   selector:
@@ -31,21 +31,30 @@ spec:
           image: postgres:latest
           ports:
             - containerPort: 5432
-          env:
-            - name: POSTGRES_DB
-              value: "Scalable"
-            - name: POSTGRES_USER
-              value: "postgres"
-            - name: POSTGRES_PASSWORD
-              value: "0000"
-          volumeMounts:
-            - mountPath: /var/lib/postgresql/data
-              name: postgres-persistence-storage
-      volumes:
-        - name: postgres-persistence-storage
-          persistentVolumeClaim:
-            claimName: postgres-pv-claim
+          env: # Setting Enviornmental Variables
+            - name: POSTGRES_USER  # Setting Database username from Secret
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials # Secret Name
+                  key: postgres_user
+            - name: POSTGRES_PASSWORD # Setting Database password from Secret
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: postgres_password
 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+spec:
+    selector:
+        app: postgres
+    ports:
+      - protocol: TCP
+        port: 5432
+        targetPort: 5432
 #spec:
 #  replicas: 1
 #  selector:

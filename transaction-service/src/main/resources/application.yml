@@ -2,9 +2,9 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     continue-on-error: true
-    url: jdbc:postgresql://postgres:5432/Scalable
-    username: postgres
-    password: 0000
+    url: jdbc:postgresql://${DB_HOST}:5432/${DB_NAME}
+    username: {POSTGRES_USER}
+    password: {POSTGRES_PASSWORD}
     hikari:
       allow-pool-suspension: true
       initialization-fail-timeout: 0

@@ -14,7 +14,7 @@ services:
       - postgres-data:/var/lib/postgresql/data
 
   spring-boot-app:
-    image: myapp
+    image: nayerkotry/myapp:myapp
     ports:
       - "8080:8080"
     depends_on:

@@ -15,7 +15,7 @@ spec:
       containers:
       - name: spring-boot-app
         imagePullPolicy: IfNotPresent
-        image: my:latest
+        image: nayerkotry/myapp:myapp
         ports:
         - containerPort: 8080
         env:
