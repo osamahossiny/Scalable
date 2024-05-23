@@ -2,7 +2,6 @@ package com.example.demo.Service;
 
 import com.example.demo.Model.Refund;
 import com.example.demo.Model.Promotion;
-import com.example.demo.Model.Flight;
 import com.example.demo.Model.Complaints;
 import com.example.demo.Repository.RefundRepository;
 import com.example.demo.Repository.PromotionRepository;
@@ -29,6 +28,7 @@ public class AdminService {
         return refundRepository.save(refund);
     }
     public Refund updateRefundStatus(Long id, String status) {
+
         Refund refund = refundRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Refund not found"));
         refund.setStatus(status);
@@ -36,9 +36,9 @@ public class AdminService {
     }
 
     public Promotion addPromotion(Promotion promotion, Long flightId) {
-        Flight flight = flightRepository.findById(flightId)
-                .orElseThrow(() -> new RuntimeException("Flight not found"));
-        promotion.setFlight(flight);
+//        Flight flight = flightRepository.findById(flightId)
+//                .orElseThrow(() -> new RuntimeException("Flight not found"));
+//        promotion.setFlight(flight);
         return promotionRepository.save(promotion);
     }
 

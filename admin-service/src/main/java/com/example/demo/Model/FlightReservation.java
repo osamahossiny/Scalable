@@ -52,4 +52,12 @@ public class FlightReservation {
     private boolean withInsurance;
     @Column
     private int totalPrice;
+    public FlightReservation(AppUser appUser, FlightPackage flightPackage, boolean seatChargeable, boolean extraBaggage, boolean withInsurance, int totalPrice) {
+        this.appUser = appUser;
+        this.Package = flightPackage;
+        this.seatChargeable = seatChargeable;
+        this.extraBaggage = extraBaggage;
+        this.withInsurance = withInsurance;
+        this.totalPrice = totalPrice;
+    }
 }
