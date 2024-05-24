@@ -20,6 +20,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class SecurityConfiguration {
 
     private static final String[] WHITE_LIST_URL = {
+            "/api/refunds/**"
 //            "/api/v1/auth/**",
 //            "/api/v1/messages",
 //            "/api/v1/messages/**",

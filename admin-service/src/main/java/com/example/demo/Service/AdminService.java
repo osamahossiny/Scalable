@@ -10,6 +10,7 @@ import com.example.demo.Repository.ComplaintsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.UUID;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class AdminService {
@@ -24,6 +25,14 @@ public class AdminService {
     @Autowired
     private ComplaintsRepository complaintsRepository;
 
+    @Autowired
+    private final RestTemplate restTemplate;
+    public AdminService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
+    private String transactionServiceUrl="http://localhost:8081";
+
+
     public Refund processRefund(Refund refund) {
         return refundRepository.save(refund);
     }
@@ -32,8 +41,19 @@ public class AdminService {
         Refund refund = refundRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Refund not found"));
         refund.setStatus(status);
+       // refundRepository.save(refund);
+        notifyTransactionService(refund);
         return refundRepository.save(refund);
     }
+    public Refund createRefund(Refund refund) {
+        return refundRepository.save(refund);
+    }
+    private void notifyTransactionService(Refund refund) {
+        String url = transactionServiceUrl + "/api/refunds/" + refund.getId() + "/status";
+        System.out.println(url);
+        restTemplate.put(url, refund);
+    }
+
 
     public Promotion addPromotion(Promotion promotion, Long flightId) {
 //        Flight flight = flightRepository.findById(flightId)

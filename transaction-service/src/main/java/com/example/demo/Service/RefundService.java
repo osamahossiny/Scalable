@@ -2,30 +2,38 @@ package com.example.demo.Service;
 
 import com.example.demo.Model.Refund;
 import com.example.demo.Repository.RefundRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class RefundService {
+    private final RefundRepository refundRepository;
+    private final RestTemplate restTemplate;
 
-    @Autowired
-    private RefundRepository refundRepository;
+
+    private String adminServiceUrl="http://localhost:8083";
+
+    public RefundService(RefundRepository refundRepository, RestTemplate restTemplate) {
+        this.refundRepository = refundRepository;
+        this.restTemplate = restTemplate;
+    }
 
     public Refund createRefund(Refund refund) {
-        refund.setStatus("PENDING"); // Default status
+        Refund createdRefund = refundRepository.save(refund);
+        notifyAdminService(createdRefund);
+        return createdRefund;
+    }
+
+    private void notifyAdminService(Refund refund) {
+        String url = adminServiceUrl + "/api/v1/refunds";
+        restTemplate.postForEntity(url, refund, Void.class);
+    }
+    public Refund updateRefundStatus(Long id, String status) {
+        System.out.println(id);
+        Refund refund = refundRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Refund not found"));
+        refund.setStatus(status);
         return refundRepository.save(refund);
     }
-
-    public Refund getRefundById(Long id) {
-        return refundRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Refund not found"));
-    }
-
-    public List<Refund> getAllRefunds() {
-        return refundRepository.findAll();
-    }
-
-
 }
