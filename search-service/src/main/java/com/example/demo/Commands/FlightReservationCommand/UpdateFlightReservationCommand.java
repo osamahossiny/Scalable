@@ -1,6 +1,7 @@
 package com.example.demo.Commands.FlightReservationCommand;
 
 import com.example.demo.Commands.CommandInterface;
+import com.example.demo.Model.User;
 import com.example.demo.Service.FlightReservationService;
 import com.example.demo.Model.AppUser;
 import com.example.demo.Model.FlightPackage;
@@ -12,7 +13,7 @@ public class UpdateFlightReservationCommand implements CommandInterface {
 
     private final FlightReservationService flightReservationService;
     private final Long id;
-    private final AppUser appUser;
+    private final User appUser;
     private final FlightPackage flightPackage;
     private final PlaneSeat planeSeat;
     private final boolean seatChargeable;

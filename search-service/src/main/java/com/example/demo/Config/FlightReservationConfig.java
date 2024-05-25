@@ -13,7 +13,7 @@ import java.util.List;
 public class FlightReservationConfig {
 
     @Bean
-    CommandLineRunner flightReservationCommandLineRunner(FlightReservationRepository repository, FlightPackageRepository flightRepository, PlaneSeatRepository planeSeatRepository, PlaneRepository planeRepository, AppUserRepository userRepository){
+    CommandLineRunner flightReservationCommandLineRunner(FlightReservationRepository repository, FlightPackageRepository flightRepository, PlaneSeatRepository planeSeatRepository, PlaneRepository planeRepository, UserRepository userRepository){
         return args -> {
             FlightPackage chickenPackage= new FlightPackage(new Flight("Egypt","Germany", LocalTime.now().toString(), LocalTime.now().toString(), new Plane("Boeing77746", new Airline("Dawly","456981684","01000000000"),"Airbus"),500.4F,10000.0F, 1000.0F, 500.0F, "CAI", "BER", LocalDate.now().toString(), LocalDate.now().toString()), 8,20,150,50,"Chicken with Potatoes",true,300);
             flightRepository.save(chickenPackage);
@@ -25,13 +25,15 @@ public class FlightReservationConfig {
             PlaneSeat seat = new PlaneSeat(15,SeatCategory.EconomyIsle,p,500);
             planeSeatRepository.saveAll(List.of(seat));
 
-            AppUser appUser=new AppUser("BavarianAT", "Guc197831!", "Taha123@gmail.com", LocalDate.now(), "male", "Single", "0158", "Egypt", "01012524680", "Amr", "Maged");
+            User appUser=new User(25, "Ibraham","Ali", "Taha123@gmail.com","1234",Role.USER);
+            System.out.println("Testing App"+appUser);
             userRepository.saveAll(List.of(appUser));
 
             FlightReservation flightReservation=new FlightReservation(
-                    appUser,
+                    null,
                     chickenPackage,
                     seat,false,false,false,300);
+//          flightReservation.setAppUser(appUser);
             repository.saveAll(List.of(flightReservation));
         };
     }
