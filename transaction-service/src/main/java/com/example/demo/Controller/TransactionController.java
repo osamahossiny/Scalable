@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping(path = "api/transactions")
+@RequestMapping(path = "api/v1/transaction")
 public class TransactionController {
     Logger logger=  LoggerFactory.getLogger(TransactionController.class);
 
@@ -25,6 +25,12 @@ public class TransactionController {
     public List<Transaction> getTransactions(){
         logger.info("Getting all transactions");
         return this.transactionService.getTransactions();
+    }
+
+    @GetMapping(path = "user")
+    public List<Transaction> getUserTransactions(){
+        logger.info("Getting all transactions for user");
+        return this.transactionService.getUserTransactions();
     }
 
     @PostMapping
