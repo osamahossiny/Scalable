@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: admin-postgres-configmap
+data:
+  host: "postgres"
+  name: "Admin"

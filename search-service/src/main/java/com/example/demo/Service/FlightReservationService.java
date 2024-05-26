@@ -1,9 +1,6 @@
 package com.example.demo.Service;
+import com.example.demo.Model.*;
 import com.example.demo.Repository.FlightReservationRepository;
-import com.example.demo.Model.AppUser;
-import com.example.demo.Model.FlightPackage;
-import com.example.demo.Model.FlightReservation;
-import com.example.demo.Model.PlaneSeat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -51,7 +48,7 @@ public class FlightReservationService {
             throw new IllegalStateException("A Flight Reservation with this id already exists.");
         }
 
-        Optional<AppUser> appUser = flightReservationRepository.findAppUserId(flightReservation.getAppUser().getId());
+        Optional<User> appUser = flightReservationRepository.findAppUserId(flightReservation.getAppUser().getId());
         if (!appUser.isPresent()){
             throw new IllegalStateException("This appUser does not exist.");
         }
@@ -84,7 +81,7 @@ public class FlightReservationService {
     }
 
     @Transactional
-    public void updateFlightReservation(Long flightReservationId ,AppUser appUser, FlightPackage flightPackage, PlaneSeat planeSeat, boolean seatChargeable, boolean extraBaggage, boolean withInsurance, int totalPrice) {
+    public void updateFlightReservation(Long flightReservationId ,User appUser, FlightPackage flightPackage, PlaneSeat planeSeat, boolean seatChargeable, boolean extraBaggage, boolean withInsurance, int totalPrice) {
 
         FlightReservation flightReservation = flightReservationRepository.findById(flightReservationId).orElseThrow(() ->
                 new IllegalStateException("flight Package with id " + flightReservationId + " does not exist")
