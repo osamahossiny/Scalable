@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import java.util.List;
 
 import java.util.UUID;
 
@@ -19,13 +20,17 @@ import java.util.UUID;
 public class AdminController {
     @Autowired
     private AdminService adminService;
-
-
     @PutMapping("/refund/{id}/status")
     public Refund updateRefundStatus(@PathVariable Long id, @RequestBody RefundStatusUpdateRequest statusUpdateRequest) {
         System.out.println(SecurityContextHolder.getContext().getAuthentication().getCredentials());
         return adminService.updateRefundStatus(id, statusUpdateRequest.getStatus());
     }
+    @GetMapping("/refunds")
+    public ResponseEntity<List<Refund>> getAllRefunds() {
+        List<Refund> refunds = adminService.getAllRefunds();
+        return ResponseEntity.ok(refunds);
+    }
+
     @PostMapping("/promotion/{flightId}")
     public Promotion addPromotion(@RequestBody Promotion promotion, @PathVariable Long flightId) {
         return adminService.addPromotion(promotion, flightId);

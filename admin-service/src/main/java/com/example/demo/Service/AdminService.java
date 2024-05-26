@@ -1,5 +1,6 @@
 package com.example.demo.Service;
 
+import com.example.demo.Model.Flight;
 import com.example.demo.Model.Refund;
 import com.example.demo.Model.Promotion;
 import com.example.demo.Model.Complaints;
@@ -9,6 +10,8 @@ import com.example.demo.Repository.FlightRepository;
 import com.example.demo.Repository.ComplaintsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.UUID;
 import org.springframework.web.client.RestTemplate;
 
@@ -31,7 +34,9 @@ public class AdminService {
         this.restTemplate = restTemplate;
     }
     private String transactionServiceUrl="http://localhost:8081";
-
+    public List<Refund> getAllRefunds() {
+        return refundRepository.findAll();
+    }
 
     public Refund processRefund(Refund refund) {
         return refundRepository.save(refund);
@@ -41,7 +46,7 @@ public class AdminService {
         Refund refund = refundRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Refund not found"));
         refund.setStatus(status);
-       // refundRepository.save(refund);
+
         notifyTransactionService(refund);
         return refundRepository.save(refund);
     }
@@ -56,9 +61,9 @@ public class AdminService {
 
 
     public Promotion addPromotion(Promotion promotion, Long flightId) {
-//        Flight flight = flightRepository.findById(flightId)
-//                .orElseThrow(() -> new RuntimeException("Flight not found"));
-//        promotion.setFlight(flight);
+        Flight flight = flightRepository.findById(flightId)
+                .orElseThrow(() -> new RuntimeException("Flight not found"));
+        promotion.setFlight(flight);
         return promotionRepository.save(promotion);
     }
 
