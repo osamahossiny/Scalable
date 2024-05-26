@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: transaction-postgres-configmap
+data:
+  host: "postgres"
+  name: "transaction"

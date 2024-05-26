@@ -20,6 +20,7 @@
         <module>search-service</module>
         <module>discovery-service</module>
         <module>Test</module>
+        <module>api-gateway-service</module>
     </modules>
 
     <properties>
