@@ -185,7 +185,7 @@ public class DummyDataConfiguration {
                         faker.options().option("Pending", "Completed", "Rejected") // status
                 ));
             }
-          //  refundRepository.saveAll(refunds);
+            refundRepository.saveAll(refunds);
         };
     }
 }

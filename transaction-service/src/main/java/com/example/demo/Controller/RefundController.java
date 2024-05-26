@@ -16,8 +16,10 @@ public class RefundController {
 
         @PostMapping
         public ResponseEntity<Refund> createRefund(@RequestBody Refund refund) {
-           // Long userId = (long)SecurityContextHolder.getContext().getAuthentication().getCredentials();
-          //  refund.setUserId(refund.getUserId());
+//            String userId = SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
+//            System.out.println(userId);
+            refund.setUserId(1l);
+            refund.setStatus("Pending");
             Refund createdRefund = refundService.createRefund(refund);
             return ResponseEntity.ok(createdRefund);
         }

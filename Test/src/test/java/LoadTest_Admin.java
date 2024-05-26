@@ -3,14 +3,13 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class LoadTest_User {
+public class LoadTest_Admin {
 
     private static final int NUM_THREADS = 50; // Number of concurrent threads
     private static final int NUM_REQUESTS = 1000; // Total number of requests to send
@@ -36,7 +35,7 @@ public class LoadTest_User {
                 String registerPayload = generateRegisterPayload(email, password);
 
                 try {
-                    HttpResponse registerResponse = HttpUtil.sendPost("http://localhost:8080/api/v1/auth/register", registerPayload);
+                    HttpResponse registerResponse = HttpUtil.sendPost("http://localhost:8084/api/v1/auth/register", registerPayload);
                     int registerResponseCode = registerResponse.getStatusLine().getStatusCode();
                     if (registerResponseCode == 200) {
                         synchronized (lock) {
@@ -94,7 +93,7 @@ public class LoadTest_User {
                 String loginPayload = generateLoginPayload(email, password);
 
                 try {
-                    HttpResponse loginResponse = HttpUtil.sendPost("http://localhost:8080/api/v1/auth/authenticate", loginPayload);
+                    HttpResponse loginResponse = HttpUtil.sendPost("http://localhost:8084/api/v1/auth/authenticate", loginPayload);
                     int loginResponseCode = loginResponse.getStatusLine().getStatusCode();
                     if (loginResponseCode == 200) {
                         synchronized (lock) {
@@ -228,7 +227,7 @@ public class LoadTest_User {
         String registerPayload = generateRegisterPayload(email, password);
 
         try {
-            HttpResponse registerResponse = HttpUtil.sendPost("http://localhost:8080/api/v1/auth/register", registerPayload);
+            HttpResponse registerResponse = HttpUtil.sendPost("http://localhost:8084/api/v1/auth/register", registerPayload);
             int registerResponseCode = registerResponse.getStatusLine().getStatusCode();
             if (registerResponseCode != 200) {
                 System.err.println("User registration failed with response code: " + registerResponseCode);
@@ -245,7 +244,7 @@ public class LoadTest_User {
         String loginPayload = generateLoginPayload(email, password);
         String token = null;
         try {
-            HttpResponse loginResponse = HttpUtil.sendPost("http://localhost:8080/api/v1/auth/authenticate", loginPayload);
+            HttpResponse loginResponse = HttpUtil.sendPost("http://localhost:8084/api/v1/auth/authenticate", loginPayload);
             int loginResponseCode = loginResponse.getStatusLine().getStatusCode();
             if (loginResponseCode == 200) {
                 synchronized (lock) {
