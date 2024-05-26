@@ -17,12 +17,10 @@ import java.time.LocalDate;
 
 @NoArgsConstructor
 public class
-RegisterRequest {
+EditProfileRequest {
   private String firstname;
   private String lastname;
   private String email;
-  private String password;
-  private Role role;
   @DateTimeFormat(pattern = "yyyy-MM-dd")
   private LocalDate birthDay;
   private Gender gender;

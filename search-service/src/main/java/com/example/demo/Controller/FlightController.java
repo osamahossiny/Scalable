@@ -13,7 +13,7 @@ import com.example.demo.Commands.FlightCommand.UpdateFlightCommand;
 import java.util.*;
 
 @RestController
-@RequestMapping(path = "api/v1/flight")
+@RequestMapping(path = "api/search/flight")
 public class FlightController {
 
     private final FlightService flightService;

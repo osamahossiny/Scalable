@@ -4,75 +4,103 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf70ecc4-6ced-4fe0-8aed-6e25af2182ab" name="Changes" comment="docker setup">
-      <change afterPath="$PROJECT_DIR$/.idea/copilot/chatSessions/00000000000.xd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot/chatSessions/blobs/version" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot/chatSessions/xd.lck" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ConfigServer/src/main/java/configration_files/admin-service.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ConfigServer/src/main/java/configration_files/search-service.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ConfigServer/src/main/java/configration_files/transaction-service.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ConfigServer/src/main/java/configration_files/user-service.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Config/DummyDataConfiguration.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Config/RestTemplateConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Controller/Request.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Repository/FlightPackageRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Repository/FlightReservationRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Config/RestTemplateConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/PlaneController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Service/PlaneService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+    <list default="true" id="bf70ecc4-6ced-4fe0-8aed-6e25af2182ab" name="Changes" comment="updates">
+      <change afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/Gender.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/MaritalStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Model/Gender.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Model/MaritalStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Model/Gender.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Model/MaritalStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Commands/AuthenticateUserCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Commands/ChangePasswordCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Commands/EditProfileCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Commands/GetProfileCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Commands/RegisterUserCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Config/UserConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Model/Gender.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Model/MaritalStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/dto/EditProfileRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Config/ApplicationConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Config/ApplicationConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Config/DummyDataConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Config/DummyDataConfiguration.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Config/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Config/JwtAuthenticationFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Config/SecurityConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Config/SecurityConfiguration.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Controller/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Controller/AdminController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/Airline.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/Airline.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/Complaints.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/Complaints.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/Flight.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/Flight.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/FlightPackage.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/FlightPackage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/FlightReservation.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/FlightReservation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/PlaneSeat.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/PlaneSeat.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Repository/FlightRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Repository/FlightRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Repository/PlaneRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Repository/PlaneRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Service/AdminService.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Service/AdminService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Controller/AirlineController.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Controller/AirlineController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Controller/Request.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Controller/Request.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/auditing/ApplicationAuditAware.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/auditing/ApplicationAuditAware.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/dto/RegisterRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/dto/RegisterRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/dto/UserTransfer.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/dto/UserTransfer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/admin-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/compose.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Commands/FlightReservationCommand/UpdateFlightReservationCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Commands/FlightReservationCommand/UpdateFlightReservationCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Config/ApplicationConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Config/ApplicationConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Config/FlightReservationConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Config/FlightReservationConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Config/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Config/JwtAuthenticationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Controller/AirlineController.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Controller/AirlineController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Controller/AppUserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Controller/AppUserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Controller/ComplaintsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Controller/ComplaintsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Controller/FlightController.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Controller/FlightController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Controller/FlightPackageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Controller/FlightPackageController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Controller/FlightReservationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Controller/FlightReservationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Model/FlightReservation.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Model/FlightReservation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Repository/FlightReservationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Repository/FlightReservationRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Service/ComplaintsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Service/ComplaintsService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Service/FlightReservationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Service/FlightReservationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Config/FlightReservationConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Config/FlightReservationConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Config/SecurityConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Config/SecurityConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Config/TransactionConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Config/TransactionConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Controller/PlaneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Controller/PlaneController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Controller/PlaneSeatController.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Controller/PlaneSeatController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/auditing/ApplicationAuditAware.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/auditing/ApplicationAuditAware.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/dto/RegisterRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/dto/RegisterRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/dto/UserTransfer.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/dto/UserTransfer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/search-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Config/ApplicationConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Config/ApplicationConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Config/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Config/JwtAuthenticationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/AirlineController.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/AirlineController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/AppUserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/AppUserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/FlightController.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/FlightController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/FlightPackageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/FlightPackageController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/FlightReservationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/FlightReservationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/PaymentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/PaymentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/PlaneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/PlaneController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/PlaneSeatController.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/PlaneSeatController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/RefundController.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/RefundController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/StripeWebhookController.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/StripeWebhookController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/TransactionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/TransactionController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Model/FlightReservation.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Model/FlightReservation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Model/Transaction.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Model/Transaction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Repository/FlightReservationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Repository/FlightReservationRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Repository/TransactionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Repository/TransactionRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Service/FlightPackageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Service/FlightPackageService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Repository/UserRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Service/FlightReservationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Service/FlightReservationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Service/RefundService.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Service/RefundService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Service/TransactionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Service/TransactionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/auditing/ApplicationAuditAware.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/auditing/ApplicationAuditAware.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/dto/RegisterRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/dto/RegisterRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/dto/UserTransfer.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/dto/UserTransfer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/transaction-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Commands/CommandConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Config/ApplicationConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Config/ApplicationConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Config/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Config/JwtAuthenticationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Config/SecurityConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Config/SecurityConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Controller/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Controller/AdminController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Controller/AuthenticationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Controller/AuthenticationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Controller/DemoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Controller/DemoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Controller/ManagementController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Repository/TokenRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Repository/TokenRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Service/AuthenticationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Service/AuthenticationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/auditing/ApplicationAuditAware.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/auditing/ApplicationAuditAware.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/dto/RegisterRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/dto/RegisterRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/dto/UserTransfer.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/dto/UserTransfer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -81,6 +109,20 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "osamahossiny"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="3053f22c-0841-4b15-903e-7271560dcb1b" />
+        <option name="url" value="https://github.com/osamahossiny/Scalabe.git" />
+      </UrlAndAccount>
+    </option>
   </component>
   <component name="KubernetesApiProvider">{
   &quot;contexts&quot;: [
@@ -116,16 +158,22 @@
     "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "Spring Boot.AdminServiceApplication.executor": "Run",
+    "Spring Boot.ApiGatewayServiceApplication.executor": "Run",
+    "Spring Boot.DiscoveryServiceApplication.executor": "Run",
+    "Spring Boot.SearchServiceApplication.executor": "Run",
+    "Spring Boot.TransactionServiceApplication.executor": "Run",
+    "Spring Boot.UserServiceApplication.executor": "Run",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "Merging auth",
-    "last_opened_file_path": "/Users/nayerkotry/InteleliJ/ScalabeNew",
+    "git-widget-placeholder": "auth",
+    "last_opened_file_path": "C:/Users/osama/IdeaProjects/MakeMyTrip/admin-service/src/main/java/com/example/demo/Model",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "settings.editor.selected.configurable": "database.data.views.appearance",
     "vue.rearranger.settings.migration": "true"
@@ -133,9 +181,14 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\osama\IdeaProjects\MakeMyTrip\admin-service\src\main\java\com\example\demo\Model" />
+      <recent name="C:\Users\osama\IdeaProjects\MakeMyTrip\search-service\src\main\java\com\example\demo\Model" />
+      <recent name="C:\Users\osama\IdeaProjects\MakeMyTrip\transaction-service\src\main\java\com\example\demo\Model" />
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.example.demo.Commands" />
+      <recent name="com.example.demo.dto" />
       <recent name="com.example.demo.Controller" />
       <recent name="com.example.demo.Service" />
     </key>
@@ -147,7 +200,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.UserServiceApplication">
+  <component name="RunManager" selected="Spring Boot.AdminServiceApplication">
     <configuration name="SearchServiceApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.example.demo.SearchServiceApplication" />
       <extension name="coverage">
@@ -183,6 +236,13 @@
     <configuration name="AdminServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="admin-service" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.demo.AdminServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ApiGatewayServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="api-gateway-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="org.example.ApiGatewayServiceApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -238,6 +298,15 @@
       <workItem from="1716569332760" duration="111000" />
       <workItem from="1716569446942" duration="20248000" />
     </task>
+    <task id="LOCAL-00001" summary="updates">
+      <option name="closed" value="true" />
+      <created>1716683296619</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1716683296619</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -256,6 +325,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="docker setup" />
-    <option name="LAST_COMMIT_MESSAGE" value="docker setup" />
+    <MESSAGE value="updates" />
+    <option name="LAST_COMMIT_MESSAGE" value="updates" />
   </component>
 </project>

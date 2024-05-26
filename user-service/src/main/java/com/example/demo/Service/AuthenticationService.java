@@ -1,9 +1,7 @@
 package com.example.demo.Service;
 
-import com.example.demo.Model.Token;
+import com.example.demo.Model.*;
 import com.example.demo.Repository.TokenRepository;
-import com.example.demo.Model.TokenType;
-import com.example.demo.Model.User;
 import com.example.demo.Repository.UserRepository;
 import com.example.demo.dto.AuthenticationRequest;
 import com.example.demo.dto.AuthenticationResponse;
@@ -21,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -34,6 +34,44 @@ public class AuthenticationService {
   private final RedisTemplate<String, UserTransfer> userRedisTemplate;
   private static final String USER_CACHE_PREFIX = "user::";
 
+  public void adminRegister(RegisterRequest request) {
+    User user = User.builder()
+            .firstname(request.getFirstname())
+            .lastname(request.getLastname())
+            .email(request.getEmail())
+            .password(passwordEncoder.encode(request.getPassword()))
+            .role(request.getRole())
+            .maritalStatus(request.getMaritalStatus())
+            .pinCode(request.getPinCode())
+            .mobileNumber(request.getMobileNumber())
+            .birthDay(request.getBirthDay())
+            .residence(request.getResidence())
+            .gender(request.getGender())
+            .build();
+    repository.save(user);
+  }
+  public UserTransfer getUser(Long userId) {
+    Optional<User> user = repository.getUserById(userId);
+    if (user.isPresent()){
+      return UserTransfer.builder()
+              .id(user.get().getId())
+              .email(user.get().getEmail())
+              .firstname(user.get().getFirstname())
+              .lastname(user.get().getLastname())
+              .password("No authorization")
+              .role(user.get().getRole())
+              .maritalStatus(user.get().getMaritalStatus())
+              .pinCode(user.get().getPinCode())
+              .mobileNumber(user.get().getMobileNumber())
+              .birthDay(user.get().getBirthDay().toString())
+              .residence(user.get().getResidence())
+              .gender(user.get().getGender())
+              .build();
+    }
+    else {
+      throw new IllegalStateException("Invalid user id");
+    }
+  }
   public AuthenticationResponse register(RegisterRequest request) {
     var user = User.builder()
         .firstname(request.getFirstname())
@@ -41,11 +79,19 @@ public class AuthenticationService {
         .email(request.getEmail())
         .password(passwordEncoder.encode(request.getPassword()))
         .role(request.getRole())
+        .maritalStatus(request.getMaritalStatus())
+        .pinCode(request.getPinCode())
+        .mobileNumber(request.getMobileNumber())
+        .birthDay(request.getBirthDay())
+        .residence(request.getResidence())
+        .gender(request.getGender())
         .build();
+
     var savedUser = repository.save(user);
     var jwtToken = jwtService.generateToken(user);
-    var refreshToken = jwtService.generateRefreshToken(user);
-    saveUserToken(savedUser, jwtToken);
+    //var refreshToken = jwtService.generateRefreshToken(user);
+    var refreshToken = jwtToken;
+    //saveUserToken(savedUser, jwtToken);
     UserTransfer userTransfer = UserTransfer.builder()
             .id(user.getId())
             .email(user.getEmail())
@@ -53,6 +99,12 @@ public class AuthenticationService {
             .lastname(user.getLastname())
             .password(user.getPassword())
             .role(user.getRole())
+            .maritalStatus(user.getMaritalStatus())
+            .pinCode(user.getPinCode())
+            .mobileNumber(user.getMobileNumber())
+            .birthDay(user.getBirthDay().toString())
+            .residence(user.getResidence())
+            .gender(user.getGender())
             .build();
     userRedisTemplate.opsForValue().set(USER_CACHE_PREFIX + jwtToken, userTransfer, 24, TimeUnit.HOURS);
     return AuthenticationResponse.builder()
@@ -81,6 +133,12 @@ public class AuthenticationService {
             .lastname(user.getLastname())
             .password(user.getPassword())
             .role(user.getRole())
+            .maritalStatus(user.getMaritalStatus())
+            .pinCode(user.getPinCode())
+            .mobileNumber(user.getMobileNumber())
+            .birthDay(user.getBirthDay().toString())
+            .residence(user.getResidence())
+            .gender(user.getGender())
             .build();
     userRedisTemplate.opsForValue().set(USER_CACHE_PREFIX + jwtToken, userTransfer, 24, TimeUnit.HOURS);
     return AuthenticationResponse.builder()
@@ -137,5 +195,14 @@ public class AuthenticationService {
         new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
       }
     }
+  }
+
+  public void deleteUserById(Long userId) {
+    boolean exists = repository.existsById(userId);
+
+    if (!exists) {
+      throw new IllegalStateException("User with id "+ userId + " does not exist.");
+    }
+    repository.deleteById(userId);
   }
 }

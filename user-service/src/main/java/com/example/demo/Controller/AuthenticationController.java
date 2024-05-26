@@ -1,5 +1,7 @@
 package com.example.demo.Controller;
 
+import com.example.demo.Commands.RegisterUserCommand;
+import com.example.demo.Model.Role;
 import com.example.demo.dto.AuthenticationRequest;
 import com.example.demo.dto.AuthenticationResponse;
 import com.example.demo.Service.AuthenticationService;
@@ -16,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/user/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
 
@@ -26,6 +28,10 @@ public class AuthenticationController {
   public ResponseEntity<AuthenticationResponse> register(
       @RequestBody RegisterRequest request
   ) {
+//    request.setRole(Role.USER);
+//    RegisterUserCommand registerUserCommand = new RegisterUserCommand(service, request);
+//    registerUserCommand.execute();;
+//    return ResponseEntity.ok(registerUserCommand.getAuthenticationResponse());
     return ResponseEntity.ok(service.register(request));
   }
   @PostMapping("/authenticate")

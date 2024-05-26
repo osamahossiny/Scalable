@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping(path = "api/v1/transaction")
+@RequestMapping(path = "/api/transaction/transaction")
 public class TransactionController {
     Logger logger=  LoggerFactory.getLogger(TransactionController.class);
 

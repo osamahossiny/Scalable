@@ -8,7 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/messages")
+@RequestMapping("/api/user/messages")
 @RequiredArgsConstructor
 //@PreAuthorize("hasRole('ADMIN')")
 public class DemoController {
@@ -22,4 +22,10 @@ public class DemoController {
         kafkaProducerService.sendRegisterRequestMessage(registerRequest);
         return ResponseEntity.ok(registerRequest.toString());
     }
+
+//    @GetMapping
+//    @PreAuthorize("hasAuthority('admin:read')")
+//    public String get() {
+//        return "GET:: admin controller";
+//    }
 }

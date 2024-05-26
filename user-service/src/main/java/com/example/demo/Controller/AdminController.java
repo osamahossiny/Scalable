@@ -1,40 +1,37 @@
 package com.example.demo.Controller;
 
+import com.example.demo.Model.User;
+import com.example.demo.Repository.UserRepository;
+import com.example.demo.Service.AuthenticationService;
+import com.example.demo.dto.RegisterRequest;
+import com.example.demo.dto.UserTransfer;
 import io.swagger.v3.oas.annotations.Hidden;
+import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/admin")
+@RequestMapping("/api/user/admin")
 @PreAuthorize("hasRole('ADMIN')")
+@AllArgsConstructor
 public class AdminController {
+    private final AuthenticationService service;
 
-    @GetMapping
-    @PreAuthorize("hasAuthority('admin:read')")
-    public String get() {
-        return "GET:: admin controller";
+    @PostMapping("/register-user")
+    public void registerUser(@RequestBody RegisterRequest request) {
+        service.adminRegister(request);
     }
-    @PostMapping
-    @PreAuthorize("hasAuthority('admin:create')")
-    @Hidden
-    public String post() {
-        return "POST:: admin controller";
+
+    @DeleteMapping("/delete-user")
+    public void deleteUser(@RequestBody Long userId) {
+        service.deleteUserById(userId);
     }
-    @PutMapping
-    @PreAuthorize("hasAuthority('admin:update')")
-    @Hidden
-    public String put() {
-        return "PUT:: admin controller";
+
+    @GetMapping("/get-user/{userId}")
+    public ResponseEntity<UserTransfer> getUser(@PathVariable(name = "userId") Long userId) {
+        return ResponseEntity.ok(service.getUser(userId));
     }
-    @DeleteMapping
-    @PreAuthorize("hasAuthority('admin:delete')")
-    @Hidden
-    public String delete() {
-        return "DELETE:: admin controller";
-    }
+
 }

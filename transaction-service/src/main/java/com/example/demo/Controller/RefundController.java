@@ -8,7 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/refunds")
+@RequestMapping("/api/transaction/refunds")
 public class RefundController {
 
     @Autowired

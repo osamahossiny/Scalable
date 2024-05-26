@@ -28,7 +28,7 @@ public class StripeWebhookController {
     }
     @Value("${stripe.webhook.secret}")
     private String endpointSecret;
-    @PostMapping("/stripe/events")
+    @PostMapping("/api/transaction/stripe/events")
     public void handleStripeEvent(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader) throws EventDataObjectDeserializationException {
         if(sigHeader == null){
             return;
