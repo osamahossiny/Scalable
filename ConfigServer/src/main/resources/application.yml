@@ -1,0 +1,15 @@
+spring:
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: C:\Users\Ahmed Elbltagy\Desktop\temp\Scalabe\ConfigServer\src\configration_files
+server:
+  port: 8888
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh,env

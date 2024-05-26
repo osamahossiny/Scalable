@@ -1,0 +1,2711 @@
+Index: admin-service/src/main/java/com/example/demo/Service/AdminService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.demo.Service;\r\n\r\nimport com.example.demo.Model.Refund;\r\nimport com.example.demo.Model.Promotion;\r\nimport com.example.demo.Model.Complaints;\r\nimport com.example.demo.Repository.RefundRepository;\r\nimport com.example.demo.Repository.PromotionRepository;\r\nimport com.example.demo.Repository.FlightRepository;\r\nimport com.example.demo.Repository.ComplaintsRepository;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.stereotype.Service;\r\nimport java.util.UUID;\r\nimport org.springframework.web.client.RestTemplate;\r\n\r\n@Service\r\npublic class AdminService {\r\n    @Autowired\r\n    private RefundRepository refundRepository;\r\n    @Autowired\r\n    private FlightRepository flightRepository;\r\n\r\n    @Autowired\r\n    private PromotionRepository promotionRepository;\r\n\r\n    @Autowired\r\n    private ComplaintsRepository complaintsRepository;\r\n\r\n    @Autowired\r\n    private final RestTemplate restTemplate;\r\n    public AdminService(RestTemplate restTemplate) {\r\n        this.restTemplate = restTemplate;\r\n    }\r\n    private String transactionServiceUrl=\"http://localhost:8081\";\r\n\r\n\r\n    public Refund processRefund(Refund refund) {\r\n        return refundRepository.save(refund);\r\n    }\r\n    public Refund updateRefundStatus(Long id, String status) {\r\n\r\n        Refund refund = refundRepository.findById(id)\r\n                .orElseThrow(() -> new RuntimeException(\"Refund not found\"));\r\n        refund.setStatus(status);\r\n       // refundRepository.save(refund);\r\n        notifyTransactionService(refund);\r\n        return refundRepository.save(refund);\r\n    }\r\n    public Refund createRefund(Refund refund) {\r\n        return refundRepository.save(refund);\r\n    }\r\n    private void notifyTransactionService(Refund refund) {\r\n        String url = transactionServiceUrl + \"/api/refunds/\" + refund.getId() + \"/status\";\r\n        System.out.println(url);\r\n        restTemplate.put(url, refund);\r\n    }\r\n\r\n\r\n    public Promotion addPromotion(Promotion promotion, Long flightId) {\r\n//        Flight flight = flightRepository.findById(flightId)\r\n//                .orElseThrow(() -> new RuntimeException(\"Flight not found\"));\r\n//        promotion.setFlight(flight);\r\n        return promotionRepository.save(promotion);\r\n    }\r\n\r\n    public Complaints followUpComplaint(UUID complaintId, String status) {\r\n        Complaints complaint = complaintsRepository.findById(complaintId)\r\n                .orElseThrow(() -> new RuntimeException(\"Complaint not found\"));\r\n        complaint.setStatus(status);\r\n        return complaintsRepository.save(complaint);\r\n    }\r\n\r\n    // Add other necessary methods\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/admin-service/src/main/java/com/example/demo/Service/AdminService.java b/admin-service/src/main/java/com/example/demo/Service/AdminService.java
+--- a/admin-service/src/main/java/com/example/demo/Service/AdminService.java	(revision d66ffa62edeaebfee7971fbbe4647d19204e7674)
++++ b/admin-service/src/main/java/com/example/demo/Service/AdminService.java	(date 1716683377697)
+@@ -1,5 +1,6 @@
+ package com.example.demo.Service;
+ 
++import com.example.demo.Model.Flight;
+ import com.example.demo.Model.Refund;
+ import com.example.demo.Model.Promotion;
+ import com.example.demo.Model.Complaints;
+@@ -9,6 +10,8 @@
+ import com.example.demo.Repository.ComplaintsRepository;
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.stereotype.Service;
++
++import java.util.List;
+ import java.util.UUID;
+ import org.springframework.web.client.RestTemplate;
+ 
+@@ -31,7 +34,9 @@
+         this.restTemplate = restTemplate;
+     }
+     private String transactionServiceUrl="http://localhost:8081";
+-
++    public List<Refund> getAllRefunds() {
++        return refundRepository.findAll();
++    }
+ 
+     public Refund processRefund(Refund refund) {
+         return refundRepository.save(refund);
+@@ -41,7 +46,7 @@
+         Refund refund = refundRepository.findById(id)
+                 .orElseThrow(() -> new RuntimeException("Refund not found"));
+         refund.setStatus(status);
+-       // refundRepository.save(refund);
++
+         notifyTransactionService(refund);
+         return refundRepository.save(refund);
+     }
+@@ -56,9 +61,9 @@
+ 
+ 
+     public Promotion addPromotion(Promotion promotion, Long flightId) {
+-//        Flight flight = flightRepository.findById(flightId)
+-//                .orElseThrow(() -> new RuntimeException("Flight not found"));
+-//        promotion.setFlight(flight);
++        Flight flight = flightRepository.findById(flightId)
++                .orElseThrow(() -> new RuntimeException("Flight not found"));
++        promotion.setFlight(flight);
+         return promotionRepository.save(promotion);
+     }
+ 
+Index: transaction-service/src/main/java/com/example/demo/Controller/RefundController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.demo.Controller;\r\n\r\nimport com.example.demo.Model.Refund;\r\nimport com.example.demo.Service.RefundService;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.http.ResponseEntity;\r\nimport org.springframework.security.core.context.SecurityContextHolder;\r\nimport org.springframework.web.bind.annotation.*;\r\n\r\n@RestController\r\n@RequestMapping(\"/api/refunds\")\r\npublic class RefundController {\r\n\r\n    @Autowired\r\n    private RefundService refundService;\r\n\r\n        @PostMapping\r\n        public ResponseEntity<Refund> createRefund(@RequestBody Refund refund) {\r\n           // Long userId = (long)SecurityContextHolder.getContext().getAuthentication().getCredentials();\r\n          //  refund.setUserId(refund.getUserId());\r\n            Refund createdRefund = refundService.createRefund(refund);\r\n            return ResponseEntity.ok(createdRefund);\r\n        }\r\n    @PutMapping(\"/{id}/status\")\r\n    public ResponseEntity<Refund> updateRefundStatus(@PathVariable Long id, @RequestBody Refund refund) {\r\n        System.out.println(\"test api\");\r\n        Refund updatedRefund = refundService.updateRefundStatus(id, refund.getStatus());\r\n        return ResponseEntity.ok(updatedRefund);\r\n    }\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/transaction-service/src/main/java/com/example/demo/Controller/RefundController.java b/transaction-service/src/main/java/com/example/demo/Controller/RefundController.java
+--- a/transaction-service/src/main/java/com/example/demo/Controller/RefundController.java	(revision d66ffa62edeaebfee7971fbbe4647d19204e7674)
++++ b/transaction-service/src/main/java/com/example/demo/Controller/RefundController.java	(date 1716690071683)
+@@ -16,8 +16,10 @@
+ 
+         @PostMapping
+         public ResponseEntity<Refund> createRefund(@RequestBody Refund refund) {
+-           // Long userId = (long)SecurityContextHolder.getContext().getAuthentication().getCredentials();
+-          //  refund.setUserId(refund.getUserId());
++//            String userId = SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
++//            System.out.println(userId);
++            refund.setUserId(1l);
++            refund.setStatus("Pending");
+             Refund createdRefund = refundService.createRefund(refund);
+             return ResponseEntity.ok(createdRefund);
+         }
+Index: admin-service/src/main/resources/application.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>server.port=8083\r\nspring.application.name=admin-service\r\neureka.client.service-url.defaultZone=http://localhost:8761/eureka/\r\n#spring.datasource.url=jdbc:postgresql://localhost:5434/Admin\r\n#spring.datasource.username=Admin\r\n#spring.datasource.password=password\r\n\r\nspring.datasource.url=jdbc:postgresql://localhost:5432/Scalable\r\nspring.datasource.username=postgres\r\nspring.datasource.password=1234\r\nspring.jpa.hibernate.ddl-auto=create-drop\r\nspring.jpa.show-sql=true\r\nspring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect\r\nspring.jpa.properties.hibernate.format_sql=true\r\nserver.error.include-message=always\r\n\r\nspring.cassandra.contact-points=127.0.0.1\r\nspring.cassandra.port=9042\r\nspring.cassandra.keyspace-name=mykeyspace\r\nspring.cassandra.local-datacenter=datacenter1\r\nspring.cassandra.schema-action=CREATE_IF_NOT_EXISTS\r\nspring.main.allow-bean-definition-overriding=true\r\nspring.data.redis.host=localhost\r\nspring.data.redis.port=6379\r\napplication.security.jwt.secret-key==404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970\r\napplication.security.jwt.expiration=86400000\r\napplication.security.jwt.refresh-token.expiration=86400000\r\n\r\nspring.kafka.consumer.bootstrap-servers=localhost:9092\r\nspring.kafka.consumer.group-id=group\r\nspring.kafka.consumer.auto-offset-reset=earliest\r\nspring.kafka.consumer.key-deserializer=org.apache.kafka.common.serialization.StringDeserializer\r\nspring.kafka.consumer.value-deserializer=org.springframework.kafka.support.serializer.JsonDeserializer\r\nspring.kafka.consumer.properties.spring.json.trusted.packages=*\r\n\r\nspring.kafka.producer.bootstrap-servers=localhost:9092\r\nspring.kafka.producer.key-serializer=org.apache.kafka.common.serialization.StringSerializer\r\nspring.kafka.producer.value-serializer=org.springframework.kafka.support.serializer.JsonSerializer
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>ISO-8859-1
+===================================================================
+diff --git a/admin-service/src/main/resources/application.properties b/admin-service/src/main/resources/application.properties
+--- a/admin-service/src/main/resources/application.properties	(revision d66ffa62edeaebfee7971fbbe4647d19204e7674)
++++ b/admin-service/src/main/resources/application.properties	(date 1716683012357)
+@@ -1,11 +1,21 @@
++management.endpoints.web.exposure.include=refresh,bus-refresh
++management.endpoint.health.show-details: always
++spring.cloud.config.uri=http://localhost:8888
++spring.application.name=admin_service
++spring.profiles.active=admin_service
++spring.cassandra.contact-points=127.0.0.1
++spring.cassandra.port=9042
++spring.cassandra.keyspace-name=mykeyspace
++spring.cassandra.local-datacenter=datacenter1
++spring.cassandra.schema-action=CREATE_IF_NOT_EXISTS
++
+ server.port=8083
+-spring.application.name=admin-service
+ eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
+ #spring.datasource.url=jdbc:postgresql://localhost:5434/Admin
+ #spring.datasource.username=Admin
+ #spring.datasource.password=password
+ 
+-spring.datasource.url=jdbc:postgresql://localhost:5432/Scalable
++spring.datasource.url=jdbc:postgresql://localhost:5432/Admin
+ spring.datasource.username=postgres
+ spring.datasource.password=1234
+ spring.jpa.hibernate.ddl-auto=create-drop
+@@ -14,11 +24,6 @@
+ spring.jpa.properties.hibernate.format_sql=true
+ server.error.include-message=always
+ 
+-spring.cassandra.contact-points=127.0.0.1
+-spring.cassandra.port=9042
+-spring.cassandra.keyspace-name=mykeyspace
+-spring.cassandra.local-datacenter=datacenter1
+-spring.cassandra.schema-action=CREATE_IF_NOT_EXISTS
+ spring.main.allow-bean-definition-overriding=true
+ spring.data.redis.host=localhost
+ spring.data.redis.port=6379
+@@ -26,13 +31,7 @@
+ application.security.jwt.expiration=86400000
+ application.security.jwt.refresh-token.expiration=86400000
+ 
+-spring.kafka.consumer.bootstrap-servers=localhost:9092
+-spring.kafka.consumer.group-id=group
+-spring.kafka.consumer.auto-offset-reset=earliest
+-spring.kafka.consumer.key-deserializer=org.apache.kafka.common.serialization.StringDeserializer
+-spring.kafka.consumer.value-deserializer=org.springframework.kafka.support.serializer.JsonDeserializer
+-spring.kafka.consumer.properties.spring.json.trusted.packages=*
++
+ 
+-spring.kafka.producer.bootstrap-servers=localhost:9092
+-spring.kafka.producer.key-serializer=org.apache.kafka.common.serialization.StringSerializer
+-spring.kafka.producer.value-serializer=org.springframework.kafka.support.serializer.JsonSerializer
+\ No newline at end of file
++
++
+Index: admin-service/src/main/java/com/example/demo/Config/SecurityConfiguration.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.demo.Config;\r\n\r\nimport lombok.RequiredArgsConstructor;\r\nimport org.springframework.context.annotation.Bean;\r\nimport org.springframework.context.annotation.Configuration;\r\nimport org.springframework.security.authentication.AuthenticationProvider;\r\nimport org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;\r\nimport org.springframework.security.config.annotation.web.builders.HttpSecurity;\r\nimport org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;\r\nimport org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;\r\nimport org.springframework.security.web.SecurityFilterChain;\r\nimport org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;\r\n\r\nimport static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;\r\n\r\n@Configuration\r\n@EnableWebSecurity\r\n@RequiredArgsConstructor\r\n@EnableMethodSecurity\r\npublic class SecurityConfiguration {\r\n\r\n    private static final String[] WHITE_LIST_URL = {\r\n            \"/api/v1/refunds/**\"\r\n//            \"/api/v1/auth/**\",\r\n//            \"/api/v1/messages\",\r\n//            \"/api/v1/messages/**\",\r\n    };\r\n    private final JwtAuthenticationFilter jwtAuthFilter;\r\n    private final AuthenticationProvider authenticationProvider;\r\n\r\n    @Bean\r\n    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {\r\n        http\r\n                .csrf(AbstractHttpConfigurer::disable)\r\n                .authorizeHttpRequests(req ->\r\n                        req.requestMatchers(WHITE_LIST_URL)\r\n                                .permitAll()\r\n//                                .requestMatchers(\"/api/v1/management/**\").hasAnyRole(ADMIN.name(), MANAGER.name())\r\n//                                .requestMatchers(GET, \"/api/v1/management/**\").hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())\r\n//                                .requestMatchers(POST, \"/api/v1/management/**\").hasAnyAuthority(ADMIN_CREATE.name(), MANAGER_CREATE.name())\r\n//                                .requestMatchers(PUT, \"/api/v1/management/**\").hasAnyAuthority(ADMIN_UPDATE.name(), MANAGER_UPDATE.name())\r\n//                                .requestMatchers(DELETE, \"/api/v1/management/**\").hasAnyAuthority(ADMIN_DELETE.name(), MANAGER_DELETE.name())\r\n                                .anyRequest()\r\n                                .authenticated()\r\n                )\r\n                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))\r\n                .authenticationProvider(authenticationProvider)\r\n                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)\r\n        ;\r\n\r\n        return http.build();\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/admin-service/src/main/java/com/example/demo/Config/SecurityConfiguration.java b/admin-service/src/main/java/com/example/demo/Config/SecurityConfiguration.java
+--- a/admin-service/src/main/java/com/example/demo/Config/SecurityConfiguration.java	(revision d66ffa62edeaebfee7971fbbe4647d19204e7674)
++++ b/admin-service/src/main/java/com/example/demo/Config/SecurityConfiguration.java	(date 1716638330832)
+@@ -20,7 +20,7 @@
+ public class SecurityConfiguration {
+ 
+     private static final String[] WHITE_LIST_URL = {
+-            "/api/v1/refunds/**"
++            "/api/v1/refunds/**","/actuator/refresh"
+ //            "/api/v1/auth/**",
+ //            "/api/v1/messages",
+ //            "/api/v1/messages/**",
+Index: admin-service/src/main/java/com/example/demo/Controller/AdminController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.demo.Controller;\r\n\r\nimport com.example.demo.Model.Refund;\r\nimport com.example.demo.Model.Promotion;\r\nimport com.example.demo.Model.Complaints;\r\nimport com.example.demo.Service.AdminService;\r\nimport com.example.demo.dto.UserTransfer;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.security.access.prepost.PreAuthorize;\r\nimport org.springframework.security.core.context.SecurityContextHolder;\r\nimport org.springframework.web.bind.annotation.*;\r\nimport org.springframework.http.ResponseEntity;\r\n\r\nimport java.util.UUID;\r\n\r\n@RestController\r\n@RequestMapping(\"/admin\")\r\n@PreAuthorize(\"hasRole('ADMIN')\")\r\npublic class AdminController {\r\n    @Autowired\r\n    private AdminService adminService;\r\n\r\n\r\n    @PutMapping(\"/refund/{id}/status\")\r\n    public Refund updateRefundStatus(@PathVariable Long id, @RequestBody RefundStatusUpdateRequest statusUpdateRequest) {\r\n        System.out.println(SecurityContextHolder.getContext().getAuthentication().getCredentials());\r\n        return adminService.updateRefundStatus(id, statusUpdateRequest.getStatus());\r\n    }\r\n    @PostMapping(\"/promotion/{flightId}\")\r\n    public Promotion addPromotion(@RequestBody Promotion promotion, @PathVariable Long flightId) {\r\n        return adminService.addPromotion(promotion, flightId);\r\n    }\r\n\r\n    @PutMapping(\"/followup/{complaintId}\")\r\n    public ResponseEntity<Complaints> followUpComplaint(@PathVariable UUID complaintId, @RequestParam String status) {\r\n        Complaints updatedComplaint = adminService.followUpComplaint(complaintId, status);\r\n        return ResponseEntity.ok(updatedComplaint);\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/admin-service/src/main/java/com/example/demo/Controller/AdminController.java b/admin-service/src/main/java/com/example/demo/Controller/AdminController.java
+--- a/admin-service/src/main/java/com/example/demo/Controller/AdminController.java	(revision d66ffa62edeaebfee7971fbbe4647d19204e7674)
++++ b/admin-service/src/main/java/com/example/demo/Controller/AdminController.java	(date 1716682795014)
+@@ -10,6 +10,7 @@
+ import org.springframework.security.core.context.SecurityContextHolder;
+ import org.springframework.web.bind.annotation.*;
+ import org.springframework.http.ResponseEntity;
++import java.util.List;
+ 
+ import java.util.UUID;
+ 
+@@ -19,13 +20,17 @@
+ public class AdminController {
+     @Autowired
+     private AdminService adminService;
+-
+-
+     @PutMapping("/refund/{id}/status")
+     public Refund updateRefundStatus(@PathVariable Long id, @RequestBody RefundStatusUpdateRequest statusUpdateRequest) {
+         System.out.println(SecurityContextHolder.getContext().getAuthentication().getCredentials());
+         return adminService.updateRefundStatus(id, statusUpdateRequest.getStatus());
+     }
++    @GetMapping("/refunds")
++    public ResponseEntity<List<Refund>> getAllRefunds() {
++        List<Refund> refunds = adminService.getAllRefunds();
++        return ResponseEntity.ok(refunds);
++    }
++
+     @PostMapping("/promotion/{flightId}")
+     public Promotion addPromotion(@RequestBody Promotion promotion, @PathVariable Long flightId) {
+         return adminService.addPromotion(promotion, flightId);
+Index: Test/src/test/java/LoadTest.java
+===================================================================
+diff --git a/Test/src/test/java/LoadTest.java b/Test/src/test/java/LoadTest.java
+deleted file mode 100644
+--- a/Test/src/test/java/LoadTest.java	(revision d66ffa62edeaebfee7971fbbe4647d19204e7674)
++++ /dev/null	(revision d66ffa62edeaebfee7971fbbe4647d19204e7674)
+@@ -1,137 +0,0 @@
+-import org.junit.Test;
+-
+-import java.io.IOException;
+-import java.net.HttpURLConnection;
+-import java.net.URL;
+-import java.util.ArrayList;
+-import java.util.List;
+-import java.util.concurrent.*;
+-
+-public class LoadTest {
+-
+-    private static final int NUM_THREADS = 5; // Number of concurrent threads
+-    private static final int NUM_REQUESTS = 10000; // Total number of requests to send
+-    private static final int HEALTH_CHECK_TIMEOUT = 5000; // Health check timeout in milliseconds
+-
+-    @Test
+-    public void testAirlineLoad() throws InterruptedException, IOException {
+-        String url = "http://localhost:8080/api/v1/airline";
+-        String payload = "{\"name\":\"Test Airline\"}";
+-        if (isServiceAvailable(url)) {
+-            loadTestEndpoint(url, payload);
+-        } else {
+-            System.err.println("Service is not available: " + url);
+-        }
+-    }
+-
+-    @Test
+-    public void testUserLoad() throws InterruptedException, IOException {
+-        String url = "http://localhost:8080/api/v1/user";
+-        String payload = "{\"username\":\"testuser\",\"password\":\"testpass\"}";
+-        if (isServiceAvailable(url)) {
+-            loadTestEndpoint(url, payload);
+-        } else {
+-            System.err.println("Service is not available: " + url);
+-        }
+-    }
+-
+-    @Test
+-    public void testFlightLoad() throws InterruptedException, IOException {
+-        String url = "http://localhost:8080/api/v1/flight";
+-        String payload = "{\"flightNumber\":\"12345\"}";
+-        if (isServiceAvailable(url)) {
+-            loadTestEndpoint(url, payload);
+-        } else {
+-            System.err.println("Service is not available: " + url);
+-        }
+-    }
+-
+-    @Test
+-    public void testFlightPackageLoad() throws InterruptedException, IOException {
+-        String url = "http://localhost:8080/api/v1/flightPackage";
+-        String payload = "{\"packageName\":\"Test Package\"}";
+-        if (isServiceAvailable(url)) {
+-            loadTestEndpoint(url, payload);
+-        } else {
+-            System.err.println("Service is not available: " + url);
+-        }
+-    }
+-
+-    @Test
+-    public void testFlightReservationLoad() throws InterruptedException, IOException {
+-        String url = "http://localhost:8080/api/v1/flightReservation";
+-        String payload = "{\"reservationId\":\"12345\"}";
+-        if (isServiceAvailable(url)) {
+-            loadTestEndpoint(url, payload);
+-        } else {
+-            System.err.println("Service is not available: " + url);
+-        }
+-    }
+-
+-    @Test
+-    public void testPlaneLoad() throws InterruptedException, IOException {
+-        String url = "http://localhost:8080/api/v1/plane";
+-        String payload = "{\"planeId\":\"7890\"}";
+-        if (isServiceAvailable(url)) {
+-            loadTestEndpoint(url, payload);
+-        } else {
+-            System.err.println("Service is not available: " + url);
+-        }
+-    }
+-
+-    @Test
+-    public void testPlaneSeatLoad() throws InterruptedException, IOException {
+-        String url = "http://localhost:8080/api/v1/planeSeat";
+-        String payload = "{\"seatNumber\":\"12A\"}";
+-        if (isServiceAvailable(url)) {
+-            loadTestEndpoint(url, payload);
+-        } else {
+-            System.err.println("Service is not available: " + url);
+-        }
+-    }
+-
+-    private boolean isServiceAvailable(String urlString) throws IOException {
+-        URL url = new URL(urlString);
+-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+-        connection.setRequestMethod("GET");
+-        connection.setConnectTimeout(HEALTH_CHECK_TIMEOUT);
+-        connection.setReadTimeout(HEALTH_CHECK_TIMEOUT);
+-
+-        int responseCode = connection.getResponseCode();
+-        connection.disconnect();
+-        return (responseCode == 200);
+-    }
+-
+-    private void loadTestEndpoint(String url, String payload) throws InterruptedException {
+-        ExecutorService executorService = Executors.newFixedThreadPool(NUM_THREADS);
+-        List<Future<Void>> futures = new ArrayList<>();
+-
+-        for (int i = 0; i < NUM_REQUESTS; i++) {
+-            futures.add(executorService.submit(new Callable<Void>() {
+-                @Override
+-                public Void call() {
+-                    try {
+-                        HttpUtil.sendPost(url, payload);
+-                    } catch (IOException e) {
+-                        e.printStackTrace();
+-                    }
+-                    return null;
+-                }
+-            }));
+-        }
+-
+-        executorService.shutdown();
+-        if (!executorService.awaitTermination(1, TimeUnit.MINUTES)) {
+-            System.err.println("Tasks did not finish in the allotted time");
+-            executorService.shutdownNow();
+-        }
+-
+-        for (Future<Void> future : futures) {
+-            try {
+-                future.get();
+-            } catch (Exception e) {
+-                e.printStackTrace();
+-            }
+-        }
+-    }
+-}
+Index: ConfigServer/src/main/java/configration_files/search-service.yml
+===================================================================
+diff --git a/ConfigServer/src/main/java/configration_files/search-service.yml b/ConfigServer/src/main/java/configration_files/search-service.yml
+deleted file mode 100644
+--- a/ConfigServer/src/main/java/configration_files/search-service.yml	(revision d66ffa62edeaebfee7971fbbe4647d19204e7674)
++++ /dev/null	(revision d66ffa62edeaebfee7971fbbe4647d19204e7674)
+@@ -1,64 +0,0 @@
+-server:
+-  port: 8086
+-  error:
+-    include-message: always
+-
+-email:
+-  smtp:
+-    server:505656
+-spring:
+-  application:
+-    name: admin-service
+-  datasource:
+-    url: jdbc:postgresql://localhost:5432/Scalable
+-    username: postgres
+-    password: 1234
+-  jpa:
+-    hibernate:
+-      ddl-auto: create-drop
+-    show-sql: true
+-    properties:
+-      hibernate:
+-        dialect: org.hibernate.dialect.PostgreSQLDialect
+-        format_sql: true
+-  main:
+-    allow-bean-definition-overriding: true
+-  data:
+-    redis:
+-      host: localhost
+-      port: 6379
+-
+-eureka:
+-  client:
+-    service-url:
+-      defaultZone: http://localhost:8761/eureka/
+-
+-
+-my:
+-  property=fuck:
+-application:
+-  security:
+-    jwt:
+-      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+-      expiration: 86400000
+-      refresh-token:
+-        expiration: 86400000
+-
+-kafka:
+-  consumer:
+-    bootstrap-servers: localhost:9092
+-    group-id: group
+-    auto-offset-reset: earliest
+-    key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+-    value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+-    properties:
+-      spring:
+-        json:
+-          trusted:
+-            packages: "*"
+-  producer:
+-    bootstrap-servers: localhost:9092
+-    key-serializer: org.apache.kafka.common.serialization.StringSerializer
+-    value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+-
+-
+Index: ConfigServer/src/main/java/configration_files/admin-service.yml
+===================================================================
+diff --git a/ConfigServer/src/main/java/configration_files/admin-service.yml b/ConfigServer/src/main/java/configration_files/admin-service.yml
+deleted file mode 100644
+--- a/ConfigServer/src/main/java/configration_files/admin-service.yml	(revision d66ffa62edeaebfee7971fbbe4647d19204e7674)
++++ /dev/null	(revision d66ffa62edeaebfee7971fbbe4647d19204e7674)
+@@ -1,64 +0,0 @@
+-server:
+-  port: 8086
+-  error:
+-    include-message: always
+-
+-email:
+-  smtp:
+-    server:505656
+-spring:
+-  application:
+-    name: admin-service
+-  datasource:
+-    url: jdbc:postgresql://localhost:5432/Scalable
+-    username: postgres
+-    password: 1234
+-  jpa:
+-    hibernate:
+-      ddl-auto: create-drop
+-    show-sql: true
+-    properties:
+-      hibernate:
+-        dialect: org.hibernate.dialect.PostgreSQLDialect
+-        format_sql: true
+-  main:
+-    allow-bean-definition-overriding: true
+-  data:
+-    redis:
+-      host: localhost
+-      port: 6379
+-
+-eureka:
+-  client:
+-    service-url:
+-      defaultZone: http://localhost:8761/eureka/
+-
+-
+-my:
+-  property=fuck:
+-application:
+-  security:
+-    jwt:
+-      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+-      expiration: 86400000
+-      refresh-token:
+-        expiration: 86400000
+-
+-kafka:
+-  consumer:
+-    bootstrap-servers: localhost:9092
+-    group-id: group
+-    auto-offset-reset: earliest
+-    key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+-    value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+-    properties:
+-      spring:
+-        json:
+-          trusted:
+-            packages: "*"
+-  producer:
+-    bootstrap-servers: localhost:9092
+-    key-serializer: org.apache.kafka.common.serialization.StringSerializer
+-    value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+-
+-
+Index: admin-service/src/main/java/com/example/demo/Config/AirlineConfig.java
+===================================================================
+diff --git a/admin-service/src/main/java/com/example/demo/Config/AirlineConfig.java b/admin-service/src/main/java/com/example/demo/Config/AirlineConfig.java
+deleted file mode 100644
+--- a/admin-service/src/main/java/com/example/demo/Config/AirlineConfig.java	(revision d66ffa62edeaebfee7971fbbe4647d19204e7674)
++++ /dev/null	(revision d66ffa62edeaebfee7971fbbe4647d19204e7674)
+@@ -1,22 +0,0 @@
+-package com.example.demo.Config;
+-
+-import com.example.demo.Repository.AirlineRepository;
+-import com.example.demo.Model.Airline;
+-import org.springframework.boot.CommandLineRunner;
+-import org.springframework.context.annotation.Bean;
+-import org.springframework.context.annotation.Configuration;
+-
+-import java.util.List;
+-
+-@Configuration
+-public class AirlineConfig {
+-
+-    @Bean
+-    CommandLineRunner commandLineRunner(AirlineRepository repository){
+-        return args -> {
+-            Airline egyptAir = new Airline(1L,"EgyptAir","456981684","01000000000");
+-            Airline flyEmirates = new Airline(2L,"FlyEmirates","97816322","01099999999");
+-            repository.saveAll(List.of(egyptAir, flyEmirates));
+-        };
+-    }
+-}
+Index: Controller/src/main/java/org/example/configManager/storage/ConfigurationStorage.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/configManager/storage/ConfigurationStorage.java b/Controller/src/main/java/org/example/configManager/storage/ConfigurationStorage.java
+new file mode 100644
+--- /dev/null	(date 1716649828549)
++++ b/Controller/src/main/java/org/example/configManager/storage/ConfigurationStorage.java	(date 1716649828549)
+@@ -0,0 +1,38 @@
++package org.example.configManager.storage;//package com.msa.configManager.storage;
++//
++//import com.google.gson.Gson;
++//import com.mongodb.client.*;
++//import com.msa.configManager.properties.ServiceProperties;
++//import org.bson.Document;
++//
++//import java.util.ArrayList;
++//
++//
++//public class ConfigurationStorage {
++//
++//    private MongoDatabase db;
++//
++//    public ConfigurationStorage()  {
++//        String connectionString = "";
++//        MongoClient mongoClient = MongoClients.create(connectionString);
++//        db =  mongoClient.getDatabase("Service-Configs");
++//    }
++//
++//    public void insert(ServiceProperties properties) {
++//        Gson gson = new Gson();
++//        String json = gson.toJson(properties);
++//        Document doc = Document.parse(json);
++//        db.getCollection("configs").insertOne(doc);
++//    }
++//
++//    public ArrayList<ServiceProperties> getAllConfigs() {
++//        MongoCollection<Document> collection = db.getCollection("configs");
++//        FindIterable<Document> iterDoc = collection.find();
++//        ArrayList<ServiceProperties> configs = new ArrayList<>();
++//        Gson gson = new Gson();
++//        for (Document document : iterDoc) {
++//            configs.add(gson.fromJson(document.toJson(), ServiceProperties.class));
++//        }
++//        return configs;
++//    }
++//}
+Index: Controller/src/main/java/org/example/repos/RunningInstanceRepo.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/repos/RunningInstanceRepo.java b/Controller/src/main/java/org/example/repos/RunningInstanceRepo.java
+new file mode 100644
+--- /dev/null	(date 1716650121633)
++++ b/Controller/src/main/java/org/example/repos/RunningInstanceRepo.java	(date 1716650121633)
+@@ -0,0 +1,8 @@
++//package org.example.repos;
++//
++//import com.msa.models.RunningInstance;
++//import org.springframework.stereotype.Repository;
++//import org.springframework.data.jpa.repository.JpaRepository;
++//
++//@Repository
++//public interface RunningInstanceRepo extends JpaRepository<RunningInstance, Long>{ }
+Index: .idea/encodings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"Encoding\">\r\n    <file url=\"file://$PROJECT_DIR$/Load_Test/src/main/java\" charset=\"UTF-8\" />\r\n    <file url=\"file://$PROJECT_DIR$/Test/src/main/java\" charset=\"UTF-8\" />\r\n    <file url=\"file://$PROJECT_DIR$/admin-service/src/main/java\" charset=\"UTF-8\" />\r\n    <file url=\"file://$PROJECT_DIR$/admin-service/src/main/resources\" charset=\"UTF-8\" />\r\n    <file url=\"file://$PROJECT_DIR$/discovery-service/src/main/java\" charset=\"UTF-8\" />\r\n    <file url=\"file://$PROJECT_DIR$/search-service/src/main/java\" charset=\"UTF-8\" />\r\n    <file url=\"file://$PROJECT_DIR$/search-service/src/main/resources\" charset=\"UTF-8\" />\r\n    <file url=\"file://$PROJECT_DIR$/src/main/java\" charset=\"UTF-8\" />\r\n    <file url=\"file://$PROJECT_DIR$/src/main/resources\" charset=\"UTF-8\" />\r\n    <file url=\"file://$PROJECT_DIR$/transaction-service/src/main/java\" charset=\"UTF-8\" />\r\n    <file url=\"file://$PROJECT_DIR$/transaction-service/src/main/resources\" charset=\"UTF-8\" />\r\n    <file url=\"file://$PROJECT_DIR$/user-service/src/main/java\" charset=\"UTF-8\" />\r\n    <file url=\"file://$PROJECT_DIR$/user-service/src/main/resources\" charset=\"UTF-8\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/encodings.xml b/.idea/encodings.xml
+--- a/.idea/encodings.xml	(revision d66ffa62edeaebfee7971fbbe4647d19204e7674)
++++ b/.idea/encodings.xml	(date 1716642640235)
+@@ -1,11 +1,15 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="Encoding">
++    <file url="file://$PROJECT_DIR$/ConfigServer/src/main/java" charset="UTF-8" />
++    <file url="file://$PROJECT_DIR$/Controller/src/main/java" charset="UTF-8" />
+     <file url="file://$PROJECT_DIR$/Load_Test/src/main/java" charset="UTF-8" />
+     <file url="file://$PROJECT_DIR$/Test/src/main/java" charset="UTF-8" />
++    <file url="file://$PROJECT_DIR$/Test/src/main/resources" charset="UTF-8" />
+     <file url="file://$PROJECT_DIR$/admin-service/src/main/java" charset="UTF-8" />
+     <file url="file://$PROJECT_DIR$/admin-service/src/main/resources" charset="UTF-8" />
+     <file url="file://$PROJECT_DIR$/discovery-service/src/main/java" charset="UTF-8" />
++    <file url="file://$PROJECT_DIR$/discovery-service/src/main/resources" charset="UTF-8" />
+     <file url="file://$PROJECT_DIR$/search-service/src/main/java" charset="UTF-8" />
+     <file url="file://$PROJECT_DIR$/search-service/src/main/resources" charset="UTF-8" />
+     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
+Index: Controller/src/main/java/org/example/repos/MachinesRepo.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/repos/MachinesRepo.java b/Controller/src/main/java/org/example/repos/MachinesRepo.java
+new file mode 100644
+--- /dev/null	(date 1716650112091)
++++ b/Controller/src/main/java/org/example/repos/MachinesRepo.java	(date 1716650112091)
+@@ -0,0 +1,7 @@
++//package org.example.repos;
++//
++//import com.msa.models.Machine;
++//import org.springframework.data.jpa.repository.JpaRepository;
++//
++//public interface MachinesRepo extends JpaRepository<Machine, Long> {
++//}
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ExternalStorageConfigurationManager\" enabled=\"true\" />\r\n  <component name=\"MavenProjectsManager\">\r\n    <option name=\"originalFiles\">\r\n      <list>\r\n        <option value=\"$PROJECT_DIR$/pom.xml\" />\r\n        <option value=\"$PROJECT_DIR$/search-service/pom.xml\" />\r\n        <option value=\"$PROJECT_DIR$/admin-service/pom.xml\" />\r\n        <option value=\"$PROJECT_DIR$/transaction-service/pom.xml\" />\r\n        <option value=\"$PROJECT_DIR$/user-service/pom.xml\" />\r\n      </list>\r\n    </option>\r\n    <option name=\"ignoredFiles\">\r\n      <set>\r\n        <option value=\"$PROJECT_DIR$/Load_Test/pom.xml\" />\r\n      </set>\r\n    </option>\r\n  </component>\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_21\" default=\"true\" project-jdk-name=\"21\" project-jdk-type=\"JavaSDK\">\r\n    <output url=\"file://$PROJECT_DIR$/out\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision d66ffa62edeaebfee7971fbbe4647d19204e7674)
++++ b/.idea/misc.xml	(date 1716662406633)
+@@ -1,4 +1,3 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="ExternalStorageConfigurationManager" enabled="true" />
+   <component name="MavenProjectsManager">
+Index: Controller/src/main/java/org/example/configManager/manager/ConfigurationManager.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/configManager/manager/ConfigurationManager.java b/Controller/src/main/java/org/example/configManager/manager/ConfigurationManager.java
+new file mode 100644
+--- /dev/null	(date 1716649821464)
++++ b/Controller/src/main/java/org/example/configManager/manager/ConfigurationManager.java	(date 1716649821464)
+@@ -0,0 +1,94 @@
++package org.example.configManager.manager;//package com.msa.configManager.manager;
++//
++//import com.msa.configManager.storage.ConfigurationStorage;
++//import com.msa.configManager.properties.ApplicationPropertiesParser;
++//import com.msa.configManager.properties.Property;
++//import com.msa.configManager.properties.ServiceProperties;
++//import org.apache.commons.text.StringSubstitutor;
++//
++//import java.io.BufferedReader;
++//import java.io.File;
++//import java.io.FileReader;
++//import java.io.IOException;
++//import java.text.ParseException;
++//import java.util.ArrayList;
++//import java.util.HashMap;
++//import java.util.regex.Matcher;
++//import java.util.regex.Pattern;
++//
++//public class ConfigurationManager {
++//
++//    private ApplicationPropertiesParser applicationPropertiesParser;
++//    private final File[] propertiesFiles;
++//    private ConfigurationStorage configurationStorage;
++//    public ConfigurationManager(String dir) {
++//        File f = new File("./");
++//        File folder = new File(dir);
++//        propertiesFiles = folder.listFiles();
++//        configurationStorage = new ConfigurationStorage();
++//    }
++//
++//    public String getFileContent(File file) throws IOException {
++//        // open the file
++//        FileReader fileReader = new FileReader(file);
++//        BufferedReader bf = new BufferedReader(fileReader);
++//
++//        StringBuilder sb = new StringBuilder();
++//        String line;
++//
++//        while ((line = bf.readLine() )!= null) {
++//            sb.append(line);
++//            sb.append("\n");
++//        }
++//        return sb.toString();
++//    }
++//
++//    public void addConfigsToDB() throws ParseException {
++//        applicationPropertiesParser = new ApplicationPropertiesParser();
++//        for (File file : propertiesFiles) {
++//            try {
++//                String fileContent = getFileContent(file);
++//                applicationPropertiesParser.setProperties(fileContent);
++//                ArrayList<Property> properties = applicationPropertiesParser.parse();
++//                configurationStorage.insert(new ServiceProperties(file.getName(), properties));
++//            } catch (IOException e) {
++//                e.printStackTrace();
++//            }
++//        }
++//    }
++//
++//    public void addSingleConfig(String serviceName, String configs) throws ParseException {
++//        applicationPropertiesParser = new ApplicationPropertiesParser();
++//        applicationPropertiesParser.setProperties(configs);
++//        ArrayList<Property> properties = applicationPropertiesParser.parse();
++//        configurationStorage.insert(new ServiceProperties(serviceName, properties));
++//    }
++//
++//    public ArrayList<ServiceProperties> getProperties() {
++//        ArrayList<ServiceProperties> properties = configurationStorage.getAllConfigs();
++//        ArrayList<ServiceProperties> newProps = new ArrayList<>();
++//
++//        for (ServiceProperties prop: properties) {
++//            ArrayList<Property> newProperties = new ArrayList<>();
++//            for (Property p: prop.getProperties()) {
++//                String val = p.getVal();
++//                Pattern pattern = Pattern.compile("\\{([^}]+)\\}");
++//                Matcher matcher = pattern.matcher(val);
++//                ArrayList<String> placeHoldersToBeQueried = new ArrayList<>();
++//                while (matcher.find()) {
++//                    String match = matcher.group(1);
++//                    placeHoldersToBeQueried.add(match);
++//                }
++//                HashMap<String, String> newValMap = getResourceVal(placeHoldersToBeQueried);
++//                String newVal = StringSubstitutor.replace(p.getVal(), newValMap);
++//                newProperties.add(new Property(p.getPropertyName(), newVal));
++//            }
++//            newProps.add(new ServiceProperties(prop.getServiceName(), newProperties));
++//        }
++//        return newProps;
++//    }
++//
++//    public HashMap<String, String> getResourceVal(ArrayList<String> placeHoldersToBeQueried) {
++//        return new HashMap<>();
++//    }
++//}
+Index: Controller/src/main/java/org/example/controllers/DeploymentController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/controllers/DeploymentController.java b/Controller/src/main/java/org/example/controllers/DeploymentController.java
+new file mode 100644
+--- /dev/null	(date 1716649862934)
++++ b/Controller/src/main/java/org/example/controllers/DeploymentController.java	(date 1716649862934)
+@@ -0,0 +1,38 @@
++//package org.example.controllers;
++//
++//import com.msa.deployment.Deployer;
++//import com.msa.models.Machine;
++//import com.msa.models.requests.DeploymentRequest;
++//import com.msa.models.responses.DeploymentResponse;
++//import com.msa.services.NodeMatcher;
++//import lombok.AllArgsConstructor;
++//import org.springframework.stereotype.Controller;
++//import org.springframework.web.bind.annotation.PostMapping;
++//import org.springframework.web.bind.annotation.RequestBody;
++//import org.springframework.web.bind.annotation.RequestMapping;
++//
++//@Controller
++//@RequestMapping("/deployment")
++//@AllArgsConstructor
++//public class DeploymentController {
++//
++//    private final Deployer deployer;
++//    private final NodeMatcher nodeMatcher;
++//
++//    @PostMapping()
++//    public DeploymentResponse deploy (@RequestBody DeploymentRequest deploymentRequest) {
++//
++//        Machine availableMachine = nodeMatcher.findNode(deploymentRequest.getServiceType());
++//        try {
++//            deployer.deployService(availableMachine, deploymentRequest.getServiceType());
++//        }
++//        catch (Exception e) {
++//            e.printStackTrace();
++//            return DeploymentResponse.builder().build();
++//        }
++//
++//        DeploymentResponse response = DeploymentResponse.builder().build();
++//        response.setMachine(availableMachine);
++//        return response;
++//    }
++//}
+Index: Controller/pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/pom.xml b/Controller/pom.xml
+new file mode 100644
+--- /dev/null	(date 1716649420705)
++++ b/Controller/pom.xml	(date 1716649420705)
+@@ -0,0 +1,40 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project xmlns="http://maven.apache.org/POM/4.0.0"
++         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
++    <modelVersion>4.0.0</modelVersion>
++    <parent>
++        <groupId>org.example</groupId>
++        <artifactId>MakeMyTrip</artifactId>
++        <version>1.0-SNAPSHOT</version>
++    </parent>
++
++    <artifactId>Controller</artifactId>
++
++    <properties>
++        <maven.compiler.source>21</maven.compiler.source>
++        <maven.compiler.target>21</maven.compiler.target>
++        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
++    </properties>
++    <dependencies>
++        <dependency>
++            <groupId>org.springframework.boot</groupId>
++            <artifactId>spring-boot-starter-web</artifactId>
++        </dependency>
++
++        <!-- Jackson Databind for JSON parsing -->
++        <dependency>
++            <groupId>com.fasterxml.jackson.core</groupId>
++            <artifactId>jackson-databind</artifactId>
++        </dependency>
++
++        <!-- Spring Boot Starter Test for testing -->
++        <dependency>
++            <groupId>org.springframework.boot</groupId>
++            <artifactId>spring-boot-starter-test</artifactId>
++            <scope>test</scope>
++        </dependency>
++
++    </dependencies>
++
++</project>
+\ No newline at end of file
+Index: Controller/src/main/java/org/example/configManager/properties/ApplicationPropertiesParser.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/configManager/properties/ApplicationPropertiesParser.java b/Controller/src/main/java/org/example/configManager/properties/ApplicationPropertiesParser.java
+new file mode 100644
+--- /dev/null	(date 1716649828659)
++++ b/Controller/src/main/java/org/example/configManager/properties/ApplicationPropertiesParser.java	(date 1716649828659)
+@@ -0,0 +1,46 @@
++package org.example.configManager.properties;//package com.msa.configManager.properties;
++//
++//import java.text.ParseException;
++//import java.util.ArrayList;
++//import java.util.Arrays;
++//import java.util.HashMap;
++//import java.util.regex.Matcher;
++//import java.util.regex.Pattern;
++//
++//public class ApplicationPropertiesParser {
++//
++//    private String properties;
++//    /**
++//     * input example:
++//     *          spring.datasource.url=jdbc:{users-service-db.db}://{users-service-db.host}:{users-service-db.port}/aliexpress
++//     *          spring.datasource.username=postgres
++//     *          spring.datasource.password=postgres
++//     */
++//
++//
++//    public ArrayList<Property> parse() throws ParseException {
++//        ArrayList<Property> properties = new ArrayList<>();
++//        String[] lines = this.properties.split("\n");
++//        for (String prop : lines) {
++//            if (prop.isEmpty())
++//                continue;
++//            String [] propParts = prop.split("=");
++//            if (propParts.length < 2) {
++//                throw new ParseException("Invalid property: " + prop, 0);
++//            }
++//            String propertyName = propParts[0];
++//            StringBuilder val = new StringBuilder();
++//            for (int i = 1; i < propParts.length; i++) {
++//                val.append(propParts[i]);
++//            }
++//
++//            properties.add(new Property(propertyName, val.toString()));
++//        }
++//        return properties;
++//    }
++//
++//    public void setProperties(String properties) {
++//        this.properties = properties;
++//    }
++//
++//}
+Index: Controller/src/main/java/org/example/configManager/properties/ServiceProperties.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/configManager/properties/ServiceProperties.java b/Controller/src/main/java/org/example/configManager/properties/ServiceProperties.java
+new file mode 100644
+--- /dev/null	(date 1716649828601)
++++ b/Controller/src/main/java/org/example/configManager/properties/ServiceProperties.java	(date 1716649828601)
+@@ -0,0 +1,28 @@
++package org.example.configManager.properties;//package com.msa.configManager.properties;
++//
++//import java.util.ArrayList;
++//
++//public class ServiceProperties {
++//    private String applicationName;
++//    private ArrayList<Property> properties;
++//
++//    public ServiceProperties(String applicationName, ArrayList<Property> properties) {
++//        this.applicationName = applicationName;
++//        this.properties = properties;
++//    }
++//
++//    public ArrayList<Property> getProperties() {
++//        return properties;
++//}
++//    public String getServiceName() {
++//        return applicationName;
++//    }
++//
++//    @Override
++//    public String toString() {
++//        return "ServiceProperties{" +
++//                "applicationName='" + applicationName + '\'' +
++//                ", properties=" + properties +
++//                '}';
++//    }
++//}
+Index: Controller/src/main/java/org/example/configManager/properties/Property.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/configManager/properties/Property.java b/Controller/src/main/java/org/example/configManager/properties/Property.java
+new file mode 100644
+--- /dev/null	(date 1716649828609)
++++ b/Controller/src/main/java/org/example/configManager/properties/Property.java	(date 1716649828609)
+@@ -0,0 +1,29 @@
++package org.example.configManager.properties;//package com.msa.configManager.properties;
++//
++//import java.util.HashMap;
++//
++//public class Property {
++//    private String propertyName; // spring.data.redis.port
++//    private String val; // should contain placeholders for the values of external resources for example: {users-service-cache.port}
++//
++//    public Property(String propertyName, String val) {
++//        this.propertyName = propertyName;
++//        this.val = val;
++//    }
++//
++//    public String toString() {
++//        return "--" + propertyName + "=" + getVal();
++//    }
++//
++//    public String getVal() {
++//        return val;
++//    }
++//
++//    public String getPropertyName() {
++//        return propertyName;
++//}
++//
++//    public void setVal(String val) {
++//        this.val = val;
++//    }
++//}
+Index: transaction-service/pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\"\r\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\r\n         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\r\n    <modelVersion>4.0.0</modelVersion>\r\n    <parent>\r\n        <groupId>org.example</groupId>\r\n        <artifactId>MakeMyTrip</artifactId>\r\n        <version>1.0-SNAPSHOT</version>\r\n    </parent>\r\n\r\n    <artifactId>transaction-service</artifactId>\r\n\r\n    <properties>\r\n        <maven.compiler.source>21</maven.compiler.source>\r\n        <maven.compiler.target>21</maven.compiler.target>\r\n        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\r\n    </properties>\r\n    <dependencies>\r\n        <dependency>\r\n            <groupId>org.springframework.boot</groupId>\r\n            <artifactId>spring-boot-starter-data-jpa</artifactId>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.springframework.boot</groupId>\r\n            <artifactId>spring-boot-starter-web</artifactId>\r\n        </dependency>\r\n\r\n        <dependency>\r\n            <groupId>org.postgresql</groupId>\r\n            <artifactId>postgresql</artifactId>\r\n            <scope>runtime</scope>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.springframework.boot</groupId>\r\n            <artifactId>spring-boot-starter-test</artifactId>\r\n            <scope>test</scope>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.projectlombok</groupId>\r\n            <artifactId>lombok</artifactId>\r\n            <optional>true</optional>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>com.stripe</groupId>\r\n            <artifactId>stripe-java</artifactId>\r\n            <version>25.4.0</version>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.springframework.cloud</groupId>\r\n            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>\r\n        </dependency>\r\n\r\n        <dependency>\r\n            <groupId>org.springframework.boot</groupId>\r\n            <artifactId>spring-boot-starter-security</artifactId>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>io.jsonwebtoken</groupId>\r\n            <artifactId>jjwt-api</artifactId>\r\n            <version>0.11.5</version>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>io.jsonwebtoken</groupId>\r\n            <artifactId>jjwt-impl</artifactId>\r\n            <version>0.11.5</version>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>io.jsonwebtoken</groupId>\r\n            <artifactId>jjwt-jackson</artifactId>\r\n            <version>0.11.5</version>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.springdoc</groupId>\r\n            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>\r\n            <version>2.1.0</version>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.springframework.boot</groupId>\r\n            <artifactId>spring-boot-starter-validation</artifactId>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.springframework.kafka</groupId>\r\n            <artifactId>spring-kafka</artifactId>\r\n        </dependency>\r\n\r\n        <dependency>\r\n            <groupId>org.springframework.boot</groupId>\r\n            <artifactId>spring-boot-starter-data-redis</artifactId>\r\n        </dependency>\r\n\r\n    </dependencies>\r\n\r\n    <build>\r\n        <plugins>\r\n            <plugin>\r\n                <groupId>org.springframework.boot</groupId>\r\n                <artifactId>spring-boot-maven-plugin</artifactId>\r\n            </plugin>\r\n        </plugins>\r\n    </build>\r\n\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/transaction-service/pom.xml b/transaction-service/pom.xml
+--- a/transaction-service/pom.xml	(revision d66ffa62edeaebfee7971fbbe4647d19204e7674)
++++ b/transaction-service/pom.xml	(date 1716682476647)
+@@ -18,6 +18,11 @@
+     </properties>
+     <dependencies>
+         <dependency>
++            <groupId>com.github.javafaker</groupId>
++            <artifactId>javafaker</artifactId>
++            <version>1.0.2</version>
++        </dependency>
++        <dependency>
+             <groupId>org.springframework.boot</groupId>
+             <artifactId>spring-boot-starter-data-jpa</artifactId>
+         </dependency>
+Index: Controller/src/main/java/org/example/deployment/Deployer.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/deployment/Deployer.java b/Controller/src/main/java/org/example/deployment/Deployer.java
+new file mode 100644
+--- /dev/null	(date 1716649923197)
++++ b/Controller/src/main/java/org/example/deployment/Deployer.java	(date 1716649923197)
+@@ -0,0 +1,42 @@
++//package org.example.deployment;
++//
++//import com.msa.models.Machine;
++//import com.msa.models.RunningInstance;
++//import com.msa.models.ServiceType;
++//import com.msa.repos.RunningInstanceRepo;
++//import lombok.AllArgsConstructor;
++//import org.springframework.stereotype.Component;
++//
++//import java.io.IOException;
++//
++//@Component
++//@AllArgsConstructor
++//public class Deployer {
++//
++//    // when it gets a command to deploy a service, it will do the following
++//    // 1. find a machine to deploy the service on
++//    // 2. clone the repository of the service
++//    // 3. build the service jar
++//    // send the jar to the machine
++//    // 4. run the jar on the machine
++//    // 5. add the service to the database as a running service
++//
++//    private final DeploymentHandler deploymentHandler;
++//    private final RunningInstanceRepo runningInstanceRepo;
++//    private final PrometheusHandler prometheusHandler;
++//
++//    public void deployService(Machine machine, ServiceType serviceType) throws IOException {
++//
++//        int port = deploymentHandler.runService(machine.getUsername(), machine.getIp(), serviceType.getDirectory());
++//        // add the service to the database as a running service
++//        RunningInstance recentDeployment = RunningInstance.builder().build();
++//        recentDeployment.setHost(machine);
++//        recentDeployment.setPort(Integer.toString(port));
++//        recentDeployment.setServiceType(serviceType);
++//        runningInstanceRepo.save(recentDeployment);
++//
++//        // inform prometheus about the new service
++//        prometheusHandler.informPrometheus(recentDeployment);
++//    }
++//
++//}
+Index: transaction-service/src/main/resources/application.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>server.port=8081\r\nspring.application.name=transaction-service\r\neureka.client.service-url.defaultZone=http://localhost:8761/eureka/\r\n#spring.datasource.url=jdbc:postgresql://localhost:5436/Transaction\r\n#spring.datasource.username=Transaction\r\n#spring.datasource.password=password\r\n\r\nspring.datasource.url=jdbc:postgresql://localhost:5432/postgres\r\nspring.datasource.username=postgres\r\nspring.datasource.password=1234\r\nspring.jpa.hibernate.ddl-auto=create-drop\r\nspring.jpa.show-sql=true\r\nspring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect\r\nspring.jpa.properties.hibernate.format_sql=true\r\nserver.error.include-message=always\r\nspring.jackson.serialization.fail-on-empty-beans=false\r\nstripe.webhook.secret=whsec_2372c36571b1ea54a06f974fa9f6170742151387a9a606b969e7cb101f6985b7\r\n\r\napplication.security.jwt.secret-key==404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970\r\napplication.security.jwt.expiration=86400000\r\napplication.security.jwt.refresh-token.expiration=86400000\r\n\r\nspring.kafka.consumer.bootstrap-servers=localhost:9092\r\nspring.kafka.consumer.group-id=group\r\nspring.kafka.consumer.auto-offset-reset=earliest\r\nspring.kafka.consumer.key-deserializer=org.apache.kafka.common.serialization.StringDeserializer\r\nspring.kafka.consumer.value-deserializer=org.springframework.kafka.support.serializer.JsonDeserializer\r\nspring.kafka.consumer.properties.spring.json.trusted.packages=*\r\n\r\nspring.kafka.producer.bootstrap-servers=localhost:9092\r\nspring.kafka.producer.key-serializer=org.apache.kafka.common.serialization.StringSerializer\r\nspring.kafka.producer.value-serializer=org.springframework.kafka.support.serializer.JsonSerializer
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>ISO-8859-1
+===================================================================
+diff --git a/transaction-service/src/main/resources/application.properties b/transaction-service/src/main/resources/application.properties
+--- a/transaction-service/src/main/resources/application.properties	(revision d66ffa62edeaebfee7971fbbe4647d19204e7674)
++++ b/transaction-service/src/main/resources/application.properties	(date 1716683068123)
+@@ -5,7 +5,7 @@
+ #spring.datasource.username=Transaction
+ #spring.datasource.password=password
+ 
+-spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
++spring.datasource.url=jdbc:postgresql://localhost:5432/Transaction
+ spring.datasource.username=postgres
+ spring.datasource.password=1234
+ spring.jpa.hibernate.ddl-auto=create-drop
+Index: Controller/src/main/java/org/example/deployment/PrometheusHandler.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/deployment/PrometheusHandler.java b/Controller/src/main/java/org/example/deployment/PrometheusHandler.java
+new file mode 100644
+--- /dev/null	(date 1716650040905)
++++ b/Controller/src/main/java/org/example/deployment/PrometheusHandler.java	(date 1716650040905)
+@@ -0,0 +1,84 @@
++//package org.example.deployment;
++//
++//import com.fasterxml.jackson.databind.ObjectMapper;
++//import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
++//import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
++//import com.msa.models.prometheus.PrometheusYml;
++//import com.msa.models.RunningInstance;
++//import com.msa.models.prometheus.ScrapeConfig;
++//import com.msa.models.prometheus.StaticConfig;
++//import com.msa.services.MetricsPuller;
++//import org.springframework.beans.factory.annotation.Value;
++//import org.springframework.stereotype.Component;
++//
++//
++//import java.io.*;
++//import java.net.URLEncoder;
++//import java.nio.file.Paths;
++//import java.util.Vector;
++//
++//@Component
++//public class PrometheusHandler {
++//
++//    @Value("${prometheusYamlFile}")
++//    private String prometheusYamlPath;
++//
++//    private final MetricsPuller metricsPuller;
++//
++//    public PrometheusHandler(MetricsPuller metricsPuller) {
++//        this.metricsPuller = metricsPuller;
++//    }
++//
++//    public void informPrometheus(RunningInstance runningInstance) {
++//        try {
++//
++//            // open the prometheus .yml file
++//
++//            File file = new File(prometheusYamlPath);
++//
++//            // Create ObjectMapper with YAMLFactory
++//            ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory().disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER));
++//
++//            // Read YAML file and parse into Config object
++//            PrometheusYml config = objectMapper.readValue(file, PrometheusYml.class);
++//
++//            System.out.println(runningInstance);
++//            System.out.println(config);
++//
++//            // Add new target to yaml
++//            ScrapeConfig runningInstanceConfig = null;
++//            for (ScrapeConfig scrapeConfig : config.getScrape_configs()) {
++//                if (scrapeConfig.getJob_name().equals(runningInstance.getServiceType().getDirectory())) {
++//                    runningInstanceConfig = scrapeConfig;
++//                    break;
++//                }
++//            }
++//            if (runningInstanceConfig == null) {
++//                runningInstanceConfig = new ScrapeConfig();
++//                runningInstanceConfig.setJob_name(runningInstance.getServiceType().getDirectory());
++//                runningInstanceConfig.setMetrics_path("/actuator/prometheus");
++//                runningInstanceConfig.setStatic_configs(new Vector<>());
++//                runningInstanceConfig.getStatic_configs().add(new StaticConfig(new Vector<>()));
++//
++//                config.getScrape_configs().add(runningInstanceConfig);
++//            }
++//            if (runningInstanceConfig.getStatic_configs().isEmpty()) {
++//                runningInstanceConfig.getStatic_configs().add(new StaticConfig());
++//            }
++//            StaticConfig staticConfig = runningInstanceConfig.getStatic_configs().get(0);
++//            staticConfig.getTargets().add(runningInstance.getHost().getIp() + ":" + runningInstance.getPort());
++//
++//
++//            objectMapper.writeValue(file, config);
++//
++//            metricsPuller.reloadYaml();
++//
++//            System.out.println(config);
++//
++//            System.out.println("Target added successfully.");
++//        } catch (IOException e) {
++//            e.printStackTrace();
++//        }
++//    }
++//
++//}
+Index: Controller/src/main/java/org/example/deployment/DeploymentHandler.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/deployment/DeploymentHandler.java b/Controller/src/main/java/org/example/deployment/DeploymentHandler.java
+new file mode 100644
+--- /dev/null	(date 1716650016853)
++++ b/Controller/src/main/java/org/example/deployment/DeploymentHandler.java	(date 1716650016853)
+@@ -0,0 +1,35 @@
++//package org.example.deployment;
++//
++//import lombok.AllArgsConstructor;
++//import org.springframework.stereotype.Component;
++//
++//import java.io.IOException;
++//
++//@Component
++//@AllArgsConstructor
++//public class DeploymentHandler {
++//    private final GitHandler gitHandler;
++//    private final SshHandler sshHandler;
++//    private final MavenHandler mavenHandler;
++//
++//
++//    public int runService(String hostUsername, String hostIp, String serviceName) throws IOException {
++//        System.out.printf("Initializing run of service %s on %s@%s%n", serviceName, hostUsername, hostIp);
++//        gitHandler.checkoutToBranch();
++//        gitHandler.pull();
++//
++//        mavenHandler.packageToJAR(serviceName);
++//        String pathToJar = mavenHandler.getPathToJar(serviceName);
++//
++//
++//        String fileNameOnServer = serviceName + ".jar";
++//        sshHandler.sendFileToServer(hostUsername, hostIp, pathToJar, fileNameOnServer);
++//
++//        int randomPort = sshHandler.getRandomOpenPort(hostUsername, hostIp);
++//        sshHandler.runCommandOnServer(hostUsername, hostIp, String.format("java -Dserver.port=%d -jar /home/shared/%s", randomPort, fileNameOnServer));
++//
++//        System.out.printf("Service %s is running on %s@%s port:%d%n", serviceName, hostUsername, hostIp, randomPort);
++//        return randomPort;
++//    }
++//
++//}
+Index: Controller/src/main/java/org/example/deployment/Configurations.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/deployment/Configurations.java b/Controller/src/main/java/org/example/deployment/Configurations.java
+new file mode 100644
+--- /dev/null	(date 1716649899801)
++++ b/Controller/src/main/java/org/example/deployment/Configurations.java	(date 1716649899801)
+@@ -0,0 +1,45 @@
++//package org.example.deployment;
++//
++//import org.apache.maven.shared.invoker.DefaultInvoker;
++//import org.apache.maven.shared.invoker.Invoker;
++//import org.eclipse.jgit.api.Git;
++//import org.eclipse.jgit.internal.storage.file.FileRepository;
++//import org.eclipse.jgit.lib.Repository;
++//import org.eclipse.jgit.transport.CredentialsProvider;
++//import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
++//import org.springframework.beans.factory.annotation.Value;
++//import org.springframework.context.annotation.Bean;
++//import org.springframework.context.annotation.Configuration;
++//
++//import java.io.IOException;
++//
++//@Configuration
++//public class Configurations {
++//    @Value("${gitToken}")
++//    private String gitToken;
++//
++//    @Value("${localRepoPath}")
++//    private String localPath;
++//
++//    @Bean
++//    public Invoker getDefaultInvoker() {
++//        return new DefaultInvoker();
++//    }
++//
++//    @Bean
++//    public CredentialsProvider getCredentialsProvider() {
++//        return new UsernamePasswordCredentialsProvider(gitToken, "");
++//    }
++//
++//    @Bean
++//    public Git getGit() {
++//        Repository localRepo;
++//        try {
++//            localRepo = new FileRepository(localPath + "/.git");
++//        } catch (IOException e) {
++//            throw new RuntimeException(e);
++//        }
++//        return new Git(localRepo);
++//    }
++//
++//}
+Index: Controller/src/main/java/org/example/deployment/MavenHandler.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/deployment/MavenHandler.java b/Controller/src/main/java/org/example/deployment/MavenHandler.java
+new file mode 100644
+--- /dev/null	(date 1716650033667)
++++ b/Controller/src/main/java/org/example/deployment/MavenHandler.java	(date 1716650033667)
+@@ -0,0 +1,52 @@
++//package org.example.deployment;
++//
++//import org.apache.maven.shared.invoker.*;
++//import org.springframework.beans.factory.annotation.Autowired;
++//import org.springframework.beans.factory.annotation.Value;
++//import org.springframework.stereotype.Component;
++//
++//import java.io.File;
++//import java.util.Collections;
++//
++//@Component
++//public class MavenHandler {
++//
++//    @Value("${mavenHome}")
++//    private String mavenHome;
++//    @Value("${localRepoPath}")
++//    private String localRepoPath;
++//    @Value("${version}")
++//    private String version;
++//
++//    private final Invoker invoker;
++//
++//    @Autowired
++//    public MavenHandler(Invoker invoker) {
++//        this.invoker = invoker;
++//    }
++//
++//    public void packageToJAR(String serviceName) {
++//        InvocationRequest request = new DefaultInvocationRequest();
++//        request.setMavenHome(new File(mavenHome));
++//        request.setPomFile(new File(String.format(localRepoPath + "\\%s\\pom.xml", serviceName)));
++//        request.setGoals(Collections.singletonList("package"));
++//
++//        InvocationResult result;
++//        try {
++//            result = invoker.execute(request);
++//        } catch (MavenInvocationException e) {
++//            throw new RuntimeException(e);
++//        }
++//        if (result.getExitCode() != 0) {
++//            throw new IllegalStateException("Build failed.");
++//        }
++//        System.out.printf("Packaged %s to JAR%n", serviceName);
++//    }
++//
++//    public String getPathToJar(String serviceName) {
++//        String pathToJar = String.format(localRepoPath + "\\%s\\target\\%s-%s.jar", serviceName, serviceName, version);
++//        System.out.printf("Path to Jar is %s%n", pathToJar);
++//        return pathToJar;
++//    }
++//
++//}
+Index: pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\"\r\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\r\n         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\r\n    <modelVersion>4.0.0</modelVersion>\r\n    <parent>\r\n        <groupId>org.springframework.boot</groupId>\r\n        <artifactId>spring-boot-starter-parent</artifactId>\r\n        <version>3.2.3</version>\r\n        <relativePath/> <!-- lookup parent from repository -->\r\n    </parent>\r\n    <groupId>org.example</groupId>\r\n    <artifactId>MakeMyTrip</artifactId>\r\n    <version>1.0-SNAPSHOT</version>\r\n    <packaging>pom</packaging>\r\n    <modules>\r\n        <module>user-service</module>\r\n        <module>admin-service</module>\r\n        <module>transaction-service</module>\r\n        <module>search-service</module>\r\n        <module>discovery-service</module>\r\n        <module>Test</module>\r\n    </modules>\r\n\r\n    <properties>\r\n        <maven.compiler.source>21</maven.compiler.source>\r\n        <maven.compiler.target>21</maven.compiler.target>\r\n        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\r\n        <spring-cloud-version>2023.0.0</spring-cloud-version>\r\n    </properties>\r\n\r\n    <dependencyManagement>\r\n        <dependencies>\r\n            <dependency>\r\n                <groupId>org.springframework.cloud</groupId>\r\n                <artifactId>spring-cloud-dependencies</artifactId>\r\n                <version>${spring-cloud-version}</version>\r\n                <type>pom</type>\r\n                <scope>import</scope>\r\n            </dependency>\r\n        </dependencies>\r\n    </dependencyManagement>\r\n\r\n    <build>\r\n        <plugins>\r\n            <plugin>\r\n                <groupId>org.springframework.boot</groupId>\r\n                <artifactId>spring-boot-maven-plugin</artifactId>\r\n                <configuration>\r\n                    <excludes>\r\n                        <exclude>\r\n                            <groupId>org.projectlombok</groupId>\r\n                            <artifactId>lombok</artifactId>\r\n                        </exclude>\r\n                    </excludes>\r\n                </configuration>\r\n            </plugin>\r\n            <plugin>\r\n                <groupId>com.google.cloud.tools</groupId>\r\n                <artifactId>jib-maven-plugin</artifactId>\r\n                <version>3.4.1</version>\r\n                <configuration>\r\n                    <from>\r\n                        <image>openjdk:21-slim</image>\r\n                    </from>\r\n                    <to>\r\n                        <image>docker.io/osamahossiny/${project.artifactId}</image>\r\n                    </to>\r\n                </configuration>\r\n                <executions>\r\n                    <execution>\r\n                        <phase>package</phase>\r\n                        <goals>\r\n                            <goal>dockerBuild</goal>\r\n                        </goals>\r\n                    </execution>\r\n                </executions>\r\n            </plugin>\r\n        </plugins>\r\n    </build>\r\n\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/pom.xml b/pom.xml
+--- a/pom.xml	(revision d66ffa62edeaebfee7971fbbe4647d19204e7674)
++++ b/pom.xml	(date 1716642632987)
+@@ -20,6 +20,8 @@
+         <module>search-service</module>
+         <module>discovery-service</module>
+         <module>Test</module>
++        <module>ConfigServer</module>
++        <module>Controller</module>
+     </modules>
+ 
+     <properties>
+Index: Controller/src/main/java/org/example/deployment/SshHandler.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/deployment/SshHandler.java b/Controller/src/main/java/org/example/deployment/SshHandler.java
+new file mode 100644
+--- /dev/null	(date 1716650048044)
++++ b/Controller/src/main/java/org/example/deployment/SshHandler.java	(date 1716650048044)
+@@ -0,0 +1,84 @@
++//package org.example.deployment;
++//
++//import org.apache.sshd.client.SshClient;
++//import org.apache.sshd.client.channel.ClientChannel;
++//import org.apache.sshd.client.session.ClientSession;
++//import org.apache.sshd.common.channel.Channel;
++//import org.apache.sshd.sftp.client.fs.SftpFileSystemProvider;
++//import org.springframework.beans.factory.annotation.Value;
++//import org.springframework.stereotype.Component;
++//
++//import java.io.File;
++//import java.io.IOException;
++//import java.net.URI;
++//import java.nio.file.FileSystem;
++//import java.nio.file.Files;
++//import java.nio.file.Path;
++//import java.nio.file.StandardCopyOption;
++//import java.util.Collections;
++//
++//@Component
++//public class SshHandler {
++//
++//    @Value("${sftpUser}")
++//    String sftpUsername;
++//
++//    @Value("${sftpPassword}")
++//    String sftpPassword;
++//
++//    public void sendFileToServer(String serverUsername, String serverIp, String localPath, String fileNameOnServer) throws IOException {
++//        System.out.printf("Sending file from %s on local machine to /shared/%s %s@%s%n", localPath, fileNameOnServer, serverUsername, serverIp);
++//        SshClient client = SshClient.setUpDefaultClient();
++//        client.start();
++//
++//        URI uri = SftpFileSystemProvider.createFileSystemURI(serverIp, 22, sftpUsername, sftpPassword);
++//
++//        SftpFileSystemProvider provider = new SftpFileSystemProvider(client);
++//        FileSystem fs = provider.newFileSystem(uri, Collections.<String, Object>emptyMap());
++//
++//        Path remotePath = fs.getPath("/shared/" + fileNameOnServer);
++//
++//        Files.copy(new File(localPath).toPath(), remotePath, StandardCopyOption.REPLACE_EXISTING);
++//
++//        System.out.printf("File sent from %s on local machine to /shared/%s %s@%s%n", localPath, fileNameOnServer, serverUsername, serverIp);
++//    }
++//
++//    public void runCommandOnServer(String serverUsername, String serverIp, String command) throws IOException {
++//        System.out.printf("Running command : %s on %s@%s%n", command, serverUsername, serverIp);
++//        SshClient client = SshClient.setUpDefaultClient();
++//        client.start();
++//        ClientSession session = client.connect(serverUsername, serverIp, 22).verify().getClientSession();
++//        session.auth().verify(5000);
++//
++//
++//        ClientChannel channel = session.createChannel(Channel.CHANNEL_EXEC, command);
++//
++//
++//        channel.open().verify();
++//
++//        channel.close();
++//
++//        System.out.printf("command : %s , run on %s@%s%n", command, serverUsername, serverIp);
++//    }
++//
++//    public int getRandomOpenPort(String serverUsername, String serverIp) throws IOException {
++//        System.out.printf("Getting random port on %s@%s%n", serverUsername, serverIp);
++//        SshClient client = SshClient.setUpDefaultClient();
++//        client.start();
++//        ClientSession session = client.connect(serverUsername, serverIp, 22).verify().getClientSession();
++//        session.auth().verify(5000);
++//
++//        int startRange = 3000;
++//        int endRange = 20000;
++//        int numberOfPorts = 1;
++//        String command = String.format("comm -23 <(seq %d %d | sort) <(ss -Htan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n %d", startRange, endRange, numberOfPorts);
++//        String output = session.executeRemoteCommand(command);
++//
++//        System.out.printf("Running command to get random port : %s on %s@%s%n", command, serverUsername, serverIp);
++//
++//        int randomPort = Integer.parseInt(output.replaceAll("[^\\d.]", ""));
++//
++//        System.out.printf("Random port %d  on %s@%s%n", randomPort, serverUsername, serverIp);
++//        return randomPort;
++//    }
++//}
+Index: Controller/src/main/java/org/example/deployment/GitHandler.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/deployment/GitHandler.java b/Controller/src/main/java/org/example/deployment/GitHandler.java
+new file mode 100644
+--- /dev/null	(date 1716650026049)
++++ b/Controller/src/main/java/org/example/deployment/GitHandler.java	(date 1716650026049)
+@@ -0,0 +1,66 @@
++//package org.example.deployment;
++//
++//import lombok.AllArgsConstructor;
++//import org.eclipse.jgit.api.CheckoutCommand;
++//import org.eclipse.jgit.api.Git;
++//import org.eclipse.jgit.api.PullCommand;
++//import org.eclipse.jgit.api.errors.GitAPIException;
++//import org.eclipse.jgit.internal.storage.file.FileRepository;
++//import org.eclipse.jgit.lib.Repository;
++//import org.eclipse.jgit.transport.CredentialsProvider;
++//import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
++//import org.springframework.beans.factory.annotation.Autowire;
++//import org.springframework.beans.factory.annotation.Autowired;
++//import org.springframework.beans.factory.annotation.Value;
++//import org.springframework.stereotype.Component;
++//
++//import java.io.FileNotFoundException;
++//import java.io.FileReader;
++//import java.io.IOException;
++//import java.util.Properties;
++//
++//@Component
++//@AllArgsConstructor
++//public class GitHandler {
++//
++//
++//    @Value("${branchName}")
++//    private String branchName;
++//    private final Git git;
++//    private final CredentialsProvider credentialsProvider;
++//
++//    @Autowired
++//    public GitHandler(Git git, CredentialsProvider credentialsProvider) {
++//        this.git = git;
++//        this.credentialsProvider = credentialsProvider;
++//    }
++//
++//
++//    public void checkoutToBranch() {
++//        for (int i = 0; i < 3; i++) {
++//            try {
++//                CheckoutCommand checkoutCommand = git.checkout().setName(branchName);
++//                checkoutCommand.call();
++//                System.out.printf("Checked out to %s branch%n", branchName);
++//                return;
++//            } catch (GitAPIException e) {
++//                e.printStackTrace();
++//            }
++//        }
++//    }
++//
++//    public void pull() {
++//        for (int i = 0; i < 3; i++) {
++//            try {
++//                PullCommand pullCmd = git.pull().setCredentialsProvider(credentialsProvider);
++//                pullCmd.call();
++//                System.out.printf("Pulled remote%n");
++//                return;
++//            } catch (GitAPIException e) {
++//                e.printStackTrace();
++//            }
++//        }
++//    }
++//
++//}
++//
+Index: ConfigServer/pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ConfigServer/pom.xml b/ConfigServer/pom.xml
+new file mode 100644
+--- /dev/null	(date 1716629032925)
++++ b/ConfigServer/pom.xml	(date 1716629032925)
+@@ -0,0 +1,67 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project xmlns="http://maven.apache.org/POM/4.0.0"
++         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
++    <modelVersion>4.0.0</modelVersion>
++    <parent>
++        <groupId>org.springframework.boot</groupId>
++        <artifactId>spring-boot-starter-parent</artifactId>
++        <version>3.1.3</version> <!-- Use a compatible version -->
++        <relativePath/> <!-- lookup parent from repository -->
++    </parent>
++
++    <artifactId>ConfigServer</artifactId>
++
++    <properties>
++        <maven.compiler.source>21</maven.compiler.source>
++        <maven.compiler.target>21</maven.compiler.target>
++        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
++    </properties>
++    <dependencies>
++        <!--  Spring Boot Starter for Web  -->
++        <!-- Spring Cloud Bus -->
++
++
++        <!-- Spring Boot Actuator -->
++        <dependency>
++            <groupId>org.springframework.boot</groupId>
++            <artifactId>spring-boot-starter-actuator</artifactId>
++        </dependency>
++
++
++        <!--  Spring Cloud Config Server  -->
++        <dependency>
++            <groupId>org.springframework.cloud</groupId>
++            <artifactId>spring-cloud-config-server</artifactId>
++        </dependency>
++    </dependencies>
++    <dependencyManagement>
++        <dependencies>
++            <dependency>
++                <groupId>org.springframework.cloud</groupId>
++                <artifactId>spring-cloud-dependencies</artifactId>
++                <version>2022.0.4</version>
++                <type>pom</type>
++                <scope>import</scope>
++            </dependency>
++        </dependencies>
++    </dependencyManagement>
++    <build>
++        <plugins>
++            <plugin>
++                <groupId>org.springframework.boot</groupId>
++                <artifactId>spring-boot-maven-plugin</artifactId>
++            </plugin>
++            <plugin>
++                <groupId>org.apache.maven.plugins</groupId>
++                <artifactId>maven-compiler-plugin</artifactId>
++                <version>3.8.1</version>
++                <configuration>
++                    <source>21</source>
++                    <target>21</target>
++                </configuration>
++            </plugin>
++        </plugins>
++    </build>
++
++</project>
+\ No newline at end of file
+Index: Controller/src/main/java/org/example/Controller/GeneralController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/Controller/GeneralController.java b/Controller/src/main/java/org/example/Controller/GeneralController.java
+new file mode 100644
+--- /dev/null	(date 1716649623983)
++++ b/Controller/src/main/java/org/example/Controller/GeneralController.java	(date 1716649623983)
+@@ -0,0 +1,82 @@
++package org.example.Controller;
++
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.http.ResponseEntity;
++import org.springframework.web.bind.annotation.*;
++
++@RestController
++@RequestMapping("/controller")
++public class GeneralController {
++
++
++    @PostMapping("/set_mq")
++    public ResponseEntity<String> setMessageQueue(@RequestBody MQConfig config) {
++        return ResponseEntity.ok("Message Queue Updated for Service: " );
++    }
++
++    @PostMapping("/set_max_thread_count")
++    public ResponseEntity<String> setMaxThreadCount(@RequestParam String serviceName, @RequestParam int count) {
++        return ResponseEntity.ok("Max Thread Count Set for Service: " + serviceName);
++    }
++
++    @PostMapping("/set_max_db_connections_count")
++    public ResponseEntity<String> setMaxDbConnectionsCount(@RequestParam String serviceName, @RequestParam int count) {
++        return ResponseEntity.ok("Max DB Connections Count Set for Service: " + serviceName);
++    }
++
++    @PostMapping("/add_command")
++    public ResponseEntity<String> addCommand(@RequestBody CommandConfig commandConfig) {
++        return ResponseEntity.ok("Command Added to Service: ");
++    }
++
++    @DeleteMapping("/delete_command")
++    public ResponseEntity<String> deleteCommand(@RequestParam String serviceName, @RequestParam String commandName) {
++      return ResponseEntity.ok("Command Deleted from Service: " + serviceName);
++    }
++
++    @PutMapping("/update_command")
++    public ResponseEntity<String> updateCommand(@RequestBody CommandConfig commandConfig) {
++        return ResponseEntity.ok("Command Updated in Service: " );
++    }
++
++    @PutMapping("/update_class")
++    public ResponseEntity<String> updateClass(@RequestBody ClassConfig classConfig) {
++        return ResponseEntity.ok("Class Updated in Service: " );
++    }
++
++    @PostMapping("/freeze")
++    public ResponseEntity<String> freezeApp(@RequestParam String serviceName) {
++        return ResponseEntity.ok("App Frozen for Service: " + serviceName);
++    }
++
++    @PostMapping("/continue")
++    public ResponseEntity<String> continueApp(@RequestParam String serviceName) {
++        return ResponseEntity.ok("App Continued for Service: " + serviceName);
++    }
++
++    @PostMapping("/set_error_reporting_level")
++    public ResponseEntity<String> setErrorReportingLevel(@RequestParam String serviceName, @RequestParam String level) {
++        return ResponseEntity.ok("Error Reporting Level Set for Service: " + serviceName);
++    }
++}
++
++class MQConfig {
++    private String serviceName;
++    private String address;
++    private int port;
++    // Getters and Setters
++}
++
++class CommandConfig {
++    private String serviceName;
++    private String commandName;
++    private String commandDetails;
++    // Getters and Setters
++}
++
++class ClassConfig {
++    private String serviceName;
++    private String className;
++    private String classDetails;
++    // Getters and Setters
++}
+Index: Controller/src/main/java/org/example/models/responses/MetricResult.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/models/responses/MetricResult.java b/Controller/src/main/java/org/example/models/responses/MetricResult.java
+new file mode 100644
+--- /dev/null	(date 1716672737929)
++++ b/Controller/src/main/java/org/example/models/responses/MetricResult.java	(date 1716672737929)
+@@ -0,0 +1,29 @@
++    //package org.example.models.responses;
++    //
++    //import lombok.AllArgsConstructor;
++    //import lombok.Builder;
++    //import lombok.Data;
++    //import lombok.NoArgsConstructor;
++    //
++    //import java.util.List;
++    //import java.util.Map;
++    //
++    //@Data
++    //@Builder
++    //@NoArgsConstructor
++    //@AllArgsConstructor
++    //public class MetricResult {
++    //    private Map<String, String> metric;
++    //    private List<Object> value;
++    //
++    //    @Override
++    //    public String toString() {
++    //        StringBuilder sb = new StringBuilder();
++    //        sb.append("MetricResult {");
++    //        sb.append("metric=").append(metric);
++    //        sb.append(", value=").append(value);
++    //        sb.append("}");
++    //        return sb.toString();
++    //    }
++    //
++    //}
+\ No newline at end of file
+Index: Controller/src/main/java/org/example/models/responses/MetricData.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/models/responses/MetricData.java b/Controller/src/main/java/org/example/models/responses/MetricData.java
+new file mode 100644
+--- /dev/null	(date 1716650157827)
++++ b/Controller/src/main/java/org/example/models/responses/MetricData.java	(date 1716650157827)
+@@ -0,0 +1,18 @@
++//package org.example.models.responses;
++//
++//import lombok.AllArgsConstructor;
++//import lombok.Builder;
++//import lombok.Data;
++//import lombok.NoArgsConstructor;
++//
++//import java.util.List;
++//
++//@Data
++//@Builder
++//@NoArgsConstructor
++//@AllArgsConstructor
++//public class MetricData {
++//    private String resultType;
++//    private List<MetricResult> result;
++//
++//}
+\ No newline at end of file
+Index: admin-service/pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\"\r\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\r\n         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\r\n    <modelVersion>4.0.0</modelVersion>\r\n    <parent>\r\n        <groupId>org.example</groupId>\r\n        <artifactId>MakeMyTrip</artifactId>\r\n        <version>1.0-SNAPSHOT</version>\r\n    </parent>\r\n\r\n    <artifactId>admin-service</artifactId>\r\n\r\n    <properties>\r\n        <maven.compiler.source>21</maven.compiler.source>\r\n        <maven.compiler.target>21</maven.compiler.target>\r\n        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\r\n    </properties>\r\n    <dependencies>\r\n        <dependency>\r\n            <groupId>org.springframework.boot</groupId>\r\n            <artifactId>spring-boot-starter-data-jpa</artifactId>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.springframework.boot</groupId>\r\n            <artifactId>spring-boot-starter-web</artifactId>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.springframework.security</groupId>\r\n            <artifactId>spring-security-test</artifactId>\r\n            <scope>test</scope>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.springframework.kafka</groupId>\r\n            <artifactId>spring-kafka</artifactId>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.springframework.boot</groupId>\r\n            <artifactId>spring-boot-starter-data-jpa</artifactId>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.springframework.boot</groupId>\r\n            <artifactId>spring-boot-starter-security</artifactId>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.springframework.boot</groupId>\r\n            <artifactId>spring-boot-starter-web</artifactId>\r\n        </dependency>\r\n\r\n        <dependency>\r\n            <groupId>org.postgresql</groupId>\r\n            <artifactId>postgresql</artifactId>\r\n            <scope>runtime</scope>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.projectlombok</groupId>\r\n            <artifactId>lombok</artifactId>\r\n            <optional>true</optional>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>io.jsonwebtoken</groupId>\r\n            <artifactId>jjwt-api</artifactId>\r\n            <version>0.11.5</version>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>io.jsonwebtoken</groupId>\r\n            <artifactId>jjwt-impl</artifactId>\r\n            <version>0.11.5</version>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>io.jsonwebtoken</groupId>\r\n            <artifactId>jjwt-jackson</artifactId>\r\n            <version>0.11.5</version>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.springdoc</groupId>\r\n            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>\r\n            <version>2.1.0</version>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.springframework.boot</groupId>\r\n            <artifactId>spring-boot-starter-validation</artifactId>\r\n        </dependency>\r\n\r\n        <dependency>\r\n            <groupId>org.springframework.boot</groupId>\r\n            <artifactId>spring-boot-starter-test</artifactId>\r\n            <scope>test</scope>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.springframework.security</groupId>\r\n            <artifactId>spring-security-test</artifactId>\r\n            <scope>test</scope>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.springframework.kafka</groupId>\r\n            <artifactId>spring-kafka</artifactId>\r\n        </dependency>\r\n        <!--        <dependency>-->\r\n        <!--            <groupId>org.springframework.kafka</groupId>-->\r\n        <!--            <artifactId>spring-kafka-test</artifactId>-->\r\n        <!--            <scope>test</scope>-->\r\n        <!--        </dependency>-->\r\n        <dependency>\r\n            <groupId>org.springframework.cloud</groupId>\r\n            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>\r\n        </dependency>\r\n\r\n        <dependency>\r\n            <groupId>org.springframework.boot</groupId>\r\n            <artifactId>spring-boot-starter-data-redis</artifactId>\r\n        </dependency>\r\n\r\n        <!--        <dependency>-->\r\n        <!--            <groupId>org.springframework.session</groupId>-->\r\n        <!--            <artifactId>spring-session-data-redis</artifactId>-->\r\n        <!--        </dependency>-->\r\n\r\n        <dependency>\r\n            <groupId>org.springframework.boot</groupId>\r\n            <artifactId>spring-boot-starter-data-redis</artifactId>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>com.github.javafaker</groupId>\r\n            <artifactId>javafaker</artifactId>\r\n            <version>1.0.2</version>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.springframework.boot</groupId>\r\n            <artifactId>spring-boot-starter-data-cassandra</artifactId>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>junit</groupId>\r\n            <artifactId>junit</artifactId>\r\n            <version>4.13.2</version>\r\n            <scope>test</scope>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.apache.httpcomponents</groupId>\r\n            <artifactId>httpclient</artifactId>\r\n            <version>4.5.13</version>\r\n        </dependency>\r\n\r\n        <dependency>\r\n            <groupId>org.postgresql</groupId>\r\n            <artifactId>postgresql</artifactId>\r\n            <scope>runtime</scope>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.springframework.boot</groupId>\r\n            <artifactId>spring-boot-starter-test</artifactId>\r\n            <scope>test</scope>\r\n        </dependency>\r\n        <dependency>\r\n            <groupId>org.projectlombok</groupId>\r\n            <artifactId>lombok</artifactId>\r\n            <optional>true</optional>\r\n        </dependency>\r\n    </dependencies>\r\n\r\n    <build>\r\n        <plugins>\r\n            <plugin>\r\n                <groupId>org.springframework.boot</groupId>\r\n                <artifactId>spring-boot-maven-plugin</artifactId>\r\n            </plugin>\r\n        </plugins>\r\n    </build>\r\n\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/admin-service/pom.xml b/admin-service/pom.xml
+--- a/admin-service/pom.xml	(revision d66ffa62edeaebfee7971fbbe4647d19204e7674)
++++ b/admin-service/pom.xml	(date 1716637980100)
+@@ -1,16 +1,11 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project xmlns="http://maven.apache.org/POM/4.0.0"
+-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
++<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+     <modelVersion>4.0.0</modelVersion>
+     <parent>
+         <groupId>org.example</groupId>
+         <artifactId>MakeMyTrip</artifactId>
+         <version>1.0-SNAPSHOT</version>
+     </parent>
+-
+     <artifactId>admin-service</artifactId>
+-
+     <properties>
+         <maven.compiler.source>21</maven.compiler.source>
+         <maven.compiler.target>21</maven.compiler.target>
+@@ -19,6 +14,20 @@
+     <dependencies>
+         <dependency>
+             <groupId>org.springframework.boot</groupId>
++            <artifactId>spring-boot-starter-actuator</artifactId>
++        </dependency>
++        <dependency>
++            <groupId>org.springframework.boot</groupId>
++            <artifactId>spring-boot-devtools</artifactId>
++            <scope>runtime</scope>
++            <optional>true</optional>
++        </dependency>
++        <dependency>
++            <groupId>org.springframework.boot</groupId>
++            <artifactId>spring-boot-starter-data-cassandra</artifactId>
++        </dependency>
++        <dependency>
++            <groupId>org.springframework.boot</groupId>
+             <artifactId>spring-boot-starter-data-jpa</artifactId>
+         </dependency>
+         <dependency>
+@@ -42,11 +51,6 @@
+             <groupId>org.springframework.boot</groupId>
+             <artifactId>spring-boot-starter-security</artifactId>
+         </dependency>
+-        <dependency>
+-            <groupId>org.springframework.boot</groupId>
+-            <artifactId>spring-boot-starter-web</artifactId>
+-        </dependency>
+-
+         <dependency>
+             <groupId>org.postgresql</groupId>
+             <artifactId>postgresql</artifactId>
+@@ -81,7 +85,6 @@
+             <groupId>org.springframework.boot</groupId>
+             <artifactId>spring-boot-starter-validation</artifactId>
+         </dependency>
+-
+         <dependency>
+             <groupId>org.springframework.boot</groupId>
+             <artifactId>spring-boot-starter-test</artifactId>
+@@ -96,40 +99,29 @@
+             <groupId>org.springframework.kafka</groupId>
+             <artifactId>spring-kafka</artifactId>
+         </dependency>
+-        <!--        <dependency>-->
+-        <!--            <groupId>org.springframework.kafka</groupId>-->
+-        <!--            <artifactId>spring-kafka-test</artifactId>-->
+-        <!--            <scope>test</scope>-->
+-        <!--        </dependency>-->
+-        <dependency>
+-            <groupId>org.springframework.cloud</groupId>
+-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+-        </dependency>
+-
+-        <dependency>
+-            <groupId>org.springframework.boot</groupId>
+-            <artifactId>spring-boot-starter-data-redis</artifactId>
+-        </dependency>
+-
+-        <!--        <dependency>-->
+-        <!--            <groupId>org.springframework.session</groupId>-->
+-        <!--            <artifactId>spring-session-data-redis</artifactId>-->
+-        <!--        </dependency>-->
+-
++        <!--         <dependency> -->
++        <!--             <groupId>org.springframework.kafka</groupId> -->
++        <!--             <artifactId>spring-kafka-test</artifactId> -->
++        <!--             <scope>test</scope> -->
++        <!--         </dependency> -->
++        <!--         <dependency> -->
++        <!--             <groupId>org.springframework.session</groupId> -->
++        <!--             <artifactId>spring-session-data-redis</artifactId> -->
++        <!--         </dependency> -->
+         <dependency>
+             <groupId>org.springframework.boot</groupId>
+             <artifactId>spring-boot-starter-data-redis</artifactId>
+         </dependency>
+         <dependency>
++            <groupId>org.springframework.cloud</groupId>
++            <artifactId>spring-cloud-starter-bootstrap</artifactId>
++        </dependency>
++        <dependency>
+             <groupId>com.github.javafaker</groupId>
+             <artifactId>javafaker</artifactId>
+             <version>1.0.2</version>
+         </dependency>
+         <dependency>
+-            <groupId>org.springframework.boot</groupId>
+-            <artifactId>spring-boot-starter-data-cassandra</artifactId>
+-        </dependency>
+-        <dependency>
+             <groupId>junit</groupId>
+             <artifactId>junit</artifactId>
+             <version>4.13.2</version>
+@@ -140,7 +132,6 @@
+             <artifactId>httpclient</artifactId>
+             <version>4.5.13</version>
+         </dependency>
+-
+         <dependency>
+             <groupId>org.postgresql</groupId>
+             <artifactId>postgresql</artifactId>
+@@ -155,9 +146,16 @@
+             <groupId>org.projectlombok</groupId>
+             <artifactId>lombok</artifactId>
+             <optional>true</optional>
++        </dependency>
++        <dependency>
++            <groupId>org.springframework.cloud</groupId>
++            <artifactId>spring-cloud-starter-config</artifactId>
++        </dependency>
++        <dependency>
++            <groupId>org.springframework.cloud</groupId>
++            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+         </dependency>
+     </dependencies>
+-
+     <build>
+         <plugins>
+             <plugin>
+@@ -166,5 +164,4 @@
+             </plugin>
+         </plugins>
+     </build>
+-
+ </project>
+\ No newline at end of file
+Index: Controller/src/main/java/org/example/models/requests/DeploymentRequest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/models/requests/DeploymentRequest.java b/Controller/src/main/java/org/example/models/requests/DeploymentRequest.java
+new file mode 100644
+--- /dev/null	(date 1716650101997)
++++ b/Controller/src/main/java/org/example/models/requests/DeploymentRequest.java	(date 1716650101997)
+@@ -0,0 +1,15 @@
++//package org.example.models.requests;
++//
++//import com.msa.models.ServiceType;
++//import lombok.AllArgsConstructor;
++//import lombok.Builder;
++//import lombok.Data;
++//import lombok.NoArgsConstructor;
++//
++//@Data
++//@Builder
++//@NoArgsConstructor
++//@AllArgsConstructor
++//public class DeploymentRequest {
++//    private ServiceType serviceType;
++//}
+Index: Controller/src/main/java/org/example/services/NodeMatcher.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/services/NodeMatcher.java b/Controller/src/main/java/org/example/services/NodeMatcher.java
+new file mode 100644
+--- /dev/null	(date 1716650133021)
++++ b/Controller/src/main/java/org/example/services/NodeMatcher.java	(date 1716650133021)
+@@ -0,0 +1,73 @@
++//package org.example.services;
++//
++//import com.msa.models.Machine;
++//import com.msa.models.RunningInstance;
++//import com.msa.models.ServiceType;
++//import com.msa.repos.MachinesRepo;
++//import com.msa.repos.RunningInstanceRepo;
++//import lombok.AllArgsConstructor;
++//import org.springframework.stereotype.Component;
++//
++//import java.util.Hashtable;
++//
++//@Component
++//@AllArgsConstructor
++//public class NodeMatcher {
++//
++//    private final MachinesRepo machinesRepo;
++//    private final RunningInstanceRepo runningInstanceRepo;
++//    // This class is responsible for finding a suitable machine to deploy a service on
++//
++//    // 1. get the list of all machines
++//    // 2. get the list of all running services
++//    // 3. match the service with the machine that has the least number of services running on it
++//
++//    public Machine findNode (ServiceType serviceType) {
++//        // get the list of all machines
++//        Iterable<Machine> machines = machinesRepo.findAll();
++//        // get the list of all running services
++//        Iterable<RunningInstance> runningInstances = runningInstanceRepo.findAll();
++//        // create a hashtable that maps machine id to machine object
++//        Hashtable<Long, Machine> machineHashtable = new Hashtable<>();
++//        for (Machine machine: machines) {
++//            machineHashtable.put(machine.getId(), machine);
++//        }
++//        // create a hashtable that maps machine id to the number of services running on it
++//        Hashtable<Long, Integer> machineServicesCount = new Hashtable<>();
++//        for (Machine machine: machines) {
++//            machineServicesCount.put(machine.getId(), 0);
++//        }
++//        // find the machine that has the least number of services running on it
++//        // and doesn't have the same serviceType running on it
++//        for (RunningInstance runningInstance: runningInstances) {
++//            // if the machine is running a service of the same type, skip it
++//            if (runningInstance.getServiceType().equals(serviceType)) {
++//                machineServicesCount.remove(runningInstance.getHost().getId());
++//            }
++//            else {
++//                machineServicesCount.put(
++//                        runningInstance.getHost().getId(),
++//                        machineServicesCount.get(runningInstance.getHost().getId()) + 1
++//                );
++//            }
++//        }
++//
++//        // find the machine with the least number of services running on it
++//        Long minMachineId = null;
++//        int minServicesCount = Integer.MAX_VALUE;
++//        for (Long machineId: machineServicesCount.keySet()) {
++//            if (machineServicesCount.get(machineId) < minServicesCount) {
++//                minServicesCount = machineServicesCount.get(machineId);
++//                minMachineId = machineId;
++//            }
++//        }
++//
++//        // if there is no machine that doesn't have the same serviceType running on it
++//        if (minMachineId == null)
++//            return null;
++//
++//        // return the machine
++//        return machineHashtable.get(minMachineId);
++//    }
++//
++//}
+Index: Controller/src/main/java/org/example/models/prometheus/Global.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/models/prometheus/Global.java b/Controller/src/main/java/org/example/models/prometheus/Global.java
+new file mode 100644
+--- /dev/null	(date 1716650083166)
++++ b/Controller/src/main/java/org/example/models/prometheus/Global.java	(date 1716650083166)
+@@ -0,0 +1,16 @@
++//package org.example.models.prometheus;
++//
++//import lombok.AllArgsConstructor;
++//import lombok.Builder;
++//import lombok.Data;
++//import lombok.NoArgsConstructor;
++//
++//@Data
++//@Builder
++//@NoArgsConstructor
++//@AllArgsConstructor
++//public class Global {
++//    private String scrape_interval;
++//    private String evaluation_interval;
++//    private String scrape_timeout;
++//}
+Index: admin-service/src/main/java/com/example/demo/Config/DummyDataConfiguration.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.demo.Config;\r\n\r\n\r\nimport com.example.demo.Model.*;\r\nimport com.example.demo.Repository.*;\r\nimport com.github.javafaker.Faker;\r\nimport org.springframework.boot.CommandLineRunner;\r\nimport org.springframework.context.annotation.Bean;\r\nimport org.springframework.context.annotation.Configuration;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\nimport java.util.UUID;\r\nimport org.springframework.transaction.annotation.Transactional;\r\n\r\n\r\n@Configuration\r\npublic class DummyDataConfiguration {\r\n\r\n    private final Faker faker = new Faker();\r\n    String[] aircraftTypes = {\"Commercial\", \"Private\", \"Cargo\", \"Military\"};\r\n\r\n    @Bean\r\n    @Transactional // Ensure transactional context\r\n\r\n    CommandLineRunner commandLineRunner(AirlineRepository airlineRepository,\r\n                                        AppUserRepository appUserRepository,\r\n                                        ComplaintsRepository complaintsRepository,\r\n                                        FlightRepository flightRepository,\r\n                                        FlightPackageRepository flightPackageRepository,\r\n                                        FlightReservationRepository flightReservationRepository,\r\n                                        PlaneRepository planeRepository,\r\n                                        PromotionRepository promotionRepository,\r\n                                        RefundRepository refundRepository\r\n                                      ) {\r\n        return args -> {\r\n            // Generate dummy data for Airlines\r\n            List<Airline> airlines = new ArrayList<>();\r\n            for (int i = 1; i <= 1000; i++) {\r\n                airlines.add(new Airline(\r\n                        (long) i,\r\n                        faker.company().name()+i+\"\",\r\n                        faker.phoneNumber().cellPhone(),\r\n                        faker.phoneNumber().phoneNumber()\r\n                ));\r\n            }\r\n            airlineRepository.saveAll(airlines);\r\n\r\n            // Generate dummy data for AppUsers\r\n            List<AppUser> users = new ArrayList<>();\r\n            for (int i = 1; i <= 1000; i++) {\r\n                users.add(new AppUser(\r\n                        null, // id is generated\r\n                        faker.name().username(),\r\n                        faker.internet().emailAddress(),\r\n                        faker.internet().password(),\r\n                        faker.date().birthday().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate(),\r\n                        faker.demographic().sex(),\r\n                        faker.demographic().maritalStatus(),\r\n                        faker.address().zipCode(),\r\n                        faker.address().city(),\r\n                        faker.phoneNumber().cellPhone(),\r\n                        faker.name().firstName(),\r\n                        faker.name().lastName()\r\n                ));\r\n            }\r\n            appUserRepository.saveAll(users);\r\n            List<Plane> planes = new ArrayList<>();\r\n            for (int i = 1; i <= 1000; i++) {\r\n                Airline airline = airlines.get(i-1);\r\n                planes.add(new Plane(\r\n                        faker.aviation().aircraft()+i+\"\",\r\n                        airline,\r\n                        aircraftTypes[faker.number().numberBetween(0, aircraftTypes.length)]\r\n                ));\r\n            }\r\n            System.out.println();\r\n            planeRepository.saveAll(planes);\r\n            // Generate dummy data for Complaints\r\n            List<Complaints> complaints = new ArrayList<>();\r\n            for (int i = 1; i <= 1000; i++) {\r\n                complaints.add(new Complaints(\r\n                        UUID.randomUUID(),\r\n                        faker.lorem().sentence(),\r\n                        faker.lorem().word()\r\n                ));\r\n            }\r\n            complaintsRepository.saveAll(complaints);\r\n\r\n            // Generate dummy data for Flights\r\n\r\n\r\n                List<Flight> flights = new ArrayList<>();\r\n            for (int i = 1; i <= 1000; i++) {\r\n               Plane plane = planes.get(i-1);\r\n              //  System.out.println(plane.toString());\r\n                flights.add(new Flight(\r\n                        faker.address().city(),\r\n                        faker.address().city(),\r\n                        faker.date().future(5, java.util.concurrent.TimeUnit.DAYS).toString(),\r\n                        faker.date().future(10, java.util.concurrent.TimeUnit.DAYS).toString(),\r\n                        null,\r\n                        (float) faker.number().randomDouble(2, 500, 2000),\r\n                        (float) faker.number().randomDouble(2, 50, 500),\r\n                        (float) faker.number().randomDouble(2, 20, 100),\r\n                        (float) faker.number().randomDouble(2, 20, 100),\r\n                        faker.address().cityName(),\r\n                        faker.address().cityName(),\r\n                        faker.date().future(5, java.util.concurrent.TimeUnit.DAYS).toString(),\r\n                        faker.date().future(10, java.util.concurrent.TimeUnit.DAYS).toString()\r\n                ));\r\n            }\r\n\r\n            flightRepository.saveAll(flights);\r\n\r\n\r\n\r\n            // Generate dummy data for FlightPackages\r\n            List<FlightPackage> flightPackages = new ArrayList<>();\r\n            for (int i = 1; i <= 1000; i++) {\r\n                Flight flight = flights.get(faker.number().numberBetween(0, flights.size() - 1));\r\n                flightPackages.add(new FlightPackage(\r\n                        flight,\r\n                        faker.number().numberBetween(5, 20), // weightCabin\r\n                        faker.number().numberBetween(50, 200), // cancellationFee\r\n                        faker.number().numberBetween(20, 100), // dateChangeFee\r\n                        faker.lorem().sentence(), // mealInfo\r\n                        faker.bool().bool(), // expressCheckIn\r\n                        faker.number().numberBetween(100, 1000) // price\r\n                ));\r\n            }\r\n            flightPackageRepository.saveAll(flightPackages);\r\n\r\n            // Generate dummy data for FlightReservations\r\n            List<FlightReservation> flightReservations = new ArrayList<>();\r\n            for (int i = 1; i <= 1000; i++) {\r\n                AppUser appUser = users.get(faker.number().numberBetween(0, users.size() - 1));\r\n                FlightPackage flightPackage = flightPackages.get(faker.number().numberBetween(0, flightPackages.size() - 1));\r\n                flightReservations.add(new FlightReservation(\r\n                        appUser,\r\n                        flightPackage,\r\n                        faker.bool().bool(), // seatChargeable\r\n                        faker.bool().bool(), // extraBaggage\r\n                        faker.bool().bool(), // withInsurance\r\n                        faker.number().numberBetween(100, 1000) // totalPrice\r\n                ));\r\n            }\r\n            flightReservationRepository.saveAll(flightReservations);\r\n\r\n\r\n            // Generate dummy data for PlaneSeats\r\n            List<PlaneSeat> planeSeats = new ArrayList<>();\r\n            SeatCategory[] seatCategories = SeatCategory.values();\r\n\r\n            for (int i = 1; i <= 1000; i++) {\r\n                Plane plane = planes.get(faker.number().numberBetween(0, planes.size() - 1));\r\n                planeSeats.add(new PlaneSeat(\r\n                        faker.number().numberBetween(1, 300), // seatNumber\r\n                        seatCategories[faker.number().numberBetween(0, seatCategories.length)], // seatCategory\r\n                        plane,\r\n                        faker.number().numberBetween(100, 1000) // price\r\n                ));\r\n            }\r\n      //      planeSeatRepository.saveAll(planeSeats);\r\n\r\n            // Generate dummy data for Promotions\r\n            List<Promotion> promotions = new ArrayList<>();\r\n            for (int i = 1; i <= 1000; i++) {\r\n                Flight flight = flights.get(faker.number().numberBetween(0, flights.size() - 1));\r\n                promotions.add(new Promotion(\r\n                        faker.commerce().promotionCode(), // code\r\n                        faker.number().randomDouble(2, 5, 50), // discount\r\n                        flight // flight\r\n                ));\r\n            }\r\n            promotionRepository.saveAll(promotions);\r\n\r\n// Generate dummy data for Refunds\r\n            List<Refund> refunds = new ArrayList<>();\r\n            for (int i = 1; i <= 1000; i++) {\r\n                AppUser appUser = users.get(faker.number().numberBetween(0, users.size() - 1));\r\n                refunds.add(new Refund(\r\n                        appUser.getId(), // userId\r\n                        faker.number().randomDouble(2, 50, 500), // amount\r\n                        faker.options().option(\"Pending\", \"Completed\", \"Rejected\") // status\r\n                ));\r\n            }\r\n          //  refundRepository.saveAll(refunds);\r\n        };\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/admin-service/src/main/java/com/example/demo/Config/DummyDataConfiguration.java b/admin-service/src/main/java/com/example/demo/Config/DummyDataConfiguration.java
+--- a/admin-service/src/main/java/com/example/demo/Config/DummyDataConfiguration.java	(revision d66ffa62edeaebfee7971fbbe4647d19204e7674)
++++ b/admin-service/src/main/java/com/example/demo/Config/DummyDataConfiguration.java	(date 1716682056208)
+@@ -185,7 +185,7 @@
+                         faker.options().option("Pending", "Completed", "Rejected") // status
+                 ));
+             }
+-          //  refundRepository.saveAll(refunds);
++            refundRepository.saveAll(refunds);
+         };
+     }
+ }
+Index: Controller/src/main/java/org/example/models/responses/DeploymentResponse.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/models/responses/DeploymentResponse.java b/Controller/src/main/java/org/example/models/responses/DeploymentResponse.java
+new file mode 100644
+--- /dev/null	(date 1716650143789)
++++ b/Controller/src/main/java/org/example/models/responses/DeploymentResponse.java	(date 1716650143789)
+@@ -0,0 +1,15 @@
++//package org.example.models.responses;
++//
++//import com.msa.models.Machine;
++//import lombok.AllArgsConstructor;
++//import lombok.Builder;
++//import lombok.Data;
++//import lombok.NoArgsConstructor;
++//
++//@Data
++//@Builder
++//@NoArgsConstructor
++//@AllArgsConstructor
++//public class DeploymentResponse {
++//    private Machine machine;
++//}
+Index: Controller/src/main/java/org/example/models/responses/MetricResponse.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/models/responses/MetricResponse.java b/Controller/src/main/java/org/example/models/responses/MetricResponse.java
+new file mode 100644
+--- /dev/null	(date 1716650161522)
++++ b/Controller/src/main/java/org/example/models/responses/MetricResponse.java	(date 1716650161522)
+@@ -0,0 +1,15 @@
++//package org.example.models.responses;
++//
++//import lombok.AllArgsConstructor;
++//import lombok.Builder;
++//import lombok.Data;
++//import lombok.NoArgsConstructor;
++//
++//@Data
++//@Builder
++//@NoArgsConstructor
++//@AllArgsConstructor
++//public class MetricResponse {
++//    private String status;
++//    private MetricData data;
++//}
+\ No newline at end of file
+Index: transaction-service/src/main/java/com/example/demo/Config/DummyDataConfiguration.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/transaction-service/src/main/java/com/example/demo/Config/DummyDataConfiguration.java b/transaction-service/src/main/java/com/example/demo/Config/DummyDataConfiguration.java
+new file mode 100644
+--- /dev/null	(date 1716682664694)
++++ b/transaction-service/src/main/java/com/example/demo/Config/DummyDataConfiguration.java	(date 1716682664694)
+@@ -0,0 +1,121 @@
++package com.example.demo.Config;
++
++
++import com.example.demo.Model.*;
++import com.example.demo.Repository.*;
++import com.github.javafaker.Faker;
++import org.springframework.boot.CommandLineRunner;
++import org.springframework.context.annotation.Bean;
++import org.springframework.context.annotation.Configuration;
++import org.springframework.transaction.annotation.Transactional;
++
++import java.util.ArrayList;
++import java.util.List;
++import java.util.UUID;
++
++
++@Configuration
++public class DummyDataConfiguration {
++
++    private final Faker faker = new Faker();
++    String[] aircraftTypes = {"Commercial", "Private", "Cargo", "Military"};
++
++    @Bean
++    @Transactional // Ensure transactional context
++
++    CommandLineRunner commandLineRunner(AirlineRepository airlineRepository,
++                                        AppUserRepository appUserRepository,
++
++                                        FlightRepository flightRepository,
++                                        FlightPackageRepository flightPackageRepository,
++                                        FlightReservationRepository flightReservationRepository,
++                                        PlaneRepository planeRepository,
++
++                                        RefundRepository refundRepository
++                                      ) {
++        return args -> {
++            // Generate dummy data for Airlines
++
++
++            // Generate dummy data for AppUsers
++            List<AppUser> users = new ArrayList<>();
++            for (int i = 1; i <= 1000; i++) {
++                users.add(new AppUser(
++                        null, // id is generated
++                        faker.name().username(),
++                        faker.internet().emailAddress(),
++                        faker.internet().password(),
++                        faker.date().birthday().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate(),
++                        faker.demographic().sex(),
++                        faker.demographic().maritalStatus(),
++                        faker.address().zipCode(),
++                        faker.address().city(),
++                        faker.phoneNumber().cellPhone(),
++                        faker.name().firstName(),
++                        faker.name().lastName()
++                ));
++            }
++            appUserRepository.saveAll(users);
++
++
++
++            // Generate dummy data for Flights
++
++
++
++
++
++
++            // Generate dummy data for FlightPackages
++            List<FlightPackage> flightPackages = new ArrayList<>();
++//            for (int i = 1; i <= 1000; i++) {
++//                Flight flight = flights.get(faker.number().numberBetween(0, flights.size() - 1));
++//                flightPackages.add(new FlightPackage(
++//                        flight,
++//                        faker.number().numberBetween(5, 20), // weightCabin
++//                        faker.number().numberBetween(50, 200), // cancellationFee
++//                        faker.number().numberBetween(20, 100), // dateChangeFee
++//                        faker.lorem().sentence(), // mealInfo
++//                        faker.bool().bool(), // expressCheckIn
++//                        faker.number().numberBetween(100, 1000) // price
++//                ));
++//            }
++//            flightPackageRepository.saveAll(flightPackages);
++
++            // Generate dummy data for FlightReservations
++//            List<FlightReservation> flightReservations = new ArrayList<>();
++//            for (int i = 1; i <= 1000; i++) {
++//                AppUser appUser = users.get(faker.number().numberBetween(0, users.size() - 1));
++//                FlightPackage flightPackage = flightPackages.get(faker.number().numberBetween(0, flightPackages.size() - 1));
++//                flightReservations.add(new FlightReservation(
++//                        appUser,
++//                        flightPackage,
++//                        faker.bool().bool(), // seatChargeable
++//                        faker.bool().bool(), // extraBaggage
++//                        faker.bool().bool(), // withInsurance
++//                        faker.number().numberBetween(100, 1000) // totalPrice
++//                ));
++//            }
++//            flightReservationRepository.saveAll(flightReservations);
++
++
++            // Generate dummy data for PlaneSeats
++
++      //      planeSeatRepository.saveAll(planeSeats);
++
++
++
++// Generate dummy data for Refunds
++            List<Refund> refunds = new ArrayList<>();
++            for (int i = 1; i <= 1000; i++) {
++                AppUser appUser = users.get(faker.number().numberBetween(0, users.size() - 1));
++                refunds.add(new Refund(
++                        appUser.getId(), // userId
++                        faker.number().randomDouble(2, 50, 500), // amount
++                        faker.options().option("Pending", "Completed", "Rejected") // status
++                ));
++            }
++            refundRepository.saveAll(refunds);
++        };
++    }
++}
+Index: user-service/src/main/resources/application.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>server.port=8080\r\nspring.application.name=user-service\r\neureka.client.service-url.defaultZone=http://localhost:8761/eureka/\r\n#spring.datasource.url=jdbc:postgresql://localhost:5433/User\r\n#spring.datasource.username=User\r\n#spring.datasource.password=password\r\n\r\nspring.datasource.url=jdbc:postgresql://localhost:5432/Scalable\r\nspring.datasource.username=postgres\r\nspring.datasource.password=1234\r\nspring.jpa.hibernate.ddl-auto=create-drop\r\nspring.jpa.show-sql=true\r\nspring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect\r\nspring.jpa.properties.hibernate.format_sql=true\r\nserver.error.include-message=always\r\napplication.security.jwt.secret-key==404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970\r\napplication.security.jwt.expiration=86400000\r\napplication.security.jwt.refresh-token.expiration=86400000\r\n\r\n#spring.kafka.bootstrap-servers=localhost:9092\r\nspring.kafka.consumer.bootstrap-servers=localhost:9092\r\nspring.kafka.consumer.group-id=group\r\nspring.kafka.consumer.auto-offset-reset=earliest\r\nspring.kafka.consumer.key-deserializer=org.apache.kafka.common.serialization.StringDeserializer\r\nspring.kafka.consumer.value-deserializer=org.springframework.kafka.support.serializer.JsonDeserializer\r\nspring.kafka.consumer.properties.spring.json.trusted.packages=*\r\n\r\nspring.kafka.producer.bootstrap-servers=localhost:9092\r\nspring.kafka.producer.key-serializer=org.apache.kafka.common.serialization.StringSerializer\r\nspring.kafka.producer.value-serializer=org.springframework.kafka.support.serializer.JsonSerializer\r\n\r\nspring.main.allow-bean-definition-overriding=true\r\nspring.data.redis.host=localhost\r\nspring.data.redis.password=\r\nspring.data.redis.port=6379\r\nserver.servlet.session.timeout=86400\r\nspring.session.redis.flush-mode=on_save\r\nspring.session.redis.namespace=spring:session
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>ISO-8859-1
+===================================================================
+diff --git a/user-service/src/main/resources/application.properties b/user-service/src/main/resources/application.properties
+--- a/user-service/src/main/resources/application.properties	(revision d66ffa62edeaebfee7971fbbe4647d19204e7674)
++++ b/user-service/src/main/resources/application.properties	(date 1716683046500)
+@@ -5,7 +5,7 @@
+ #spring.datasource.username=User
+ #spring.datasource.password=password
+ 
+-spring.datasource.url=jdbc:postgresql://localhost:5432/Scalable
++spring.datasource.url=jdbc:postgresql://localhost:5432/User
+ spring.datasource.username=postgres
+ spring.datasource.password=1234
+ spring.jpa.hibernate.ddl-auto=create-drop
+Index: Controller/src/main/java/org/example/models/Machine.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/models/Machine.java b/Controller/src/main/java/org/example/models/Machine.java
+new file mode 100644
+--- /dev/null	(date 1716650078949)
++++ b/Controller/src/main/java/org/example/models/Machine.java	(date 1716650078949)
+@@ -0,0 +1,24 @@
++//package org.example.models;
++//
++//import jakarta.persistence.*;
++//import lombok.AllArgsConstructor;
++//import lombok.Builder;
++//import lombok.Data;
++//import lombok.NoArgsConstructor;
++//
++//@Entity
++//@Data
++//@Builder
++//@NoArgsConstructor
++//@AllArgsConstructor
++//@Table(name = "machines")
++//public class Machine {
++//
++//    @Id
++//    @GeneratedValue(strategy = GenerationType.AUTO)
++//    private Long id;
++//    private String ip;
++//    private int memory;
++//    private String username;
++//
++//}
+Index: Controller/src/main/java/org/example/models/prometheus/PrometheusYml.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/models/prometheus/PrometheusYml.java b/Controller/src/main/java/org/example/models/prometheus/PrometheusYml.java
+new file mode 100644
+--- /dev/null	(date 1716650086866)
++++ b/Controller/src/main/java/org/example/models/prometheus/PrometheusYml.java	(date 1716650086866)
+@@ -0,0 +1,19 @@
++//package org.example.models.prometheus;
++//
++//import lombok.AllArgsConstructor;
++//import lombok.Builder;
++//import lombok.Data;
++//import lombok.NoArgsConstructor;
++//
++//import java.util.List;
++//
++//@Data
++//@Builder
++//@NoArgsConstructor
++//@AllArgsConstructor
++//public class PrometheusYml {
++//    private Global global;
++//    private List<ScrapeConfig> scrape_configs;
++//}
++//
++//
+Index: Controller/src/main/java/org/example/services/ServiceManager.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/services/ServiceManager.java b/Controller/src/main/java/org/example/services/ServiceManager.java
+new file mode 100644
+--- /dev/null	(date 1716650137464)
++++ b/Controller/src/main/java/org/example/services/ServiceManager.java	(date 1716650137464)
+@@ -0,0 +1,60 @@
++//package org.example.services;
++//
++//import com.msa.deployment.PrometheusHandler;
++//import com.msa.models.Machine;
++//import com.msa.models.RunningInstance;
++//import com.msa.models.ServiceType;
++//import com.msa.repos.MachinesRepo;
++//import com.msa.repos.RunningInstanceRepo;
++//import lombok.AllArgsConstructor;
++//import org.springframework.beans.factory.annotation.Autowired;
++//import org.springframework.scheduling.annotation.Scheduled;
++//import org.springframework.stereotype.Service;
++//
++//import java.io.*;
++//import java.util.*;
++//import java.util.concurrent.ExecutorService;
++//import java.util.concurrent.Executors;
++//
++//@Service
++//@AllArgsConstructor
++//public class ServiceManager {
++//    private final MetricsPuller metricsPuller;
++//    private final HealthChecker healthChecker;
++//    private final RunningInstanceRepo runningInstancesRepo;
++//    private final PrometheusHandler prometheusHandler;
++//    private final RunningInstanceRepo runningInstanceRepo;
++//    private final MachinesRepo machinesRepo;
++//
++//    @Scheduled(fixedDelayString = "${health-checker.period}")
++//    public void collectServicesMetrics() throws UnsupportedEncodingException {
++//        System.out.println("STARTING HEALTH CHECK");
++//        // pull the running instances to be checked
++//        List<RunningInstance> allRunningInstances = runningInstancesRepo.findAll();
++//        System.out.println(allRunningInstances);
++//        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
++//
++//        System.out.println("Checking " + allRunningInstances.size() + " instances");
++//        for (RunningInstance runningInstance: allRunningInstances){
++//            // create new thread to handle each instance
++//            executorService.execute(() -> {
++//                Hashtable<String, String> metricResponses = null;
++//                try {
++//                    metricResponses = metricsPuller.pullInstanceMetrics(runningInstance);
++//                } catch (UnsupportedEncodingException e) {
++//                    throw new RuntimeException(e);
++//                }
++//
++//                healthChecker.checkServiceHealth(metricResponses, runningInstance);
++//            });
++//
++//        }
++//
++//        allRunningInstances = runningInstancesRepo.findAll();
++//        healthChecker.checkAllServicesAvailability(allRunningInstances);
++//
++//    }
++//
++//
++//
++//}
+Index: Controller/src/main/java/org/example/models/prometheus/StaticConfig.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/models/prometheus/StaticConfig.java b/Controller/src/main/java/org/example/models/prometheus/StaticConfig.java
+new file mode 100644
+--- /dev/null	(date 1716650098307)
++++ b/Controller/src/main/java/org/example/models/prometheus/StaticConfig.java	(date 1716650098307)
+@@ -0,0 +1,16 @@
++//package org.example.models.prometheus;
++//
++//import lombok.AllArgsConstructor;
++//import lombok.Builder;
++//import lombok.Data;
++//import lombok.NoArgsConstructor;
++//
++//import java.util.List;
++//
++//@Data
++//@Builder
++//@NoArgsConstructor
++//@AllArgsConstructor
++//public class StaticConfig {
++//    List<String> targets;
++//}
+Index: Controller/src/main/java/org/example/services/MetricsPuller.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/services/MetricsPuller.java b/Controller/src/main/java/org/example/services/MetricsPuller.java
+new file mode 100644
+--- /dev/null	(date 1716650129245)
++++ b/Controller/src/main/java/org/example/services/MetricsPuller.java	(date 1716650129245)
+@@ -0,0 +1,143 @@
++//package org.example.services;
++//
++//import com.msa.models.Query;
++//import com.msa.models.RunningInstance;
++//import com.msa.models.responses.MetricResponse;
++//import org.springframework.beans.factory.annotation.Autowired;
++//import org.springframework.beans.factory.annotation.Value;
++//import org.springframework.core.io.Resource;
++//import org.springframework.core.io.ResourceLoader;
++//import org.springframework.stereotype.Component;
++//import org.springframework.web.reactive.function.client.WebClient;
++//import org.springframework.web.util.DefaultUriBuilderFactory;
++//import org.springframework.web.util.UriBuilderFactory;
++//import org.springframework.web.util.UriComponentsBuilder;
++//
++//import java.io.*;
++//import java.net.URLEncoder;
++//import java.util.*;
++//
++//
++//@Component
++//public class MetricsPuller {
++//
++//    private final WebClient webClient;
++//    private final Hashtable<String, Query> queries;
++//
++//    @Value("${prometheus.host}")
++//    private String prometheusHost;
++//
++//    @Value("${prometheus.port}")
++//    private String prometheusPort;
++//
++//    @Value("${health-checker.time-window}")
++//    private String period;
++//
++//    @Autowired
++//    public MetricsPuller(ResourceLoader resourceLoader) {
++//        WebClient.Builder builder = WebClient.builder();
++//        builder.uriBuilderFactory(customUriBuilderFactory());
++//        webClient = builder.build();
++//
++//        queries = new Hashtable<>();
++//
++//        // pull the metrics from the metric.txt file
++//        try {
++//            Resource resource = resourceLoader.getResource("classpath:metrics.txt");
++//            InputStream inputStream = resource.getInputStream();
++//
++//            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
++//            String line;
++//
++//            while ((line = reader.readLine()) != null) {
++//                // Process each query
++//                String[] lineSplit = line.split("#");
++//                int[] paramIndexSplit = Arrays.stream(lineSplit[2].split(","))
++//                        .mapToInt(Integer::parseInt)
++//                        .toArray();
++//
++//                ArrayList<Integer> parameterIndexes = new ArrayList<>();
++//                for (int i : paramIndexSplit) parameterIndexes.add(i);
++//
++//                queries.put(lineSplit[0], new Query(lineSplit[1], parameterIndexes));
++//            }
++//
++//            reader.close();
++//        } catch (IOException e) {
++//            System.err.println("Error reading the file: " + e.getMessage());
++//        }
++//    }
++//
++//    public Hashtable<String, String> pullInstanceMetrics(RunningInstance runningInstance) throws UnsupportedEncodingException {
++//
++//        Hashtable<String, String> results = new Hashtable<>();
++//
++//        String[] params = new String[4];
++//        params[0] = runningInstance.getServiceType().getDirectory();
++//        params[1] = runningInstance.getHost().getIp();
++//        params[2] = runningInstance.getPort();
++//        params[3] = period;
++//
++//        for (Map.Entry<String, Query> query : queries.entrySet()) {
++//
++//            UriComponentsBuilder uriBuilder = UriComponentsBuilder.newInstance()
++//                    .scheme("http")
++//                    .host(prometheusHost)
++//                    .port(prometheusPort)
++//                    .path("/api/v1/query")
++//                    .queryParam("query", URLEncoder.encode(
++//                            convertQueryToString(query.getValue().getQuery(), query.getValue().getParams(), params),
++//                            "UTF-8")
++//                    );
++//
++//            String uriString = uriBuilder.build().toUriString();
++//            System.out.println(uriString);
++//            MetricResponse metricResponse = webClient.get()
++//                    .uri(uriString)
++//                    .retrieve()
++//                    .bodyToMono(MetricResponse.class)
++//                    .block();
++//            System.out.println(metricResponse);
++//
++//            if (metricResponse != null &&
++//                    metricResponse.getData() != null &&
++//                    metricResponse.getData().getResult() != null &&
++//                    metricResponse.getData().getResult().size() > 0
++//            ) {
++//                results.put(
++//                        query.getKey(),
++//                        metricResponse.getData().getResult().get(0).getValue().get(1).toString()
++//                );
++//            }
++//        }
++//
++//        return results;
++//    }
++//
++//    public void reloadYaml() {
++//        UriComponentsBuilder uriBuilder = UriComponentsBuilder.newInstance()
++//                .scheme("http")
++//                .host(prometheusHost)
++//                .port(prometheusPort)
++//                .path("/-/reload");
++//
++//        String uriString = uriBuilder.build().toUriString();
++//        webClient.post().uri(uriString);
++//
++//    }
++//
++//    private String convertQueryToString(String placeholder, List<Integer> paramIndexes, String[] params) {
++//        String[] selectedParams = new String[paramIndexes.size()];
++//
++//        for (int i = 0; i < selectedParams.length; i++) {
++//            selectedParams[i] = params[paramIndexes.get(i) - 1];
++//        }
++//        return String.format(placeholder, (Object[]) selectedParams);
++//    }
++//
++//    private UriBuilderFactory customUriBuilderFactory() {
++//        DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory();
++//        factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
++//        return factory;
++//    }
++//}
+Index: Controller/src/main/java/org/example/models/prometheus/ScrapeConfig.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/models/prometheus/ScrapeConfig.java b/Controller/src/main/java/org/example/models/prometheus/ScrapeConfig.java
+new file mode 100644
+--- /dev/null	(date 1716650092277)
++++ b/Controller/src/main/java/org/example/models/prometheus/ScrapeConfig.java	(date 1716650092277)
+@@ -0,0 +1,18 @@
++//package org.example.models.prometheus;
++//
++//import lombok.AllArgsConstructor;
++//import lombok.Builder;
++//import lombok.Data;
++//import lombok.NoArgsConstructor;
++//
++//import java.util.List;
++//
++//@Data
++//@Builder
++//@NoArgsConstructor
++//@AllArgsConstructor
++//public class ScrapeConfig {
++//    private String job_name;
++//    private String metrics_path;
++//    List<StaticConfig> static_configs;
++//}
+Index: Controller/src/main/java/org/example/services/HealthChecker.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controller/src/main/java/org/example/services/HealthChecker.java b/Controller/src/main/java/org/example/services/HealthChecker.java
+new file mode 100644
+--- /dev/null	(date 1716650125382)
++++ b/Controller/src/main/java/org/example/services/HealthChecker.java	(date 1716650125382)
+@@ -0,0 +1,92 @@
++//package org.example.services;
++//
++//import com.msa.deployment.Deployer;
++//import com.msa.models.Machine;
++//import com.msa.models.RunningInstance;
++//import com.msa.models.ServiceType;
++//import lombok.AllArgsConstructor;
++//import org.springframework.beans.factory.annotation.Autowired;
++//import org.springframework.beans.factory.annotation.Value;
++//import org.springframework.stereotype.Component;
++//
++//import java.io.IOException;
++//import java.util.HashSet;
++//import java.util.Hashtable;
++//import java.util.List;
++//import java.util.Map;
++//import java.util.logging.Logger;
++//
++//@Component
++//public class HealthChecker {
++//
++//    private final Deployer deployer;
++//    private final NodeMatcher nodeMatcher;
++//
++//    @Value("${health-checker.cpu-threshold-percentage}")
++//    private String cpuThresholdPercentage;
++//
++//    @Value("${health-checker.memory-threshold-percentage}")
++//    private String memoryThresholdPercentage;
++//
++//    @Autowired
++//    public HealthChecker(Deployer deployer, NodeMatcher nodeMatcher) {
++//        this.nodeMatcher = nodeMatcher;
++//        this.deployer = deployer;
++//    }
++//
++//    private void deployServiceToMatchedMachine(ServiceType serviceType) {
++//        Machine availableMachine = nodeMatcher.findNode(serviceType);
++//        System.out.println("Migrate service to " + availableMachine.getIp());
++//        try {
++//            deployer.deployService(availableMachine, serviceType);
++//        } catch (IOException e) {
++//            e.printStackTrace();
++//        }
++//    }
++//
++//    public void checkServiceHealth(Hashtable<String, String> metricResults, RunningInstance runningInstance) {
++//        System.out.println(metricResults);
++//        for (Map.Entry<String, String> metricResult : metricResults.entrySet()) {
++//            // check that the service is up
++//            switch (metricResult.getKey()) {
++//                case "status" -> {
++//                    if (metricResult.getValue().equals("0")) {
++//                        System.out.println("Service is down");
++//                        System.out.println("remove service from running instances");
++//                    }
++//                }
++//                case "memory" -> {
++//                    double usage = Double.parseDouble(metricResult.getValue()) / 10e9 / runningInstance.getHost().getMemory();
++//                    if (usage > Double.parseDouble(memoryThresholdPercentage)) {
++//                        System.out.println("Memory usage is above threshold");
++//                        deployServiceToMatchedMachine(runningInstance.getServiceType());
++//                    }
++//                }
++//                case "cpu" -> {
++//                    // check that the cpu usage is below the threshold
++//                    if (Double.parseDouble(metricResult.getValue()) > Double.parseDouble(cpuThresholdPercentage)) {
++//                        System.out.println("CPU usage is above threshold");
++//                        deployServiceToMatchedMachine(runningInstance.getServiceType());
++//                    }
++//                }
++//            }
++//
++//        }
++//    }
++//
++//
++//    public void checkAllServicesAvailability(List<RunningInstance> runningInstances) {
++//        HashSet<ServiceType> availableServices = new HashSet<>();
++//
++//        for (RunningInstance runningInstance : runningInstances) {
++//            availableServices.add(runningInstance.getServiceType());
++//        }
++//
++//        for (ServiceType serviceType : ServiceType.values()) {
++//            if (!availableServices.contains(serviceType)) {
++//                // deploy a service of that type
++//                deployServiceToMatchedMachine(serviceType);
++//            }
++//        }
++//    }
++//}
+diff --git a/ConfigServer/src/main/java/configration_files/user-service.yml b/ConfigServer/src/main/java/configration_files/user-service.yml
+deleted file mode 100644
+diff --git a/ConfigServer/src/main/java/configration_files/transaction-service.yml b/ConfigServer/src/main/java/configration_files/transaction-service.yml
+deleted file mode 100644
