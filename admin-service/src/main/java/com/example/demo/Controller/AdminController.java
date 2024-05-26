@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/api/admin")
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
     @Autowired

@@ -25,7 +25,7 @@ public class FlightReservationConfig {
             PlaneSeat seat = new PlaneSeat(15,SeatCategory.EconomyIsle,p,500);
             planeSeatRepository.saveAll(List.of(seat));
 
-            User appUser=new User(25, "Ibraham","Ali", "Taha123@gmail.com","1234",Role.USER);
+            User appUser=new User(25L, "Ibraham","Ali", "Taha123@gmail.com","1234",Role.USER,LocalDate.parse("1999-10-10"),19,Gender.MALE,MaritalStatus.MARRIED,"1234","Egypt","01099999999");
             System.out.println("Testing App"+appUser);
             userRepository.saveAll(List.of(appUser));
 

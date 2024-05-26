@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "api/v1/plane")
+@RequestMapping(path = "api/search/plane")
 public class PlaneController {
     private final PlaneService planeService;
 

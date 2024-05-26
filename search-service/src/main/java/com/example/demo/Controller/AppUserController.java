@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "api/v1/user")
+@RequestMapping(path = "api/search/user")
 public class AppUserController {
     private final AppUserService appUserService;
 

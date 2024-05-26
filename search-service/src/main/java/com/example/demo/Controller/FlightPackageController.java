@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "api/v1/flightPackage")
+@RequestMapping(path = "api/search/flightPackage")
 public class FlightPackageController {
 
     private final FlightPackageService flightPackageService;

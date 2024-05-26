@@ -11,7 +11,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping(path = "api/v1/planeSeat")
+@RequestMapping(path = "/api/transaction/planeSeat")
 public class PlaneSeatController {
     private final PlaneSeatService planeSeatService;
 

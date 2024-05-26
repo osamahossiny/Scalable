@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/complaints")
+@RequestMapping("api/search/complaints")
 public class ComplaintsController {
     @Autowired
     private ComplaintsService complaintsService;

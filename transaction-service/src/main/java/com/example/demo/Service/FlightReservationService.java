@@ -44,7 +44,7 @@ public List<FlightReservation> getUserFlightReservations(){
         UserTransfer userTransfer = (UserTransfer) SecurityContextHolder.getContext().getAuthentication().getCredentials();
         long userId = userTransfer.getId();
         User user = new User();
-        user.setId((int)userId);
+        user.setId(userId);
         user.setPassword(userTransfer.getPassword());
         user.setFirstname(userTransfer.getFirstname());
         user.setLastname(userTransfer.getLastname());
