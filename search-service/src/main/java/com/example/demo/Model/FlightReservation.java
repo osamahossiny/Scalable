@@ -12,18 +12,18 @@ public class FlightReservation {
         this.id = id;
     }
 
-    public AppUser getAppUser() {
+    public User getAppUser() {
         return appUser;
     }
 
-    public void setAppUser(AppUser appUser) {
+    public void setAppUser(User appUser) {
         this.appUser = appUser;
     }
 
     public FlightReservation() {
     }
 
-    public FlightReservation(AppUser appUser, FlightPackage flightPackage, PlaneSeat planeSeat, boolean seatChargeable, boolean extraBaggage, boolean withInsurance, int totalPrice) {
+    public FlightReservation(User appUser, FlightPackage flightPackage, PlaneSeat planeSeat, boolean seatChargeable, boolean extraBaggage, boolean withInsurance, int totalPrice) {
         this.appUser = appUser;
         this.flightPackage = flightPackage;
         this.planeSeat = planeSeat;
@@ -100,7 +100,7 @@ public class FlightReservation {
                     name = "user_id_fk"
             )
     )
-    private AppUser appUser;
+    private User appUser;
     @ManyToOne
     @JoinColumn(
             name = "package_id",

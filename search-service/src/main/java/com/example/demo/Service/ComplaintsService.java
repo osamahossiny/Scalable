@@ -4,6 +4,7 @@ import com.example.demo.Model.Complaints;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 import java.util.UUID;
@@ -42,6 +43,8 @@ public class ComplaintsService {
     public Complaints saveComplaints(Complaints complaints) {
         complaints.setId(UUID.randomUUID());
         complaints.setStatus("Pending");
+        // added auth for user
+        complaints.setUserID(SecurityContextHolder.getContext().getAuthentication().getCredentials().toString());
         redisTemplate.opsForValue().set(COMPLAINTS_CACHE_PREFIX + complaints.getId(), complaints, 10, TimeUnit.MINUTES);
         return complaintsRepository.save(complaints);
     }

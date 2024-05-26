@@ -15,6 +15,7 @@ public class FlightPackage {
             strategy = GenerationType.SEQUENCE,
             generator = "flight_package_id_sequence"
     )
+
     private Long id;
     @ManyToOne
     private Flight flight;
@@ -32,6 +33,15 @@ public class FlightPackage {
     private boolean expressCheckIn;
     @Column
     private int price;
+    public FlightPackage(Flight flight,  int weightCheckIn, int cancellationFee, int dateChangeFee, String mealInfo, boolean expressCheckIn, int price) {
+        this.flight = flight;
 
+        this.weightCheckIn = weightCheckIn;
+        this.cancellationFee = cancellationFee;
+        this.dateChangeFee = dateChangeFee;
+        this.mealInfo = mealInfo;
+        this.expressCheckIn = expressCheckIn;
+        this.price = price;
+    }
 
 }

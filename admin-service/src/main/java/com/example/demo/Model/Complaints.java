@@ -11,7 +11,11 @@ public class Complaints {
     private UUID id;
     private String description;
     private String status;
-
+    public Complaints(UUID id, String description, String status) {
+        this.id = id;
+        this.description = description;
+        this.status = status;
+    }
     // Getters and setters
     public UUID getId() {
         return id;

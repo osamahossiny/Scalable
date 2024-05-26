@@ -1,9 +1,6 @@
 package com.example.demo.Controller;
+import com.example.demo.Model.*;
 import com.example.demo.Service.FlightReservationService;
-import com.example.demo.Model.AppUser;
-import com.example.demo.Model.FlightPackage;
-import com.example.demo.Model.FlightReservation;
-import com.example.demo.Model.PlaneSeat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -75,7 +72,7 @@ public class FlightReservationController {
 @PutMapping(path = "{FlightReservationID}")
 public void updateFlightReservation(
         @PathVariable("FlightReservationID") Long id,
-        @RequestParam(required = false, name ="appUser") AppUser appUser,
+        @RequestParam(required = false, name ="appUser") User appUser,
         @RequestParam(required = false, name ="flightPackage") FlightPackage flightPackage,
         @RequestParam(required = false, name ="planeSeat") PlaneSeat planeSeat,
         @RequestParam(required = false, name ="seatChargeable") boolean seatChargeable,

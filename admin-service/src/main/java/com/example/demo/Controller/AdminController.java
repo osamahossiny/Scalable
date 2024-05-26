@@ -4,6 +4,7 @@ import com.example.demo.Model.Refund;
 import com.example.demo.Model.Promotion;
 import com.example.demo.Model.Complaints;
 import com.example.demo.Service.AdminService;
+import com.example.demo.dto.UserTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,7 +23,7 @@ public class AdminController {
 
     @PutMapping("/refund/{id}/status")
     public Refund updateRefundStatus(@PathVariable Long id, @RequestBody RefundStatusUpdateRequest statusUpdateRequest) {
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().getCredentials().toString());
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getCredentials());
         return adminService.updateRefundStatus(id, statusUpdateRequest.getStatus());
     }
     @PostMapping("/promotion/{flightId}")

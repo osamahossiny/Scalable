@@ -20,19 +20,19 @@ public class FlightReservation {
         this.id = id;
     }
 
-    public AppUser getAppUser() {
-        return appUser;
+    public User getUser() {
+        return user;
     }
 
-    public void setAppUser(AppUser appUser) {
-        this.appUser = appUser;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public FlightReservation() {
     }
 
-    public FlightReservation(AppUser appUser, FlightPackage flightPackage, PlaneSeat planeSeat, boolean seatChargeable, boolean extraBaggage, boolean withInsurance, PaymentMethod paymentMethod) {
-        this.appUser = appUser;
+    public FlightReservation(User user, FlightPackage flightPackage, PlaneSeat planeSeat, boolean seatChargeable, boolean extraBaggage, boolean withInsurance, PaymentMethod paymentMethod) {
+        this.user = user;
         this.flightPackage = flightPackage;
         this.planeSeat = planeSeat;
         this.seatChargeable = seatChargeable;
@@ -86,11 +86,11 @@ public class FlightReservation {
         this.withInsurance = withInsurance;
     }
 
-    public int getTotalPrice() {
+    public float getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(int totalPrice) {
+    public void setTotalPrice(float totalPrice) {
         this.totalPrice = totalPrice;
     }
 
@@ -133,7 +133,7 @@ public class FlightReservation {
                     name = "user_id_fk"
             )
     )
-    private AppUser appUser;
+    private User user;
     @ManyToOne
     @JoinColumn(
             name = "package_id",
@@ -159,7 +159,7 @@ public class FlightReservation {
     @Column
     private boolean withInsurance;
     @Column
-    private int totalPrice;
+    private float totalPrice;
 
 
     public enum PaymentMethod {

@@ -29,4 +29,10 @@ public class PlaneSeat {
     private Plane plane;
     @Column
     private int price;
+    public PlaneSeat(int seatNumber, SeatCategory seatCategory, Plane plane, int price) {
+        this.seatNumber = seatNumber;
+        this.seatCategory = seatCategory;
+        this.plane = plane;
+        this.price = price;
+    }
 }
