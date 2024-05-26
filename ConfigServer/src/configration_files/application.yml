@@ -30,7 +30,7 @@ admin:
     update: ''
   classes:
     update: ''
-  status: frozen
+  status: running
   error:
     reporting:
       level: info

@@ -103,7 +103,7 @@ public class GeneralService {
         writer.close();
     }
     private void refreshConfiguration() {
-        String actuatorUrl = "http://localhost:8083/actuator/refresh";
+        String actuatorUrl = "http://admin_service/actuator/refresh";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
