@@ -49,7 +49,7 @@ public class TransactionService {
         if (flightReservation.isEmpty()){
             throw new IllegalStateException("This flight reservation does not exist.");
         }
-        if((long) flightReservation.get().getUser().getId() !=  transaction.getUserId()){
+        if((long) flightReservation.get().getUserId() !=  transaction.getUserId()){
             throw new IllegalStateException("User is not the owner of the reservation.");
         }
         //find exact transaction
@@ -109,7 +109,7 @@ public class TransactionService {
             if(transactionRepository.findFlightReservationById(reservationId).isEmpty()){
                 throw new IllegalStateException("Flight reservation with id " + reservationId + " does not exist");
             }
-            if(!transactionRepository.findFlightReservationById(reservationId).get().getUser().getId().equals(userId)){
+            if(!transactionRepository.findFlightReservationById(reservationId).get().getUserId().equals(userId)){
                 throw new IllegalStateException("User is not the owner of the reservation.");
             }
             if(!reservationId.equals(transaction.getReservationId())){

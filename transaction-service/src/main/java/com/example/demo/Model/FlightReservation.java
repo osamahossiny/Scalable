@@ -20,19 +20,19 @@ public class FlightReservation {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public FlightReservation() {
     }
 
-    public FlightReservation(User user, FlightPackage flightPackage, PlaneSeat planeSeat, boolean seatChargeable, boolean extraBaggage, boolean withInsurance, PaymentMethod paymentMethod) {
-        this.user = user;
+    public FlightReservation(Long userId, FlightPackage flightPackage, PlaneSeat planeSeat, boolean seatChargeable, boolean extraBaggage, boolean withInsurance, PaymentMethod paymentMethod) {
+        this.userId = userId;
         this.flightPackage = flightPackage;
         this.planeSeat = planeSeat;
         this.seatChargeable = seatChargeable;
@@ -125,15 +125,15 @@ public class FlightReservation {
             generator = "flight_reservation_id_sequence"
     )
     Long id;
-    @ManyToOne
-    @JoinColumn(
-            name = "user_id",
-            referencedColumnName = "id",
-            foreignKey = @ForeignKey(
-                    name = "user_id_fk"
-            )
-    )
-    private User user;
+//    @ManyToOne
+//    @JoinColumn(
+//            name = "user_id",
+//            referencedColumnName = "id",
+//            foreignKey = @ForeignKey(
+//                    name = "user_id_fk"
+//            )
+//    )
+    private Long userId;
     @ManyToOne
     @JoinColumn(
             name = "package_id",

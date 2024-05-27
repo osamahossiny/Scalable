@@ -8,6 +8,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import org.apache.http.client.methods.*;
 
 public class HttpUtil {
 
@@ -45,5 +46,28 @@ public class HttpUtil {
 
     public static String getResponseContent(HttpResponse response) throws IOException {
         return EntityUtils.toString(response.getEntity(), "UTF-8");
+    }
+
+
+    public static HttpResponse sendGet(String url) throws IOException {
+        CloseableHttpClient client = HttpClients.createDefault();
+        HttpGet get = new HttpGet(url);
+        get.setHeader("Content-Type", "application/json");
+        return client.execute(get);
+    }
+
+    public static HttpResponse sendPut(String url, String payload) throws IOException {
+        CloseableHttpClient client = HttpClients.createDefault();
+        HttpPut put = new HttpPut(url);
+        put.setHeader("Content-Type", "application/json");
+        put.setEntity(new StringEntity(payload));
+        return client.execute(put);
+    }
+
+    public static HttpResponse sendDelete(String url) throws IOException {
+        CloseableHttpClient client = HttpClients.createDefault();
+        HttpDelete delete = new HttpDelete(url);
+        delete.setHeader("Content-Type", "application/json");
+        return client.execute(delete);
     }
 }

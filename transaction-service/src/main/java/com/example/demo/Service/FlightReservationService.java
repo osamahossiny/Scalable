@@ -49,7 +49,7 @@ public List<FlightReservation> getUserFlightReservations(){
         user.setFirstname(userTransfer.getFirstname());
         user.setLastname(userTransfer.getLastname());
         user.setEmail(userTransfer.getEmail());
-        flightReservation.setUser(user);
+        flightReservation.setUserId((long)user.getId());
 
         if(flightReservation.getFlightPackage()==null){
             throw new IllegalStateException("FlightPackage cannot be null.");
@@ -73,8 +73,8 @@ public List<FlightReservation> getUserFlightReservations(){
 
 
         if(reservationSameUser.isPresent()){
-            System.out.println("reservationSameUser: { "+reservationSameUser.get().getUser().getId()+", "+reservationSameUser.get().getPlaneSeat().getId()+", "+reservationSameUser.get().getFlightPackage().getFlight().getFlightId()+" }");
-            System.out.println("flightReservation: { "+flightReservation.getUser().getId()+", "+flightReservation.getPlaneSeat().getId()+", "+flight.getFlightId()+" }");
+            System.out.println("reservationSameUser: { "+reservationSameUser.get().getUserId()+", "+reservationSameUser.get().getPlaneSeat().getId()+", "+reservationSameUser.get().getFlightPackage().getFlight().getFlightId()+" }");
+            System.out.println("flightReservation: { "+flightReservation.getUserId()+", "+flightReservation.getPlaneSeat().getId()+", "+flight.getFlightId()+" }");
             throw new IllegalStateException("This user already has a reservation with this seat and package.");
         }
 
@@ -86,6 +86,11 @@ public List<FlightReservation> getUserFlightReservations(){
 
             throw new IllegalStateException("This seat is already reserved.");
         }
+        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+        System.out.println(flight.getPlane().getId());
+        System.out.println(planeSeat.get().getPlane().getId());
+        System.out.println(Objects.equals(flight.getPlane().getId(), planeSeat.get().getPlane().getId()));
+        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$");
         if(!Objects.equals(flight.getPlane().getId(), planeSeat.get().getPlane().getId())){
             throw new IllegalStateException("This seat is not in the same plane as the flight.");
         }
@@ -207,10 +212,10 @@ public List<FlightReservation> getUserFlightReservations(){
         if(paymentMethod != null && flightReservation.getPaymentMethod() != paymentMethod){
             flightReservation.setPaymentMethod(paymentMethod);
         }
-        Optional<FlightReservation> reservationSameUser = flightReservationRepository.findFlightReservation(flightReservation.getUser().getId(), flightReservation.getPlaneSeat().getId(), flight.getFlightId());
+        Optional<FlightReservation> reservationSameUser = flightReservationRepository.findFlightReservation(flightReservation.getUserId(), flightReservation.getPlaneSeat().getId(), flight.getFlightId());
         if(reservationSameUser.isPresent()){
-            System.out.println("reservationSameUser: { "+reservationSameUser.get().getUser().getId()+", "+reservationSameUser.get().getPlaneSeat().getId()+", "+reservationSameUser.get().getFlightPackage().getFlight().getFlightId()+" }");
-            System.out.println("flightReservation: { "+flightReservation.getUser().getId()+", "+flightReservation.getPlaneSeat().getId()+", "+flight.getFlightId()+" }");
+            System.out.println("reservationSameUser: { "+reservationSameUser.get().getUserId()+", "+reservationSameUser.get().getPlaneSeat().getId()+", "+reservationSameUser.get().getFlightPackage().getFlight().getFlightId()+" }");
+            System.out.println("flightReservation: { "+flightReservation.getUserId()+", "+flightReservation.getPlaneSeat().getId()+", "+flight.getFlightId()+" }");
             throw new IllegalStateException("This user already has a reservation with this seat and package.");
         }
         if(!Objects.equals(flight.getPlane().getId(), flightReservation.getPlaneSeat().getPlane().getId())){

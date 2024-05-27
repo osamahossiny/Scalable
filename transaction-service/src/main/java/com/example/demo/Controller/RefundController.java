@@ -17,7 +17,7 @@ public class RefundController {
         @PostMapping
         public ResponseEntity<Refund> createRefund(@RequestBody Refund refund) {
            // Long userId = (long)SecurityContextHolder.getContext().getAuthentication().getCredentials();
-          //  refund.setUserId(refund.getUserId());
+           refund.setUserId(1L);
             Refund createdRefund = refundService.createRefund(refund);
             return ResponseEntity.ok(createdRefund);
         }

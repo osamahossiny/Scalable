@@ -37,16 +37,32 @@ public class FlightController {
     public List<Flight> oneWay(@RequestBody FlightAttributes attributes){
         return this.flightService.getDirectFlights(attributes);
     }
+    @PostMapping(path = "/OneWay")
+    public List<Flight> oneWay1(@RequestBody FlightAttributes attributes){
+        return this.flightService.getDirectFlights(attributes);
+    }
     @GetMapping(path = "/TwoWay")
     public List<Object[]> twoWay(@RequestBody FlightAttributes attributes){
+        return this.flightService.getTwoWay(attributes);
+    }
+    @PostMapping(path = "/TwoWay")
+    public List<Object[]> twoWay1(@RequestBody FlightAttributes attributes){
         return this.flightService.getTwoWay(attributes);
     }
     @GetMapping(path = "/RoundTrip")
     public List<Object[]> roundTrip(@RequestBody FlightAttributes attributes){
         return this.flightService.getRoundTrip(attributes);
     }
+    @PostMapping(path = "/RoundTrip")
+    public List<Object[]> roundTrip1(@RequestBody FlightAttributes attributes){
+        return this.flightService.getRoundTrip(attributes);
+    }
     @GetMapping(path = "/Filtered")
     public List<Flight> filtered(@RequestBody FlightAttributes attributes){
+        return this.flightService.getFiltered(attributes);
+    }
+    @PostMapping(path = "/Filtered")
+    public List<Flight> filtered1(@RequestBody FlightAttributes attributes){
         return this.flightService.getFiltered(attributes);
     }
 /*

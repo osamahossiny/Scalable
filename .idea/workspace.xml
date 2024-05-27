@@ -5,68 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bf70ecc4-6ced-4fe0-8aed-6e25af2182ab" name="Changes" comment="docker setup">
-      <change afterPath="$PROJECT_DIR$/.idea/copilot/chatSessions/00000000000.xd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot/chatSessions/blobs/version" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot/chatSessions/xd.lck" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ConfigServer/src/main/java/configration_files/admin-service.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ConfigServer/src/main/java/configration_files/search-service.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ConfigServer/src/main/java/configration_files/transaction-service.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ConfigServer/src/main/java/configration_files/user-service.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Config/DummyDataConfiguration.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Config/RestTemplateConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Controller/Request.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Repository/FlightPackageRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Repository/FlightReservationRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Config/RestTemplateConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/PlaneController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Service/PlaneService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Test/src/test/java/SearchTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Test/src/test/java/TransactionTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Test/src/test/java/UserTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Config/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Config/JwtAuthenticationFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Config/SecurityConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Config/SecurityConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Controller/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Controller/AdminController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/Airline.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/Airline.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/Complaints.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/Complaints.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/Flight.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/Flight.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/FlightPackage.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/FlightPackage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/FlightReservation.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/FlightReservation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/PlaneSeat.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Model/PlaneSeat.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Repository/FlightRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Repository/FlightRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Repository/PlaneRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Repository/PlaneRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Service/AdminService.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/java/com/example/demo/Service/AdminService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/src/test/java/HttpUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/Test/src/test/java/HttpUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/src/test/java/LoadTest_User.java" beforeDir="false" afterPath="$PROJECT_DIR$/Test/src/test/java/LoadTest_User.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/admin-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/admin-service/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/compose.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Commands/FlightReservationCommand/UpdateFlightReservationCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Commands/FlightReservationCommand/UpdateFlightReservationCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Config/FlightReservationConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Config/FlightReservationConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Controller/FlightReservationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Controller/FlightReservationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Model/FlightReservation.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Model/FlightReservation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Repository/FlightReservationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Repository/FlightReservationRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Service/ComplaintsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Service/ComplaintsService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Service/FlightReservationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Service/FlightReservationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Config/FlightReservationConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Config/FlightReservationConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Config/ComplaintsConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Config/ComplaintsConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Controller/FlightController.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/example/demo/Controller/FlightController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/search-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/resources/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Config/SecurityConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Config/SecurityConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Config/TransactionConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Config/TransactionConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/FlightReservationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/FlightReservationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/PaymentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/PaymentController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/RefundController.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/RefundController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/StripeWebhookController.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/StripeWebhookController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/TransactionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Controller/TransactionController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Model/FlightReservation.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Model/FlightReservation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Model/Transaction.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Model/Transaction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Repository/FlightReservationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Repository/FlightReservationRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Repository/TransactionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Repository/TransactionRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Service/FlightPackageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Service/FlightPackageService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Service/FlightReservationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Service/FlightReservationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Service/RefundService.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Service/RefundService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Service/TransactionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/java/com/example/demo/Service/TransactionService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/transaction-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/transaction-service/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Controller/AuthenticationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/example/demo/Controller/AuthenticationController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -74,10 +28,17 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="auth" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -110,14 +71,25 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Docker.compose.yaml.cassandra: Compose Deployment.executor": "Run",
+    "JUnit.LoadTest.executor": "Run",
+    "JUnit.LoadTest_User.executor": "Run",
+    "JUnit.SearchTest.executor": "Run",
+    "JUnit.TransactionTest.executor": "Run",
+    "JUnit.UserTest.executor": "Run",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
     "RequestMappingsPanelWidth0": "75",
     "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "Spring Boot.AdminServiceApplication.executor": "Run",
+    "Spring Boot.DiscoveryServiceApplication.executor": "Run",
+    "Spring Boot.SearchServiceApplication.executor": "Run",
+    "Spring Boot.TransactionServiceApplication.executor": "Run",
+    "Spring Boot.UserServiceApplication.executor": "Run",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "Merging auth",
+    "git-widget-placeholder": "auth",
     "last_opened_file_path": "/Users/nayerkotry/InteleliJ/ScalabeNew",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -147,7 +119,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.UserServiceApplication">
+  <component name="RunManager" selected="Spring Boot.TransactionServiceApplication">
     <configuration name="SearchServiceApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.example.demo.SearchServiceApplication" />
       <extension name="coverage">
@@ -187,6 +159,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="ApiGatewayServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="api-gateway-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="org.example.ApiGatewayServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="DiscoveryServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="discovery-service" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="org.example.DiscoveryServiceApplication" />
@@ -215,8 +194,26 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml" />
+      <method v="2" />
+    </configuration>
+    <configuration name="compose.yaml.cassandra: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="services">
+            <list>
+              <option value="cassandra" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="compose.yaml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Docker.compose.yaml.cassandra: Compose Deployment" />
         <item itemvalue="JUnit.All in user-service" />
         <item itemvalue="Application.TransactionServiceApplication" />
         <item itemvalue="Application.SearchServiceApplication" />
@@ -257,5 +254,57 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="docker setup" />
     <option name="LAST_COMMIT_MESSAGE" value="docker setup" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/Test/src/test/java/LoadTest_User.java</url>
+          <line>231</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/Test/src/test/java/LoadTest_User.java</url>
+          <line>232</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/Test/src/test/java/SearchTest.java</url>
+          <line>338</line>
+          <properties class="SearchTest">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/Test/src/test/java/SearchTest.java</url>
+          <line>141</line>
+          <properties class="SearchTest" method="test3">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/Test/src/test/java/TransactionTest.java</url>
+          <line>186</line>
+          <properties class="TransactionTest" method="test4">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/Test/src/test/java/UserTest.java</url>
+          <line>188</line>
+          <properties class="UserTest" method="test3">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

@@ -1,6 +1,5 @@
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 
@@ -8,24 +7,24 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
-public class LoadTest_User {
+public class TransactionTest {
 
     private static final int NUM_THREADS = 10; // Number of concurrent threads
     private static final int NUM_REQUESTS = 100; // Total number of requests to send
+
+    private int successfulTransactions = 0;
+    private int successfulGetTransactions = 0;
+    private int successfulUserTransactions = 0;
+    private int successfulAddTransactions = 0;
+    private int successfulUpdateTransactions = 0;
+    private int successfulDeleteTransactions = 0;
     private int successfulRegistrations = 0;
     private int successfulLogins = 0;
-    private int successfulPromotions = 0;
-    private int successfulRefundsFetch = 0;
-    private  int successfulRefundsPost=0;
-    private int successfulLogouts = 0;
-
+    private static List<Integer> transactionIds = new ArrayList<>();
     static private List<String> registeredEmails = new ArrayList<>(); // Store registered emails for login test
     static private List<String> tokens = new ArrayList<>(); // Store tokens from successful login responses
-    private static final AtomicInteger promotionCounter = new AtomicInteger(); // Counter for unique promotion codes
-
-    //RegisterLoad
+    //register
     @Test
     public void test1() throws InterruptedException {
         ExecutorService executorService = Executors.newFixedThreadPool(NUM_THREADS);
@@ -79,7 +78,7 @@ public class LoadTest_User {
 
         System.out.println("Number of successful registrations: " + successfulRegistrations);
     }
-    //LoginforuserLoad
+    //login
     @Test
     public void test2() throws InterruptedException {
         // Ensure that registration test is run first to populate registeredEmails
@@ -133,41 +132,40 @@ public class LoadTest_User {
         }
 
         System.out.println("Number of successful logins: " + successfulLogins);
-        System.out.println("Tokens: " + tokens);
+        System.out.println("Tokens: " + tokens.get(tokens.size()-1));
     }
-    //AddPromotionforflightLoad
+    //AddTransactionLoad
     @Test
     public void test3() throws InterruptedException {
-        // Ensure that login test is run first to populate tokens
-        if (tokens.isEmpty()) {
-            System.err.println("No tokens found. Please run the login test first.");
-            return;
-        }
-
         ExecutorService executorService = Executors.newFixedThreadPool(NUM_THREADS);
         List<Future<Void>> futures = new ArrayList<>();
         Object lock = new Object();
 
-        for (String token : tokens) {
+        for (int i = 0; i < NUM_REQUESTS; i++) {
             futures.add(executorService.submit(() -> {
-                String promotionPayload = generatePromotionPayload();
-                String flightId = "1"; // Example flight ID, replace with actual ID
+                String transactionPayload = generateAddTransactionPayload(1, 1, "2024-01-11T00:00:00", "VISA", 50000.00, "PENDING");
 
                 try {
-                    HttpResponse promotionResponse = HttpUtil.sendAuthorizedPost("http://localhost:8083/admin/promotion/" + flightId, promotionPayload, token);
-                    int promotionResponseCode = promotionResponse.getStatusLine().getStatusCode();
-                    if (promotionResponseCode == 200) {
+                    HttpResponse transactionResponse = HttpUtil.sendAuthorizedPost("http://localhost:8081/api/v1/transaction", transactionPayload , tokens.get(tokens.size()-1));
+                    int transactionResponseCode = transactionResponse.getStatusLine().getStatusCode();
+                    if (transactionResponseCode == 200) {
                         synchronized (lock) {
-                            successfulPromotions++;
+                            successfulAddTransactions++;
+                            String responseBody = EntityUtils.toString(transactionResponse.getEntity());
+                            JSONObject json = new JSONObject(responseBody);
+                            int transactionId = json.getInt("transactionId");
+                            transactionIds.add(transactionId); // Store transactionId for further tests
                         }
                     }
-                    System.out.println("Promotion Response Code: " + promotionResponseCode);
+                    System.out.println("Add Transaction Response Code: " + transactionResponseCode);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
                 return null;
             }));
         }
+
         executorService.shutdown();
         if (!executorService.awaitTermination(10, TimeUnit.MINUTES)) {
             System.err.println("Tasks did not finish in the allotted time");
@@ -182,118 +180,29 @@ public class LoadTest_User {
             }
         }
 
-        System.out.println("Number of successful promotions: " + successfulPromotions);
+        System.out.println("Number of successful add transactions: " + successfulAddTransactions);
     }
-    //FetchAllRefunds
+    //GetAllTransactionsLoad
     @Test
     public void test4() throws InterruptedException {
         ExecutorService executorService = Executors.newFixedThreadPool(NUM_THREADS);
         List<Future<Void>> futures = new ArrayList<>();
-        Object lock = new Object();
-
-        for (String token : tokens) {
-            futures.add(executorService.submit(() -> {
-                try {
-                    HttpResponse response = HttpUtil.sendAuthorizedGet("http://localhost:8083/admin/refunds", token);
-                    int responseCode = response.getStatusLine().getStatusCode();
-                    if (responseCode == 200) {
-                        synchronized (lock) {
-                            successfulRefundsFetch++;
-                        }
-                    }
-                    System.out.println("Fetch Refunds Response Code: " + responseCode);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                return null;
-            }));
-        }
-
-        executorService.shutdown();
-        if (!executorService.awaitTermination(10, TimeUnit.MINUTES)) {
-            System.err.println("Tasks did not finish in the allotted time");
-            executorService.shutdownNow();
-        }
-
-        for (Future<Void> future : futures) {
-            try {
-                future.get();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        System.out.println("Number of successful refunds fetch: " + successfulRefundsFetch);
-    }
-    //PostRefunds
-    @Test
-    public void test5() throws InterruptedException {
-        // Register a user
-        String email = "testuser" + System.currentTimeMillis() + "@example.com";
-        String password = "password";
-        String registerPayload = generateRegisterPayload(email, password);
-
-        try {
-            HttpResponse registerResponse = HttpUtil.sendPost("http://localhost:8084/api/v1/auth/register", registerPayload);
-            int registerResponseCode = registerResponse.getStatusLine().getStatusCode();
-            if (registerResponseCode != 200) {
-                System.err.println("User registration failed with response code: " + registerResponseCode);
-                return;
-            }
-            System.out.println("User registered successfully with response code: " + registerResponseCode);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-        Object lock = new Object();
-
-        // Log in with the registered user to obtain a token
-        String loginPayload = generateLoginPayload(email, password);
-        String token = null;
-        try {
-            HttpResponse loginResponse = HttpUtil.sendPost("http://localhost:8084/api/v1/auth/authenticate", loginPayload);
-            int loginResponseCode = loginResponse.getStatusLine().getStatusCode();
-            if (loginResponseCode == 200) {
-                synchronized (lock) {
-                    successfulLogins++;
-                    String responseBody = EntityUtils.toString(loginResponse.getEntity());
-                    JSONObject json = new JSONObject(responseBody);
-                    String token1 = json.getString("access_token");
-                    token=token1;
-                    tokens.add(token1); // Store token for later use
-                }
-            }
-            System.out.println("Login Response Code for " + email + ": " + loginResponseCode);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-
-        // Ensure that the token is available from the login step
-
-
-        // Test the refunds endpoint using the obtained token
-        ExecutorService executorService = Executors.newFixedThreadPool(NUM_THREADS);
-        List<Future<Void>> futures = new ArrayList<>();
-
-        String refundsPayload = generateRefundsPayload();
 
         for (int i = 0; i < NUM_REQUESTS; i++) {
             futures.add(executorService.submit(() -> {
                 try {
-                    HttpResponse refundsResponse = HttpUtil.sendAuthorizedPost("http://localhost:8081/api/refunds", refundsPayload, tokens.get(tokens.size()-1));
-                    int refundsResponseCode = refundsResponse.getStatusLine().getStatusCode();
-                    synchronized (lock) {
-                        if (refundsResponseCode == 200 || refundsResponseCode == 201) {
-                            successfulRefundsPost++;
+                    HttpResponse getResponse = HttpUtil.sendAuthorizedGet("http://localhost:8081/api/v1/transaction", tokens.get(tokens.size()-1));
+                    int getResponseCode = getResponse.getStatusLine().getStatusCode();
+                    if (getResponseCode == 200) {
+                        synchronized (this) {
+                            successfulGetTransactions++;
                         }
                     }
-                    System.out.println("Post Refunds Response Code: " + refundsResponseCode);
+                    System.out.println("Get All Transactions Response Code: " + getResponseCode);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
                 return null;
             }));
         }
@@ -312,68 +221,55 @@ public class LoadTest_User {
             }
         }
 
-        System.out.println("Number of successful refunds post: " + successfulRefundsPost);
+        System.out.println("Number of successful get all transactions: " + successfulGetTransactions);
     }
-    //UpdateRefundStatusforadmin
+    //GetUserTransactionsLoad
+    @Test
+    public void test5() throws InterruptedException {
+        ExecutorService executorService = Executors.newFixedThreadPool(NUM_THREADS);
+        List<Future<Void>> futures = new ArrayList<>();
+
+        for (int i = 0; i < NUM_REQUESTS; i++) {
+            futures.add(executorService.submit(() -> {
+                try {
+                    HttpResponse getResponse = HttpUtil.sendAuthorizedGet("http://localhost:8081/api/v1/transaction/user?userId=1", tokens.get(tokens.size()-1));
+                    int getResponseCode = getResponse.getStatusLine().getStatusCode();
+                    if (getResponseCode == 200) {
+                        synchronized (this) {
+                            successfulUserTransactions++;
+                        }
+                    }
+                    System.out.println("Get User Transactions Response Code: " + getResponseCode);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }));
+        }
+
+        executorService.shutdown();
+        if (!executorService.awaitTermination(10, TimeUnit.MINUTES)) {
+            System.err.println("Tasks did not finish in the allotted time");
+            executorService.shutdownNow();
+        }
+
+        for (Future<Void> future : futures) {
+            try {
+                future.get();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        System.out.println("Number of successful get user transactions: " + successfulUserTransactions);
+    }
+    //UpdateTransactionLoad
     @Test
     public void test6() throws InterruptedException {
-        // Ensure that the token is available from the login step
-        if (tokens.isEmpty()) {
-            System.err.println("No tokens found. Please run the login test first.");
-            return;
-        }
-
-        // Use the first token for authorization
-        String token = tokens.get(0);
-
-        // Update refund status using the obtained token
-        ExecutorService executorService = Executors.newFixedThreadPool(NUM_THREADS);
-        List<Future<Void>> futures = new ArrayList<>();
-        Object lock = new Object();
-        String updateStatusPayload = generateUpdateStatusPayload("completed");
-
-        for (int i = 1; i <= NUM_REQUESTS; i++) {
-            final Long refundId = (long) i; // Use the request number as the refund ID
-
-            futures.add(executorService.submit(() -> {
-                try {
-                    HttpResponse updateStatusResponse = HttpUtil.sendAuthorizedPut("http://localhost:8083/admin/refund/" + refundId + "/status", updateStatusPayload, token);
-                    int updateStatusResponseCode = updateStatusResponse.getStatusLine().getStatusCode();
-                    synchronized (lock) {
-                        if (updateStatusResponseCode == 200) {
-                            successfulRefundsPost++;
-                        }
-                    }
-                    System.out.println("Update Refund Status Response Code for refund ID " + refundId + ": " + updateStatusResponseCode);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }));
-        }
-
-        executorService.shutdown();
-        if (!executorService.awaitTermination(10, TimeUnit.MINUTES)) {
-            System.err.println("Tasks did not finish in the allotted time");
-            executorService.shutdownNow();
-        }
-
-        for (Future<Void> future : futures) {
-            try {
-                future.get();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        System.out.println("Number of successful refund status updates: " + successfulRefundsPost);
-    }
-    //Logout
-    @Test
-    public void test7() throws InterruptedException {
-        // Ensure that login test is run first to populate tokens
-        if (tokens.isEmpty()) {
-            System.err.println("No tokens found. Please run the login test first.");
+        // Ensure that add transaction test is run first to populate transactionIds
+        if (transactionIds.isEmpty()) {
+            System.err.println("No transactions found. Please run the add transaction test first.");
             return;
         }
 
@@ -381,17 +277,19 @@ public class LoadTest_User {
         List<Future<Void>> futures = new ArrayList<>();
         Object lock = new Object();
 
-        for (String token : tokens) {
+        for (int transactionId : transactionIds) {
             futures.add(executorService.submit(() -> {
+                String updatePayload = generateUpdateTransactionPayload(transactionId, 1, 1, "2024-01-11T00:00:00", "VISA", 50000.00, "COMPLETED");
+
                 try {
-                    HttpResponse logoutResponse = HttpUtil.sendAuthorizedPost("http://localhost:8084/api/v1/auth/logout", "", token);
-                    int logoutResponseCode = logoutResponse.getStatusLine().getStatusCode();
-                    if (logoutResponseCode == 200) {
+                    HttpResponse updateResponse = HttpUtil.sendAuthorizedPut("http://localhost:8081/api/v1/transaction/" + transactionId, updatePayload, tokens.get(tokens.size()-1));
+                    int updateResponseCode = updateResponse.getStatusLine().getStatusCode();
+                    if (updateResponseCode == 200) {
                         synchronized (lock) {
-                            successfulLogouts++;
+                            successfulUpdateTransactions++;
                         }
                     }
-                    System.out.println("Logout Response Code: " + logoutResponseCode);
+                    System.out.println("Update Transaction Response Code: " + updateResponseCode);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -414,30 +312,72 @@ public class LoadTest_User {
             }
         }
 
-        System.out.println("Number of successful logouts: " + successfulLogouts);
+        System.out.println("Number of successful update transactions: " + successfulUpdateTransactions);
+    }
+    //DeleteTransactionLoad
+//    @Test
+//    public void test7() throws InterruptedException {
+//        // Ensure that add transaction test is run first to populate transactionIds
+//        if (transactionIds.isEmpty()) {
+//            System.err.println("No transactions found. Please run the add transaction test first.");
+//            return;
+//        }
+//
+//        ExecutorService executorService = Executors.newFixedThreadPool(NUM_THREADS);
+//        List<Future<Void>> futures = new ArrayList<>();
+//        Object lock = new Object();
+//
+//        for (int transactionId : transactionIds) {
+//            futures.add(executorService.submit(() -> {
+//                try {
+//                    HttpResponse deleteResponse = HttpUtil.sendDelete("http://localhost:8081/api/v1/transaction/" + transactionId);
+//                    int deleteResponseCode = deleteResponse.getStatusLine().getStatusCode();
+//                    if (deleteResponseCode == 200) {
+//                        synchronized (lock) {
+//                            successfulDeleteTransactions++;
+//                        }
+//                    }
+//                    System.out.println("Delete Transaction Response Code: " + deleteResponseCode);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                return null;
+//            }));
+//        }
+//
+//        executorService.shutdown();
+//        if (!executorService.awaitTermination(10, TimeUnit.MINUTES)) {
+//            System.err.println("Tasks did not finish in the allotted time");
+//            executorService.shutdownNow();
+//        }
+//
+//        for (Future<Void> future : futures) {
+//            try {
+//                future.get();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        System.out.println("Number of successful delete transactions: " + successfulDeleteTransactions);
+//    }
+
+    private String generateAddTransactionPayload(int userId, int reservationId, String transactionDateTime, String paymentMethod, double transactionAmount, String status) {
+        return String.format("{\"userId\":%d,\"reservationId\":%d,\"transactionDateTime\":\"%s\",\"paymentMethod\":\"%s\",\"transactionAmount\":%.2f,\"status\":\"%s\"}",
+                userId, reservationId, transactionDateTime, paymentMethod, transactionAmount, status);
     }
 
-    private String generateUpdateStatusPayload(String status) {
-        return String.format("{\"status\":\"%s\"}", status);
+    private String generateUpdateTransactionPayload(int transactionId, int userId, int reservationId, String transactionDateTime, String paymentMethod, double transactionAmount, String status) {
+        return String.format("{\"transactionId\":%d,\"userId\":%d,\"reservationId\":%d,\"transactionDateTime\":\"%s\",\"paymentMethod\":\"%s\",\"transactionAmount\":%.2f,\"status\":\"%s\"}",
+                transactionId, userId, reservationId, transactionDateTime, paymentMethod, transactionAmount, status);
     }
+
     private String generateRegisterPayload(String email, String password) {
-        return String.format("{\"firstname\":\"Test\",\"lastname\":\"User\",\"email\":\"%s\",\"password\":\"%s\",\"role\":\"ADMIN\"}", email, password);
+        return String.format("{\"firstname\":\"Test\",\"lastname\":\"User\",\"email\":\"%s\",\"password\":\"%s\",\"role\":\"USER\"}", email, password);
     }
 
     private String generateLoginPayload(String email, String password) {
         return String.format("{\"email\":\"%s\",\"password\":\"%s\"}", email, password);
     }
-
-    private String generatePromotionPayload() {
-        String code = "code" + System.currentTimeMillis() + promotionCounter.incrementAndGet();
-        return String.format("{\"code\":\"%s\",\"discount\":20}", code);
-    }
-
-    private String generateRefundsPayload() {
-        return "{\"amount\":100,\"reason\":\"Flight cancellation\",\"status\":\"PENDING\"}";
-    }
-
-
-
-
 }
