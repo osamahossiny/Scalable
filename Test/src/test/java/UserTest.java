@@ -40,7 +40,7 @@ public class UserTest {
                 String registerPayload = generateRegisterPayload(email, password);
 
                 try {
-                    HttpResponse registerResponse = HttpUtil.sendPost("http://localhost:8084/api/user/auth/register", registerPayload);
+                    HttpResponse registerResponse = HttpUtil.sendPost("http://localhost:8080/api/user/auth/register", registerPayload);
                     int registerResponseCode = registerResponse.getStatusLine().getStatusCode();
                     if (registerResponseCode == 200) {
                         synchronized (lock) {
@@ -80,7 +80,7 @@ public class UserTest {
 
         System.out.println("Number of successful registrations: " + successfulRegistrations);
     }
-    //login
+//    login
     @Test
     public void test2() throws InterruptedException {
         // Ensure that registration test is run first to populate registeredEmails
@@ -99,7 +99,7 @@ public class UserTest {
                 String loginPayload = generateLoginPayload(email, password);
 
                 try {
-                    HttpResponse loginResponse = HttpUtil.sendPost("http://localhost:8084/api/user/auth/authenticate", loginPayload);
+                    HttpResponse loginResponse = HttpUtil.sendPost("http://localhost:8080/api/user/auth/authenticate", loginPayload);
                     int loginResponseCode = loginResponse.getStatusLine().getStatusCode();
                     if (loginResponseCode == 200) {
                         synchronized (lock) {
@@ -136,7 +136,7 @@ public class UserTest {
         System.out.println("Number of successful logins: " + successfulLogins);
         System.out.println("Tokens: " + tokens.get(tokens.size()-1));
     }
-    //changepassword
+    //logout
     @Test
     public void test4() throws InterruptedException {
         // Ensure that login test is run first to populate tokens
@@ -152,7 +152,7 @@ public class UserTest {
         for (String token : tokens) {
             futures.add(executorService.submit(() -> {
                 try {
-                    HttpResponse logoutResponse = HttpUtil.sendAuthorizedPost("http://localhost:8084/api/user/auth/logout", "", token);
+                    HttpResponse logoutResponse = HttpUtil.sendAuthorizedPost("http://localhost:8080/api/user/auth/logout", "", token);
                     int logoutResponseCode = logoutResponse.getStatusLine().getStatusCode();
                     if (logoutResponseCode == 200) {
                         synchronized (lock) {
@@ -184,7 +184,7 @@ public class UserTest {
 
         System.out.println("Number of successful logouts: " + successfulLogouts);
     }
-    //logout
+    //chang password
     @Test
     public void test3() throws InterruptedException {
         // Ensure that login test is run first to populate tokens
@@ -192,7 +192,7 @@ public class UserTest {
             System.err.println("No tokens found. Please run the login test first.");
             return;
         }
-
+        System.out.println(tokens.size());
         ExecutorService executorService = Executors.newFixedThreadPool(NUM_THREADS);
         List<Future<Void>> futures = new ArrayList<>();
         Object lock = new Object();
@@ -202,7 +202,7 @@ public class UserTest {
                 String changePasswordPayload = generateChangePasswordPayload("password", "newpassword","newpassword");
 
                 try {
-                    HttpResponse changePasswordResponse = HttpUtil.sendAuthorizedPost("http://localhost:8084/api/user/profile/change-password", changePasswordPayload, token);
+                    HttpResponse changePasswordResponse = HttpUtil.sendAuthorizedPatch("http://localhost:8080/api/user/profile/change-password", changePasswordPayload, token);
                     int changePasswordResponseCode = changePasswordResponse.getStatusLine().getStatusCode();
                     if (changePasswordResponseCode == 200) {
                         synchronized (lock) {

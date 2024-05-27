@@ -33,7 +33,7 @@ public class AdminService {
     public AdminService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
-    private String transactionServiceUrl="http://transaction-service";
+    private String transactionServiceUrl="http://TRANSACTION-SERVICE";
     public List<Refund> getAllRefunds() {
         return refundRepository.findAll();
     }
@@ -54,7 +54,7 @@ public class AdminService {
         return refundRepository.save(refund);
     }
     private void notifyTransactionService(Refund refund) {
-        String url = transactionServiceUrl + "/api/refunds/" + refund.getId() + "/status";
+        String url = transactionServiceUrl + "/api/transaction/refunds/" + refund.getId() + "/status";
         System.out.println(url);
         restTemplate.put(url, refund);
     }

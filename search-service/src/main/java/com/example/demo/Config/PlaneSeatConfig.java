@@ -15,12 +15,12 @@ public class PlaneSeatConfig {
     @Bean
     CommandLineRunner PlaneSeatcommandLineRunner(PlaneSeatRepository repository, PlaneRepository planeRepository){
         return args -> {
-            Plane p=new Plane("Boeing77725",
-                            new Airline("EgyptAir25","456981684","01000000000"),
-                            "Airbus");
-            planeRepository.save(p);
-            PlaneSeat seat = new PlaneSeat(1L,15, SeatCategory.EconomyIsle,p,500);
-            repository.saveAll(List.of(seat));
+//            Plane p=new Plane("Boeing77725",
+//                            new Airline("EgyptAir25","456981684","01000000000"),
+//                            "Airbus");
+//            planeRepository.save(p);
+//            PlaneSeat seat = new PlaneSeat(1L,15, SeatCategory.EconomyIsle,p,500);
+//            repository.saveAll(List.of(seat));
         };
     }
 }

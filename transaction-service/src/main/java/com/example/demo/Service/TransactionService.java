@@ -93,14 +93,11 @@ public class TransactionService {
         Transaction transaction = transactionRepository.findById(transactionId).orElseThrow(() ->
                 new IllegalStateException("Transaction with id " + transactionId + " does not exist")
         );
-        System.out.println("status of Transaction = " + transaction.getStatus());
 
-        System.out.println("userId = " + userId);
-        System.out.println(transactionRepository.findUserById(userId));
         if(userId!=null){
-            if(transactionRepository.findUserById(userId).isEmpty()){
-                throw new IllegalStateException("User with id " + userId + " does not exist");
-            }
+//            if(transactionRepository.findUserById(userId).isEmpty()){
+//                throw new IllegalStateException("User with id " + userId + " does not exist");
+//            }
             if(!userId.equals(transaction.getUserId())){
                 transaction.setUserId(userId);
             }

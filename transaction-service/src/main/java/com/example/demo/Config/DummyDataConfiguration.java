@@ -43,7 +43,7 @@ public class DummyDataConfiguration {
                 users.add(new AppUser(
                         null, // id is generated
                         faker.name().username(),
-                        faker.internet().emailAddress(),
+                        "Mahmoud_" + i,
                         faker.internet().password(),
                         faker.date().birthday().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate(),
                         faker.demographic().sex(),

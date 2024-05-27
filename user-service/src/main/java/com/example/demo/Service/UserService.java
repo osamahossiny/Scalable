@@ -23,6 +23,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository repository;
     public void changePassword(ChangePasswordRequest request, Principal connectedUser) {
+        System.out.println(request.getCurrentPassword() + " " + request.getNewPassword() + " " + request.getConfirmationPassword());
 
         var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
 
@@ -44,7 +45,7 @@ public class UserService {
 
     public void editProfile(EditProfileRequest request, Principal connectedUser) {
         var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
-        if (request.getEmail().isEmpty()){
+        if (request.getEmail() == null){
             throw new IllegalStateException("Email can not be empty");
         }
         if (!request.getEmail().equals(user.getEmail())){
@@ -54,11 +55,11 @@ public class UserService {
             }
         }
         user.setEmail(request.getEmail());
-        if (request.getFirstname().isEmpty()){
+        if (request.getFirstname() == null){
             throw new IllegalStateException("First name can not be empty");
         }
         user.setFirstname(request.getFirstname());
-        if (request.getLastname().isEmpty()){
+        if (request.getLastname() == null){
             throw new IllegalStateException("Last name can not be empty");
         }
         user.setLastname(request.getLastname());
@@ -74,15 +75,15 @@ public class UserService {
             throw new IllegalStateException("Marital status can not be empty");
         }
         user.setMaritalStatus(request.getMaritalStatus());
-        if (request.getPinCode().isEmpty()){
+        if (request.getPinCode() == null){
             throw new IllegalStateException("Pin code can not be empty");
         }
         user.setPinCode(request.getPinCode());
-        if (request.getResidence().isEmpty()){
+        if (request.getResidence() == null){
             throw new IllegalStateException("Residence can not be empty");
         }
         user.setResidence(request.getResidence());
-        if (request.getMobileNumber().isEmpty()){
+        if (request.getMobileNumber() == null){
             throw new IllegalStateException("Mobile number can not be empty");
         }
         user.setMobileNumber(request.getMobileNumber());

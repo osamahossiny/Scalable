@@ -43,6 +43,14 @@ public class HttpUtil {
         post.setEntity(new StringEntity(payload));
         return httpClient.execute(post);
     }
+    public static HttpResponse sendAuthorizedPatch(String urlString, String payload, String token) throws IOException {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPatch post = new HttpPatch(urlString);
+        post.setHeader("Content-type", "application/json");
+        post.setHeader("Authorization", "Bearer " + token);
+        post.setEntity(new StringEntity(payload));
+        return httpClient.execute(post);
+    }
 
     public static String getResponseContent(HttpResponse response) throws IOException {
         return EntityUtils.toString(response.getEntity(), "UTF-8");

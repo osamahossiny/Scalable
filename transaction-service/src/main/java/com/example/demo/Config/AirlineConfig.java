@@ -14,8 +14,8 @@ public class AirlineConfig {
     @Bean
     CommandLineRunner AirlineCommandLineRunner(AirlineRepository repository){
         return args -> {
-            Airline KLM = new Airline("EgyptAir","456981684","01000000000");
-            repository.saveAll(List.of(KLM));
+//            Airline KLM = new Airline("EgyptAir","456981684","01000000000");
+//            repository.saveAll(List.of(KLM));
         };
     }
 }

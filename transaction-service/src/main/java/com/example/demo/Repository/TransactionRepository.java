@@ -28,8 +28,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
 
 
-    @Query("select a from AppUser a where a.id = ?1")
-    Optional<User> findUserById(Long userId);
+//    @Query("select a from AppUser a where a.id = ?1")
+//    Optional<User> findUserById(Long userId);
 
 
     @Query("select a from FlightReservation a where a.id = ?1")

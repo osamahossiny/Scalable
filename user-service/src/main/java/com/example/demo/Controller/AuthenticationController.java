@@ -9,6 +9,7 @@ import com.example.demo.dto.RegisterRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework. web.bind.annotation.RequestBody;
@@ -20,6 +21,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/user/auth")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationController {
 
   private final AuthenticationService service;
@@ -28,6 +30,7 @@ public class AuthenticationController {
   public ResponseEntity<AuthenticationResponse> register(
       @RequestBody RegisterRequest request
   ) {
+    log.info("User " + request.getEmail() + " attempted register");
 //    request.setRole(Role.USER);
 //    RegisterUserCommand registerUserCommand = new RegisterUserCommand(service, request);
 //    registerUserCommand.execute();;
@@ -38,6 +41,7 @@ public class AuthenticationController {
   public ResponseEntity<AuthenticationResponse> authenticate(
       @RequestBody AuthenticationRequest request
   ) {
+    log.info("User " + request.getEmail() + " attempted login");
     return ResponseEntity.ok(service.authenticate(request));
   }
 

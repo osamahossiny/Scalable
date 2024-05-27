@@ -29,9 +29,7 @@ public class Plane {
     )
     private String name;
 
-    @ManyToOne(
-            cascade = {CascadeType.ALL}
-    )
+    @ManyToOne
 
 
     private Airline airline;

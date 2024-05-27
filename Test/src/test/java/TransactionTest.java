@@ -38,7 +38,7 @@ public class TransactionTest {
                 String registerPayload = generateRegisterPayload(email, password);
 
                 try {
-                    HttpResponse registerResponse = HttpUtil.sendPost("http://localhost:8084/api/user/auth/register", registerPayload);
+                    HttpResponse registerResponse = HttpUtil.sendPost("http://localhost:8080/api/user/auth/register", registerPayload);
                     int registerResponseCode = registerResponse.getStatusLine().getStatusCode();
                     if (registerResponseCode == 200) {
                         synchronized (lock) {
@@ -97,7 +97,7 @@ public class TransactionTest {
                 String loginPayload = generateLoginPayload(email, password);
 
                 try {
-                    HttpResponse loginResponse = HttpUtil.sendPost("http://localhost:8084/api/user/auth/authenticate", loginPayload);
+                    HttpResponse loginResponse = HttpUtil.sendPost("http://localhost:8080/api/user/auth/authenticate", loginPayload);
                     int loginResponseCode = loginResponse.getStatusLine().getStatusCode();
                     if (loginResponseCode == 200) {
                         synchronized (lock) {
@@ -146,7 +146,7 @@ public class TransactionTest {
                 String transactionPayload = generateAddTransactionPayload(1, 1, "2024-01-11T00:00:00", "VISA", 50000.00, "PENDING");
 
                 try {
-                    HttpResponse transactionResponse = HttpUtil.sendAuthorizedPost("http://localhost:8081/api/transaction/transaction", transactionPayload , tokens.get(tokens.size()-1));
+                    HttpResponse transactionResponse = HttpUtil.sendAuthorizedPost("http://localhost:8080/api/transaction/transaction", transactionPayload , tokens.get(tokens.size()-1));
                     int transactionResponseCode = transactionResponse.getStatusLine().getStatusCode();
                     if (transactionResponseCode == 200) {
                         synchronized (lock) {
@@ -191,7 +191,7 @@ public class TransactionTest {
         for (int i = 0; i < NUM_REQUESTS; i++) {
             futures.add(executorService.submit(() -> {
                 try {
-                    HttpResponse getResponse = HttpUtil.sendAuthorizedGet("http://localhost:8081/api/transaction/transaction", tokens.get(tokens.size()-1));
+                    HttpResponse getResponse = HttpUtil.sendAuthorizedGet("http://localhost:8080/api/transaction/transaction", tokens.get(tokens.size()-1));
                     int getResponseCode = getResponse.getStatusLine().getStatusCode();
                     if (getResponseCode == 200) {
                         synchronized (this) {

@@ -116,17 +116,8 @@ public class DummyDataConfiguration {
 
       //      planeSeatRepository.saveAll(planeSeats);
 
-            // Generate dummy data for Promotions
-            List<Promotion> promotions = new ArrayList<>();
-            for (int i = 1; i <= 100; i++) {
-                Flight flight = flights.get(faker.number().numberBetween(0, flights.size() - 1));
-                promotions.add(new Promotion(
-                        faker.commerce().promotionCode()+""+i, // code
-                        faker.number().randomDouble(2, 5, 50), // discount
-                        flight // flight
-                ));
-            }
-            promotionRepository.saveAll(promotions);
+
+
 
 // Generate dummy data for Refunds
             List<Refund> refunds = new ArrayList<>();
