@@ -8,7 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/refunds")
+@RequestMapping("/api/transaction/refunds")
 public class RefundController {
 
     @Autowired
@@ -16,8 +16,10 @@ public class RefundController {
 
         @PostMapping
         public ResponseEntity<Refund> createRefund(@RequestBody Refund refund) {
-           // Long userId = (long)SecurityContextHolder.getContext().getAuthentication().getCredentials();
-           refund.setUserId(1L);
+//            String userId = SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
+//            System.out.println(userId);
+            refund.setUserId(1l);
+            refund.setStatus("Pending");
             Refund createdRefund = refundService.createRefund(refund);
             return ResponseEntity.ok(createdRefund);
         }

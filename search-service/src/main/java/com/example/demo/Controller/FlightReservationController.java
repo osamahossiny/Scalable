@@ -15,7 +15,7 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping(path = "api/v1/flightReservation")
+@RequestMapping(path = "api/search/flightReservation")
 
 public class FlightReservationController {
         private final FlightReservationService flightReservationService;

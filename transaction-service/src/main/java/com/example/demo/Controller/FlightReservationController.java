@@ -8,7 +8,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping(path = "api/v1/flightReservation")
+@RequestMapping(path = "/api/transaction/flightReservation")
 
 public class FlightReservationController {
         private final FlightReservationService flightReservationService;

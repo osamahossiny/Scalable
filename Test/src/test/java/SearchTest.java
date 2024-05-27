@@ -40,7 +40,7 @@ public class SearchTest {
                 String registerPayload = generateRegisterPayload(email, password);
 
                 try {
-                    HttpResponse registerResponse = HttpUtil.sendPost("http://localhost:8084/api/v1/auth/register", registerPayload);
+                    HttpResponse registerResponse = HttpUtil.sendPost("http://localhost:8084/api/user/auth/register", registerPayload);
                     int registerResponseCode = registerResponse.getStatusLine().getStatusCode();
                     if (registerResponseCode == 200) {
                         synchronized (lock) {
@@ -99,7 +99,7 @@ public class SearchTest {
                 String loginPayload = generateLoginPayload(email, password);
 
                 try {
-                    HttpResponse loginResponse = HttpUtil.sendPost("http://localhost:8084/api/v1/auth/authenticate", loginPayload);
+                    HttpResponse loginResponse = HttpUtil.sendPost("http://localhost:8084/api/user/auth/authenticate", loginPayload);
                     int loginResponseCode = loginResponse.getStatusLine().getStatusCode();
                     if (loginResponseCode == 200) {
                         synchronized (lock) {
@@ -147,9 +147,8 @@ public class SearchTest {
         for (int i = 0; i < NUM_REQUESTS; i++) {
             futures.add(executorService.submit(() -> {
                 String searchPayload = generateGenericOneWaySearchPayload("Egypt", "Germany", "2024-05-24");
-                System.out.println(tokens.size());
                 try {
-                    HttpResponse searchResponse = HttpUtil.sendAuthorizedPost("http://localhost:8082/api/v1/flight/OneWay", searchPayload,tokens.get(tokens.size()-1));
+                    HttpResponse searchResponse = HttpUtil.sendAuthorizedPost("http://localhost:8082/api/search/flight/OneWay", searchPayload,tokens.get(tokens.size()-1));
                     int searchResponseCode = searchResponse.getStatusLine().getStatusCode();
                     if (searchResponseCode == 200) {
                         synchronized (lock) {
@@ -193,7 +192,7 @@ public class SearchTest {
                 String searchPayload = generateGenericTwoWaySearchPayload("Spain", "US", "2024-05-23");
 
                 try {
-                    HttpResponse searchResponse = HttpUtil.sendAuthorizedPost("http://localhost:8082/api/v1/flight/TwoWay", searchPayload,tokens.get(tokens.size()-1));
+                    HttpResponse searchResponse = HttpUtil.sendAuthorizedPost("http://localhost:8082/api/search/flight/TwoWay", searchPayload,tokens.get(tokens.size()-1));
                     int searchResponseCode = searchResponse.getStatusLine().getStatusCode();
                     if (searchResponseCode == 200) {
                         synchronized (lock) {
@@ -237,7 +236,7 @@ public class SearchTest {
                 String searchPayload = generateGenericRoundTripSearchPayload("UK", "US", "2024-05-24", "2024-05-29");
 
                 try {
-                    HttpResponse searchResponse = HttpUtil.sendAuthorizedPost("http://localhost:8082/api/v1/flight/RoundTrip", searchPayload,tokens.get(tokens.size()-1));
+                    HttpResponse searchResponse = HttpUtil.sendAuthorizedPost("http://localhost:8082/api/search/flight/RoundTrip", searchPayload,tokens.get(tokens.size()-1));
                     int searchResponseCode = searchResponse.getStatusLine().getStatusCode();
                     if (searchResponseCode == 200) {
                         synchronized (lock) {
@@ -281,7 +280,7 @@ public class SearchTest {
                 String searchPayload = generateGenericFilteredSearchPayload("Egypt", "Germany", "2024-05-23", "CAI", "BER", "13940", "10000000");
 
                 try {
-                    HttpResponse searchResponse = HttpUtil.sendAuthorizedPost("http://localhost:8082/api/v1/flight/Filtered", searchPayload,tokens.get(tokens.size()-1));
+                    HttpResponse searchResponse = HttpUtil.sendAuthorizedPost("http://localhost:8082/api/search/flight/Filtered", searchPayload,tokens.get(tokens.size()-1));
                     int searchResponseCode = searchResponse.getStatusLine().getStatusCode();
                     if (searchResponseCode == 200) {
                         synchronized (lock) {

@@ -36,7 +36,7 @@ public class DummyDataConfiguration {
         return args -> {
             // Generate dummy data for Airlines
             List<Airline> airlines = new ArrayList<>();
-            for (int i = 1; i <= 1000; i++) {
+            for (int i = 1; i <= 100; i++) {
                 airlines.add(new Airline(
                         (long) i,
                         faker.company().name()+i+"",
@@ -48,7 +48,7 @@ public class DummyDataConfiguration {
 
             // Generate dummy data for AppUsers
             List<AppUser> users = new ArrayList<>();
-            for (int i = 1; i <= 1000; i++) {
+            for (int i = 1; i <= 100; i++) {
                 users.add(new AppUser(
                         null, // id is generated
                         faker.name().username(),
@@ -66,7 +66,7 @@ public class DummyDataConfiguration {
             }
             appUserRepository.saveAll(users);
             List<Plane> planes = new ArrayList<>();
-            for (int i = 1; i <= 1000; i++) {
+            for (int i = 1; i <= 100; i++) {
                 Airline airline = airlines.get(i-1);
                 planes.add(new Plane(
                         faker.aviation().aircraft()+i+"",
@@ -78,7 +78,7 @@ public class DummyDataConfiguration {
             planeRepository.saveAll(planes);
             // Generate dummy data for Complaints
             List<Complaints> complaints = new ArrayList<>();
-            for (int i = 1; i <= 1000; i++) {
+            for (int i = 1; i <= 100; i++) {
                 complaints.add(new Complaints(
                         UUID.randomUUID(),
                         faker.lorem().sentence(),
@@ -91,7 +91,7 @@ public class DummyDataConfiguration {
 
 
                 List<Flight> flights = new ArrayList<>();
-            for (int i = 1; i <= 1000; i++) {
+            for (int i = 1; i <= 100; i++) {
                Plane plane = planes.get(i-1);
               //  System.out.println(plane.toString());
                 flights.add(new Flight(
@@ -112,63 +112,16 @@ public class DummyDataConfiguration {
             }
 
             flightRepository.saveAll(flights);
-
-
-
-            // Generate dummy data for FlightPackages
-            List<FlightPackage> flightPackages = new ArrayList<>();
-            for (int i = 1; i <= 1000; i++) {
-                Flight flight = flights.get(faker.number().numberBetween(0, flights.size() - 1));
-                flightPackages.add(new FlightPackage(
-                        flight,
-                        faker.number().numberBetween(5, 20), // weightCabin
-                        faker.number().numberBetween(50, 200), // cancellationFee
-                        faker.number().numberBetween(20, 100), // dateChangeFee
-                        faker.lorem().sentence(), // mealInfo
-                        faker.bool().bool(), // expressCheckIn
-                        faker.number().numberBetween(100, 1000) // price
-                ));
-            }
-            flightPackageRepository.saveAll(flightPackages);
-
-            // Generate dummy data for FlightReservations
-            List<FlightReservation> flightReservations = new ArrayList<>();
-            for (int i = 1; i <= 1000; i++) {
-                AppUser appUser = users.get(faker.number().numberBetween(0, users.size() - 1));
-                FlightPackage flightPackage = flightPackages.get(faker.number().numberBetween(0, flightPackages.size() - 1));
-                flightReservations.add(new FlightReservation(
-                        appUser,
-                        flightPackage,
-                        faker.bool().bool(), // seatChargeable
-                        faker.bool().bool(), // extraBaggage
-                        faker.bool().bool(), // withInsurance
-                        faker.number().numberBetween(100, 1000) // totalPrice
-                ));
-            }
-            flightReservationRepository.saveAll(flightReservations);
-
-
             // Generate dummy data for PlaneSeats
-            List<PlaneSeat> planeSeats = new ArrayList<>();
-            SeatCategory[] seatCategories = SeatCategory.values();
 
-            for (int i = 1; i <= 1000; i++) {
-                Plane plane = planes.get(faker.number().numberBetween(0, planes.size() - 1));
-                planeSeats.add(new PlaneSeat(
-                        faker.number().numberBetween(1, 300), // seatNumber
-                        seatCategories[faker.number().numberBetween(0, seatCategories.length)], // seatCategory
-                        plane,
-                        faker.number().numberBetween(100, 1000) // price
-                ));
-            }
       //      planeSeatRepository.saveAll(planeSeats);
 
             // Generate dummy data for Promotions
             List<Promotion> promotions = new ArrayList<>();
-            for (int i = 1; i <= 1000; i++) {
+            for (int i = 1; i <= 100; i++) {
                 Flight flight = flights.get(faker.number().numberBetween(0, flights.size() - 1));
                 promotions.add(new Promotion(
-                        faker.commerce().promotionCode(), // code
+                        faker.commerce().promotionCode()+""+i, // code
                         faker.number().randomDouble(2, 5, 50), // discount
                         flight // flight
                 ));
@@ -177,7 +130,7 @@ public class DummyDataConfiguration {
 
 // Generate dummy data for Refunds
             List<Refund> refunds = new ArrayList<>();
-            for (int i = 1; i <= 1000; i++) {
+            for (int i = 1; i <= 100; i++) {
                 AppUser appUser = users.get(faker.number().numberBetween(0, users.size() - 1));
                 refunds.add(new Refund(
                         appUser.getId(), // userId
@@ -185,7 +138,7 @@ public class DummyDataConfiguration {
                         faker.options().option("Pending", "Completed", "Rejected") // status
                 ));
             }
-          //  refundRepository.saveAll(refunds);
+          refundRepository.saveAll(refunds);
         };
     }
 }

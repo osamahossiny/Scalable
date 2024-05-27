@@ -17,23 +17,21 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-  //private final JwtService jwtService;
-  //private final UserDetailsService userDetailsService;
-  //private final TokenRepository tokenRepository;
   private final RedisTemplate<String, UserTransfer> userTreansferRedisTemplate;
   private static final String USER_CACHE_PREFIX = "user::";
   @Override
   protected void doFilterInternal(
-      @NonNull HttpServletRequest request,
-      @NonNull HttpServletResponse response,
-      @NonNull FilterChain filterChain
+          @NonNull HttpServletRequest request,
+          @NonNull HttpServletResponse response,
+          @NonNull FilterChain filterChain
   ) throws ServletException, IOException {
-    if (request.getServletPath().contains("/api/v1/auth")) {
+    if (request.getServletPath().contains("/api/user/auth")) {
       filterChain.doFilter(request, response);
       return;
     }
@@ -47,21 +45,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     if (SecurityContextHolder.getContext().getAuthentication() == null) {
       UserTransfer user = userTreansferRedisTemplate.opsForValue().get(USER_CACHE_PREFIX + jwt);
       if (user != null){
-          UserDetails userDetails = User.builder()
+        UserDetails userDetails = User.builder()
                 .id(user.getId())
                 .email(user.getEmail())
                 .firstname(user.getFirstname())
                 .lastname(user.getLastname())
                 .password(user.getPassword())
                 .role(user.getRole())
+                .maritalStatus(user.getMaritalStatus())
+                .pinCode(user.getPinCode())
+                .mobileNumber(user.getMobileNumber())
+                .birthDay(LocalDate.parse(user.getBirthDay()))
+                .residence(user.getResidence())
+                .gender(user.getGender())
                 .build();
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-            userDetails,
-            user,
-            userDetails.getAuthorities()
+                userDetails,
+                user,
+                userDetails.getAuthorities()
         );
         authToken.setDetails(
-            new WebAuthenticationDetailsSource().buildDetails(request)
+                new WebAuthenticationDetailsSource().buildDetails(request)
         );
         SecurityContextHolder.getContext().setAuthentication(authToken);
       }

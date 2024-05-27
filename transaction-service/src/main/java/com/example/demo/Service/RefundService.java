@@ -12,7 +12,7 @@ public class RefundService {
     private final RestTemplate restTemplate;
 
 
-    private String adminServiceUrl="http://localhost:8083";
+    private String adminServiceUrl="http://admin_service";
 
     public RefundService(RefundRepository refundRepository, RestTemplate restTemplate) {
         this.refundRepository = refundRepository;

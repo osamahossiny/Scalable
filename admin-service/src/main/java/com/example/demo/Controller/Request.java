@@ -4,7 +4,7 @@ import com.example.demo.Service.AdminService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 @RestController
-@RequestMapping("/api/v1/refunds")
+@RequestMapping("/api/admin/refunds")
 public class Request {
     private final AdminService adminService;
     public Request(AdminService adminService) {

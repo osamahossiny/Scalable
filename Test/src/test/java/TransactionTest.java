@@ -38,7 +38,7 @@ public class TransactionTest {
                 String registerPayload = generateRegisterPayload(email, password);
 
                 try {
-                    HttpResponse registerResponse = HttpUtil.sendPost("http://localhost:8084/api/v1/auth/register", registerPayload);
+                    HttpResponse registerResponse = HttpUtil.sendPost("http://localhost:8084/api/user/auth/register", registerPayload);
                     int registerResponseCode = registerResponse.getStatusLine().getStatusCode();
                     if (registerResponseCode == 200) {
                         synchronized (lock) {
@@ -97,7 +97,7 @@ public class TransactionTest {
                 String loginPayload = generateLoginPayload(email, password);
 
                 try {
-                    HttpResponse loginResponse = HttpUtil.sendPost("http://localhost:8084/api/v1/auth/authenticate", loginPayload);
+                    HttpResponse loginResponse = HttpUtil.sendPost("http://localhost:8084/api/user/auth/authenticate", loginPayload);
                     int loginResponseCode = loginResponse.getStatusLine().getStatusCode();
                     if (loginResponseCode == 200) {
                         synchronized (lock) {
@@ -146,7 +146,7 @@ public class TransactionTest {
                 String transactionPayload = generateAddTransactionPayload(1, 1, "2024-01-11T00:00:00", "VISA", 50000.00, "PENDING");
 
                 try {
-                    HttpResponse transactionResponse = HttpUtil.sendAuthorizedPost("http://localhost:8081/api/v1/transaction", transactionPayload , tokens.get(tokens.size()-1));
+                    HttpResponse transactionResponse = HttpUtil.sendAuthorizedPost("http://localhost:8081/api/transaction/transaction", transactionPayload , tokens.get(tokens.size()-1));
                     int transactionResponseCode = transactionResponse.getStatusLine().getStatusCode();
                     if (transactionResponseCode == 200) {
                         synchronized (lock) {
@@ -191,7 +191,7 @@ public class TransactionTest {
         for (int i = 0; i < NUM_REQUESTS; i++) {
             futures.add(executorService.submit(() -> {
                 try {
-                    HttpResponse getResponse = HttpUtil.sendAuthorizedGet("http://localhost:8081/api/v1/transaction", tokens.get(tokens.size()-1));
+                    HttpResponse getResponse = HttpUtil.sendAuthorizedGet("http://localhost:8081/api/transaction/transaction", tokens.get(tokens.size()-1));
                     int getResponseCode = getResponse.getStatusLine().getStatusCode();
                     if (getResponseCode == 200) {
                         synchronized (this) {
@@ -223,145 +223,6 @@ public class TransactionTest {
 
         System.out.println("Number of successful get all transactions: " + successfulGetTransactions);
     }
-    //GetUserTransactionsLoad
-    @Test
-    public void test5() throws InterruptedException {
-        ExecutorService executorService = Executors.newFixedThreadPool(NUM_THREADS);
-        List<Future<Void>> futures = new ArrayList<>();
-
-        for (int i = 0; i < NUM_REQUESTS; i++) {
-            futures.add(executorService.submit(() -> {
-                try {
-                    HttpResponse getResponse = HttpUtil.sendAuthorizedGet("http://localhost:8081/api/v1/transaction/user?userId=1", tokens.get(tokens.size()-1));
-                    int getResponseCode = getResponse.getStatusLine().getStatusCode();
-                    if (getResponseCode == 200) {
-                        synchronized (this) {
-                            successfulUserTransactions++;
-                        }
-                    }
-                    System.out.println("Get User Transactions Response Code: " + getResponseCode);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                return null;
-            }));
-        }
-
-        executorService.shutdown();
-        if (!executorService.awaitTermination(10, TimeUnit.MINUTES)) {
-            System.err.println("Tasks did not finish in the allotted time");
-            executorService.shutdownNow();
-        }
-
-        for (Future<Void> future : futures) {
-            try {
-                future.get();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        System.out.println("Number of successful get user transactions: " + successfulUserTransactions);
-    }
-    //UpdateTransactionLoad
-    @Test
-    public void test6() throws InterruptedException {
-        // Ensure that add transaction test is run first to populate transactionIds
-        if (transactionIds.isEmpty()) {
-            System.err.println("No transactions found. Please run the add transaction test first.");
-            return;
-        }
-
-        ExecutorService executorService = Executors.newFixedThreadPool(NUM_THREADS);
-        List<Future<Void>> futures = new ArrayList<>();
-        Object lock = new Object();
-
-        for (int transactionId : transactionIds) {
-            futures.add(executorService.submit(() -> {
-                String updatePayload = generateUpdateTransactionPayload(transactionId, 1, 1, "2024-01-11T00:00:00", "VISA", 50000.00, "COMPLETED");
-
-                try {
-                    HttpResponse updateResponse = HttpUtil.sendAuthorizedPut("http://localhost:8081/api/v1/transaction/" + transactionId, updatePayload, tokens.get(tokens.size()-1));
-                    int updateResponseCode = updateResponse.getStatusLine().getStatusCode();
-                    if (updateResponseCode == 200) {
-                        synchronized (lock) {
-                            successfulUpdateTransactions++;
-                        }
-                    }
-                    System.out.println("Update Transaction Response Code: " + updateResponseCode);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                return null;
-            }));
-        }
-
-        executorService.shutdown();
-        if (!executorService.awaitTermination(10, TimeUnit.MINUTES)) {
-            System.err.println("Tasks did not finish in the allotted time");
-            executorService.shutdownNow();
-        }
-
-        for (Future<Void> future : futures) {
-            try {
-                future.get();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        System.out.println("Number of successful update transactions: " + successfulUpdateTransactions);
-    }
-    //DeleteTransactionLoad
-//    @Test
-//    public void test7() throws InterruptedException {
-//        // Ensure that add transaction test is run first to populate transactionIds
-//        if (transactionIds.isEmpty()) {
-//            System.err.println("No transactions found. Please run the add transaction test first.");
-//            return;
-//        }
-//
-//        ExecutorService executorService = Executors.newFixedThreadPool(NUM_THREADS);
-//        List<Future<Void>> futures = new ArrayList<>();
-//        Object lock = new Object();
-//
-//        for (int transactionId : transactionIds) {
-//            futures.add(executorService.submit(() -> {
-//                try {
-//                    HttpResponse deleteResponse = HttpUtil.sendDelete("http://localhost:8081/api/v1/transaction/" + transactionId);
-//                    int deleteResponseCode = deleteResponse.getStatusLine().getStatusCode();
-//                    if (deleteResponseCode == 200) {
-//                        synchronized (lock) {
-//                            successfulDeleteTransactions++;
-//                        }
-//                    }
-//                    System.out.println("Delete Transaction Response Code: " + deleteResponseCode);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                return null;
-//            }));
-//        }
-//
-//        executorService.shutdown();
-//        if (!executorService.awaitTermination(10, TimeUnit.MINUTES)) {
-//            System.err.println("Tasks did not finish in the allotted time");
-//            executorService.shutdownNow();
-//        }
-//
-//        for (Future<Void> future : futures) {
-//            try {
-//                future.get();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        System.out.println("Number of successful delete transactions: " + successfulDeleteTransactions);
-//    }
 
     private String generateAddTransactionPayload(int userId, int reservationId, String transactionDateTime, String paymentMethod, double transactionAmount, String status) {
         return String.format("{\"userId\":%d,\"reservationId\":%d,\"transactionDateTime\":\"%s\",\"paymentMethod\":\"%s\",\"transactionAmount\":%.2f,\"status\":\"%s\"}",

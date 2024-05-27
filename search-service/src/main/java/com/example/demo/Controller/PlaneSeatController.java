@@ -17,7 +17,7 @@ import com.example.demo.Commands.PlaneSeatCommand.UpdatePlaneSeatCommand;
 
 
 @RestController
-@RequestMapping(path = "api/v1/planeSeat")
+@RequestMapping(path = "api/search/planeSeat")
 public class PlaneSeatController {
     private final PlaneSeatService planeSeatService;
 

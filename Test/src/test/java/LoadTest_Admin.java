@@ -3,14 +3,13 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class LoadTest_User {
+public class LoadTest_Admin {
 
     private static final int NUM_THREADS = 10; // Number of concurrent threads
     private static final int NUM_REQUESTS = 100; // Total number of requests to send

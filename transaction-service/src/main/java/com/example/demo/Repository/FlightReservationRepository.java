@@ -12,7 +12,7 @@ public interface FlightReservationRepository extends JpaRepository<FlightReserva
 
 
 
-    @Query("select a from FlightReservation a where  a.user.id = ?1")
+    @Query("select a from FlightReservation a where  a.userId = ?1")
     List<FlightReservation> findUserFlightReservations(long userId);
 
     @Query("select a from User a where  a.id = ?1")
@@ -31,6 +31,6 @@ public interface FlightReservationRepository extends JpaRepository<FlightReserva
     @Query("select a from FlightReservation a where  a.planeSeat.id = ?1 and a.flightPackage.flight.FlightId = ?2")
     Optional<FlightReservation> findReservedSeat(long planeSeatId, long flightId);
 
-    @Query("select a from FlightReservation a where  a.user.id = ?1 and a.planeSeat.id = ?2 and a.flightPackage.flight.FlightId = ?3")
+    @Query("select a from FlightReservation a where  a.userId = ?1 and a.planeSeat.id = ?2 and a.flightPackage.flight.FlightId = ?3")
     Optional<FlightReservation> findFlightReservation(long userId, long planeSeatId, long flightId);
 }

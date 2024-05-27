@@ -33,7 +33,7 @@ public class AdminService {
     public AdminService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
-    private String transactionServiceUrl="http://localhost:8081";
+    private String transactionServiceUrl="http://transaction-service";
     public List<Refund> getAllRefunds() {
         return refundRepository.findAll();
     }

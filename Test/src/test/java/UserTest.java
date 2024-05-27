@@ -40,7 +40,7 @@ public class UserTest {
                 String registerPayload = generateRegisterPayload(email, password);
 
                 try {
-                    HttpResponse registerResponse = HttpUtil.sendPost("http://localhost:8084/api/v1/auth/register", registerPayload);
+                    HttpResponse registerResponse = HttpUtil.sendPost("http://localhost:8084/api/user/auth/register", registerPayload);
                     int registerResponseCode = registerResponse.getStatusLine().getStatusCode();
                     if (registerResponseCode == 200) {
                         synchronized (lock) {
@@ -99,7 +99,7 @@ public class UserTest {
                 String loginPayload = generateLoginPayload(email, password);
 
                 try {
-                    HttpResponse loginResponse = HttpUtil.sendPost("http://localhost:8084/api/v1/auth/authenticate", loginPayload);
+                    HttpResponse loginResponse = HttpUtil.sendPost("http://localhost:8084/api/user/auth/authenticate", loginPayload);
                     int loginResponseCode = loginResponse.getStatusLine().getStatusCode();
                     if (loginResponseCode == 200) {
                         synchronized (lock) {
@@ -152,7 +152,7 @@ public class UserTest {
         for (String token : tokens) {
             futures.add(executorService.submit(() -> {
                 try {
-                    HttpResponse logoutResponse = HttpUtil.sendAuthorizedPost("http://localhost:8084/api/v1/auth/logout", "", token);
+                    HttpResponse logoutResponse = HttpUtil.sendAuthorizedPost("http://localhost:8084/api/user/auth/logout", "", token);
                     int logoutResponseCode = logoutResponse.getStatusLine().getStatusCode();
                     if (logoutResponseCode == 200) {
                         synchronized (lock) {
@@ -202,7 +202,7 @@ public class UserTest {
                 String changePasswordPayload = generateChangePasswordPayload("password", "newpassword","newpassword");
 
                 try {
-                    HttpResponse changePasswordResponse = HttpUtil.sendAuthorizedPost("http://localhost:8084/api/v1/users", changePasswordPayload, token);
+                    HttpResponse changePasswordResponse = HttpUtil.sendAuthorizedPost("http://localhost:8084/api/user/profile/change-password", changePasswordPayload, token);
                     int changePasswordResponseCode = changePasswordResponse.getStatusLine().getStatusCode();
                     if (changePasswordResponseCode == 200) {
                         synchronized (lock) {
