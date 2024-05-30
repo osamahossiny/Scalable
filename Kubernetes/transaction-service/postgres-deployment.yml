@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transaction-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: transaction-postgres
+  template:
+    metadata:
+      labels:
+        app: transaction-postgres
+    spec:
+      containers:
+        - name: transaction-postgres
+          image: postgres:latest
+          ports:
+            - containerPort: 5432
+          env: # Setting Enviornmental Variables
+            - name: POSTGRES_USER  # Setting Database username from Secret
+              valueFrom:
+                secretKeyRef:
+                  name: transaction-postgres-credentials # Secret Name
+                  key: postgres_user
+            - name: POSTGRES_PASSWORD # Setting Database password from Secret
+              valueFrom:
+                secretKeyRef:
+                  name: transaction-postgres-credentials
+                  key: postgres_password
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: transaction-postgres
+spec:
+    selector:
+        app: transaction-postgres
+    ports:
+      - protocol: TCP
+        port: 5432
+        targetPort: 5432
