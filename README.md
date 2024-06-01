@@ -23,7 +23,7 @@ Ensure you have the following installed on your system:
 - **Apache Maven**
 - **Docker (optional for running services in containers)**
 - **Apache Kafka**
-- **MySQL or any preferred database**
+- **PostgresSQL or any preferred database**
 - **Cassandra**
 - **Redis**
 
